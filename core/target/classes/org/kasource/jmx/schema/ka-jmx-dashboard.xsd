@@ -1,0 +1,112 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://kasource.org/schema/websocket" 
+	xmlns="http://kasource.org/schema/websocket"
+	elementFormDefault="qualified">
+	
+	<xs:element name="websocket-config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="websocket" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:element ref="orginWhitelist" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="clientIdGenerator" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="authentication" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="textProtocolHandler" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="binaryProtocolHandler" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<xs:element name="websocket">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="clientIdGenerator" type="clientIdGenerator" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="servletName" type="xs:string" use="required"/>
+			<xs:attribute name="dynamicAddressing" type="xs:boolean" default="false"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="originWhitelist">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="origin" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="clientIdGenerator" type="clientIdGenerator"/>
+	
+
+	<xs:complexType name="clientIdGenerator">
+		<xs:attribute name="class" type="javaClass" use="required"/>
+		<xs:attribute name="idKey" type="xs:string" use="optional"/>
+		<xs:attribute name="headerValue" type="xs:boolean" default="false"/>
+	</xs:complexType>
+
+	
+	<xs:element name="authentication">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="authenticationUrlMapping" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="authenticationProvider" minOccurs="0" maxOccurs="1"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="authenticationUrlMapping">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="authenticationProvider" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="url" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="authenticationProvider">
+		<xs:complexType>
+			<xs:attribute name="provider" type="javaClass" use="required"/>
+			<xs:attribute name="headerAuthentication" type="xs:boolean" default="false"/>
+			<xs:attribute name="usernameKey" type="xs:string" use="optional"/>
+			<xs:attribute name="passwordKey" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="textProtocolHandler" type="protocolHandler"/>
+	<xs:element name="binaryProtocolHandler" type="protocolHandler"/>
+	
+	 <xs:complexType name="protocolHandler">
+		<xs:sequence>
+			<xs:element name="handlerClass" type="javaClass" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="protocolUrlMapping" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="defaultHandlerClass" type="javaClass" use="optional"/>
+	</xs:complexType>
+	
+	<xs:element name="protocolUrlMapping">
+		<xs:complexType>
+		    <xs:sequence>
+		    	<xs:element name="handlerClass" type="javaClass" minOccurs="0" maxOccurs="unbounded"/>
+		    </xs:sequence>
+			<xs:attribute name="url" type="xs:string" use="required"/>
+			<xs:attribute name="defaultHandlerClass" type="javaClass" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	
+	<!-- Types -->
+	<xs:simpleType name="javaClass">
+		<xs:annotation>
+			<xs:documentation>
+				A valid Java fully qualified class name.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="[a-z]{2,6}(\.[a-zA-Z][a-zA-Z_$0-9]*)+\.([A-Z][a-zA-Z_$0-9]*){1}" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+</xs:schema>

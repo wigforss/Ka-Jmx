@@ -1,0 +1,111 @@
+#main-layout {
+    display:table;
+    border-collapse:collapse;
+    border-spacing:0px;
+}
+
+#footer-layout,
+#header-layout {
+    display:table-row;
+   
+}
+
+#body-layout {
+    display:table-row;
+    height:90%;
+}
+         
+#naviagation-layout, #content-layout {
+    display:table-cell;
+    height:95%;
+    text-align:left;
+	vertical-align: top; 
+}
+         
+
+#naviagation-layout {
+    width:40%;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+         
+#content-layout {
+    width:60%;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+#header-layout {
+	margin-left:1%;
+}
+
+.boxshadow 
+{
+  -moz-box-shadow: 3px 3px 5px #535353;
+  -webkit-box-shadow: 3px 3px 5px #535353;       
+  box-shadow: 3px 3px 5px #535353;
+}
+.roundbox
+{  
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px;  
+  border-radius: 6px 6px 6px 6px;
+}
+
+#footer-layout {
+	white-space: nowrap;	
+	
+}
+
+.title {
+	font-size:20px;
+	font-style:oblique;
+	font-style:italic;
+}
+
+.footer {
+	font-size:10px;
+	font-style:italic;
+	margin-top:10px;
+}
+
+.hidden {
+	display:none;
+}
+
+.error{
+	background-color:rgba(255, 0, 0, 0.1)
+}
+
+.refreshButton{
+    background:url(images/view-refresh-7.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    margin-right:5px;
+    margin-left:-5px;
+    width:24px;
+    height:24px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    -webkit-border-radius: 6px;  
+    border-radius: 6px 6px 6px 6px;
+    -moz-box-shadow: 3px 3px 5px #535353;
+    -webkit-box-shadow: 3px 3px 5px #535353;       
+    box-shadow: 3px 3px 5px #535353;
+}
+
+.refreshButton:active{
+-moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px;  
+    border-radius: 0px 0px 0px 0px;
+    -moz-box-shadow: 0px 0px 0px #535353;
+    -webkit-box-shadow: 0px 0px 0px #535353;       
+    box-shadow: 0px 0px 0px #535353;
+}
+
+.stopRefresh {
+	 background:url(images/road-sign-us-stop.png) no-repeat;
+}

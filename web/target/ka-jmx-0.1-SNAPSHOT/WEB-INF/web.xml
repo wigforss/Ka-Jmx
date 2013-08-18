@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0"
+>
+	<display-name>Ka JMX ${project.version}</display-name>
+
+    <!-- Spring 3 Configuration -->
+    
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/application-context.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+   
+     
+	
+   <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+ 
+  <servlet-mapping>
+    <servlet-name>rest</servlet-name>
+    <url-pattern>/json/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+        <servlet-name>view</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+ 
+  <servlet-mapping>
+    <servlet-name>view</servlet-name>
+    <url-pattern>/html/*</url-pattern>
+  </servlet-mapping>
+ 
+    <!-- Serves static resource content from .jar files such as spring-js.jar -->
+    <servlet>
+        <servlet-name>Resource Servlet</servlet-name>
+        <servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+    </servlet>
+        
+    <!-- Map all /resources requests to the Resource Servlet for handling -->
+    <servlet-mapping>
+        <servlet-name>Resource Servlet</servlet-name>
+        <url-pattern>/resources/*</url-pattern>
+    </servlet-mapping>
+ 
+ 
+  <servlet>
+    <servlet-name>push</servlet-name>
+    <servlet-class>org.kasource.web.websocket.impl.tomcat.TomcatWebsocketImpl</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>push</servlet-name>
+    <url-pattern>/push</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>notification</servlet-name>
+    <servlet-class>org.kasource.web.websocket.impl.tomcat.TomcatWebsocketImpl</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>notification</servlet-name>
+    <url-pattern>/notification</url-pattern>
+  </servlet-mapping>
+  
+
+  
+  <security-constraint>
+		<web-resource-collection>
+        	<web-resource-name>Resources-Protected</web-resource-name>
+            <url-pattern>/*</url-pattern>
+     	</web-resource-collection>              
+        <auth-constraint>
+        	<role-name>jmx_console</role-name>
+        </auth-constraint>
+     </security-constraint>  
+     
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>JMX Console</realm-name>
+	</login-config>
+	
+	<security-role>
+		<role-name>jmx_console</role-name>
+	</security-role>
+
+	<welcome-file-list>
+		<welcome-file>html/tree</welcome-file>
+	</welcome-file-list>
+    
+</web-app>
