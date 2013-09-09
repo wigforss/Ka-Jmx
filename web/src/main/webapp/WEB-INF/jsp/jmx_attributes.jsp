@@ -28,6 +28,7 @@
 					<th>Name</th>
 					<th class="tableDescColumn">Description</th>
 					<th>Type</th>
+					<th ><span title="Auto refresh">A</span></th>
 					<th>Value</th>
 				</tr>
 			</thead>
@@ -49,10 +50,26 @@
 								</c:choose>
 								
 							</td>
+							<td>
+							<input id="refresh-${attribute.name}" type="button" title="Auto refresh value" value="" class="refreshButton" onclick="toggleSubscription('${fn:escapeXml(mBean.name)}','${attribute.name}')"/>
+								
+							</td>
 							
 							<td id="attribute-${attribute.name}" tabindex="${attributeStatus.index + 1}">
-								<input id="refresh-${attribute.name}" type="button" title="Auto refresh value" value="" class="refreshButton" onclick="toggleSubscription('${fn:escapeXml(mBean.name)}','${attribute.name}')"/>
-								<span id="refresh-value-${attribute.name}" class="hidden"><c:out value="${attributeValues[attribute.name]}"/></span>
+							
+								<c:set var="graphable" value="${fn:toLowerCase(attribute.type) == 'long' or attribute.type == 'int' or attribute.type == 'Integer' or fn:toLowerCase(attribute.type) == 'short' or fn:toLowerCase(attribute.type) == 'byte' or fn:toLowerCase(attribute.type) == 'float' or fn:toLowerCase(attribute.type) == 'double' ? 'true' : 'false'}"/>
+								<c:set var="integerValue" value="${fn:toLowerCase(attribute.type) == 'long' or attribute.type == 'int' or attribute.type == 'Integer' or fn:toLowerCase(attribute.type) == 'short' or fn:toLowerCase(attribute.type) == 'byte' ? 'true' : 'false'}"/>
+							   <span id="refresh-value-${attribute.name}" class="hidden" graphable="${graphable}" integerValue="${integerValue}">
+									<c:choose>
+										<c:when test="${graphable}">
+											<canvas id="chart-${attribute.name}" width="500" height="100" class="boxshadow"/>
+										</c:when>
+										<c:otherwise>
+											<c:out value="${attributeValues[attribute.name]}"/>
+										</c:otherwise>
+									</c:choose>
+									
+								</span>	
 								<span id="value-${attribute.name}">
 								<c:choose>
 									<c:when test="${attribute.writable}">

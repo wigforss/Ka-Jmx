@@ -1,8 +1,11 @@
 package org.kasource.jmx.core.scheduling;
 
+import org.kasource.jmx.core.model.dashboard.ValueType;
+
 public class Subscription {
     private boolean subscribe;
     private AttributeKey key;
+    private String type = ValueType.TEXT.name();
     
     /**
      * @return the subscribe
@@ -27,5 +30,17 @@ public class Subscription {
      */
     public void setKey(AttributeKey key) {
         this.key = key;
+    }
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }

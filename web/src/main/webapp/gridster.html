@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		
+		<link rel="stylesheet" type="text/css" href="style/layout.css"/>
+		<link rel="stylesheet" type="text/css" href="style/dashboard.css"/>
+		<link rel="stylesheet" type="text/css" href="style/list_menu.css"/>
+		<link rel="stylesheet" type="text/css" href="style/jquery.gridster.css"/>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>  	
+		<script type="text/javascript" src="script/jquery.gridster.with-extras.js"> </script>
+		<script type="text/javascript" src="script/raphael.2.1.0.min.js"></script>
+    	<script type="text/javascript" src="script/justgage.1.0.1.min.js"></script>
+    	<script type="text/javascript" src="script/dashboard.js"></script>
+      	<script src="http://code.highcharts.com/highcharts.js"></script>
+		<script src="http://code.highcharts.com/modules/exporting.js"></script> 
+		<script type="text/javascript" >
+		
+		
+		 
+		$(function(){ //DOM Ready
+
+		    $(".gridster ul").gridster({
+		        widget_margins: [5, 5],
+		        widget_base_dimensions: [100, 100]
+		    });
+		    
+		    var gridster = $(".gridster").gridster().data('gridster');
+		    
+		    widgetFactory['gauge'].get("g1", {label : "pounds", title : "My title"});
+		   
+			 setInterval(function() {
+				 widgets["g1"].refresh(getRandomInt(50, 100));
+		        }, 2500);
+			 		 
+			 widgetFactory['chart'].get("container");
+			 
+			 var textGroup = new TextGroup("text", [{label: "label1", value : "value1"}, {label: "label2", value: "value2"}], "MyTextGroup Title");
+			 textGroup.render();
+		});
+		
+		</script>
+		
+		
+		
+	</head>
+	<body>
+	<div class="list-menu">
+  <h2>HelvetiList</h2>
+  <ul>
+    <li><a href="#">Zurich</a></li>
+    <li><a href="#">Geneva</a></li>
+    <li><a href="#">Winterthur</a></li>
+    <li><a href="#">Lausanne</a></li>
+    <li><a href="#">Lucerne</a></li>
+  </ul>
+</div>
+	<div class="gridster">
+   		<ul class="dashboard">
+        <li id="widget-1" data-row="1" data-col="1" data-sizex="1" data-sizey="1" class="panel" ondblclick="togglePanelSize(this.id,'g1')">
+        	<div class="title-bar">
+        		<table width="100%"><tr><td align="left">Gauge</td><td align="right"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('widget-1')"></td></tr></table>
+        	</div> <div id="g1" class="gauge"></div></li>
+        <li id="widget-2" data-row="2" data-col="1" data-sizex="1" data-sizey="1" class="panel" ondblclick="togglePanelSize(this.id)">
+        	<div class="title-bar">
+        		<table width="100%"><tr><td align="left">Text</td><td align="right"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('widget-2')"></td></tr></table>
+        	</div> 
+        	<div id="text" class="textGroup"></div>
+        </li>
+        <li id="widget-3" data-row="3" data-col="1" data-sizex="1" data-sizey="1" class="panel" ondblclick="removePanel(this.id)">3</li>
+        <li id="widget-4" data-row="1" data-col="2" data-sizex="2" data-sizey="1" class="panel" ondblclick="togglePanelSize(this.id,'container')">
+        	<div class="title-bar">
+        		<table width="100%"><tr><td align="left">Graph</td><td align="right"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('widget-4')"></td></tr></table>
+        	</div> 
+        	<div id="container" class="chart"></div>
+        </li>
+        <li data-row="2" data-col="2" data-sizex="2" data-sizey="2" class="panel">5</li>
+        <li data-row="1" data-col="4" data-sizex="1" data-sizey="1" class="panel">6</li>
+        <li data-row="2" data-col="4" data-sizex="2" data-sizey="1" class="panel">7</li>
+        <li data-row="3" data-col="4" data-sizex="1" data-sizey="1" class="panel">8</li>
+        <li data-row="1" data-col="5" data-sizex="1" data-sizey="1" class="panel">9</li>
+        <li data-row="3" data-col="5" data-sizex="1" data-sizey="1" class="panel">10</li>
+        <li data-row="1" data-col="6" data-sizex="1" data-sizey="1" class="panel">11</li>
+        <li data-row="2" data-col="6" data-sizex="1" data-sizey="2" class="panel">12</li>
+    	</ul>
+	</div>
+	
+	</body>
+</html>

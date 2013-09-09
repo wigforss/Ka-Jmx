@@ -52,6 +52,13 @@
     
     <util:properties id="javadocProperties" location="classpath:org/kasource/jmx/javadoc.properties"/>
 
- 
+ 	<bean id="dashboardDao" class="org.kasource.jmx.core.dao.DashboardXmlDao">
+ 		<property name="sourceXml" value="classpath:org/kasource/jmx/schema/dashboards.xml"/>
+ 		<property name="additionalSourceXml" value="${dashboard.location}"/>
+ 	</bean>
+ 	
+ 	<bean id="vendorDashboardFactory" class="${server.dashboard.factory}"/>
+    
+    <bean id="jmxValueFormatter" class="org.kasource.jmx.core.util.JmxValueFormatterImpl"/>
     
 </beans>

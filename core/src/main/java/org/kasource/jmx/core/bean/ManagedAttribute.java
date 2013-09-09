@@ -1,7 +1,6 @@
 package org.kasource.jmx.core.bean;
 
 
-import java.lang.reflect.Field;
 
 import javax.management.MBeanAttributeInfo;
 

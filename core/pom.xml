@@ -51,7 +51,10 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 		</dependency>
-		
+		<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+			</dependency>
 	
 		<!-- Test  dependencies -->
 		<dependency>

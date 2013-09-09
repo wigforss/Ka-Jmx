@@ -56,10 +56,19 @@
   border-radius: 6px 6px 6px 6px;
 }
 
+
+ h2 {
+  font: 400 20px/1.5 Helvetica, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 #footer-layout {
 	white-space: nowrap;	
 	
 }
+
+
 
 .title {
 	font-size:20px;

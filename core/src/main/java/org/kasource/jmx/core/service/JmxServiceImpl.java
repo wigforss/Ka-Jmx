@@ -1,22 +1,17 @@
 package org.kasource.jmx.core.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.management.Attribute;
 import javax.management.AttributeList;
-import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
-import javax.management.MBeanNotificationInfo;
-import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
 import javax.management.Notification;
 import javax.management.NotificationListener;
@@ -27,13 +22,19 @@ import org.kasource.jmx.core.bean.ManagedBean;
 import org.kasource.jmx.core.tree.JmxTree;
 import org.kasource.jmx.core.tree.JmxTreeBuilder;
 import org.kasource.jmx.core.util.JavadocResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
+
 @ManagedResource(objectName="KaJMX:name=JmxService", description="JMX Service used by the JMX Console")
 @Service
 public class JmxServiceImpl implements JmxService, NotificationListener {
-
+    private static final Logger LOG = LoggerFactory.getLogger(JmxServiceImpl.class);
+    
+    
+    
     @Resource
     private MBeanServer server;
 
@@ -43,10 +44,15 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
     @Resource
     private JavadocResolver javadocResolver;
     
+   
+    
+    
     private JmxTree jmxTree;
 
     private Set<NotificationListener> listeners = new HashSet<NotificationListener>();
 
+
+   
     @SuppressWarnings("unused")
     @PostConstruct
     private void initialize() {
@@ -63,7 +69,7 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
                     server.addNotificationListener(objectName, this, null, null);
                 }
             } catch (Exception e) {
-
+                LOG.error("Could not register notification listeners", e);
             }
 
         }
@@ -74,10 +80,22 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         try {
             return server.queryNames(ObjectName.getInstance("*:*"), null);
         } catch (Exception e) {
+            LOG.error("Could not getAllNames", e);
             return new HashSet<ObjectName>();
         }
     }
 
+    @Override
+    public Set<ObjectName> getNamesMatching(String pattern) {
+        try {
+            return server.queryNames(ObjectName.getInstance(pattern), null);
+        } catch (Exception e) {
+            LOG.error("Could not getAllNames", e);
+            return new HashSet<ObjectName>();
+        }
+    }
+    
+    
     @Override
     public void setAttributes(String objectName, Map<String, Object> attributeValues) {
         AttributeList attributes = new AttributeList();
@@ -87,6 +105,7 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         try {
             server.setAttributes(getObjectName(objectName), attributes);
         } catch (Exception e) {
+            
             throw new IllegalArgumentException("Could not set attribute value for: " + objectName, e);
         }
 
@@ -191,22 +210,18 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         for (ManagedAttribute attribute : beanInfo.getAttributes()) {
             try {
                 Object value = server.getAttribute(name, attribute.getName());
-                if(value.getClass().isArray()) {
-                    value = asList(value, value.getClass());
-                }
-                attributeValues.put(attribute.getName(),
-                            value);
+                attributeValues.put(attribute.getName(), value);
             } catch (Exception e) {
+                LOG.error("Could not set attribute value for: " + name + " attribute " + attribute.getName(), e);
+                e.printStackTrace();
             }
         }
         return attributeValues;
     }
 
-    private <T> List<T> asList(Object value, Class<T> ofClass) {
-        @SuppressWarnings("unchecked")
-        T[] values = (T[]) value;
-        return Arrays.asList(values);
-    }
+    
+   
+    
     
     @ManagedOperation(description="Refreshes the cached JMX Tree")
     @Override
@@ -215,4 +230,21 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         
     }
 
+    @Override
+    public Object getAttributeValue(String name, String attribute) {
+        Object value;
+        try {
+            value = server.getAttribute(getObjectName(name), attribute);           
+            return value;
+        } catch (Exception e) {
+           throw new IllegalArgumentException("Could not get attribute value for "+name+" attribute: " + attribute, e);
+        } 
+        
+    }
+
+    
+    
+    
+    
+   
 }

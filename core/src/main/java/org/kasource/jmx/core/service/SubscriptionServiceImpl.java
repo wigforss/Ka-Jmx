@@ -1,16 +1,14 @@
 package org.kasource.jmx.core.service;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.ReflectionException;
+import javax.management.openmbean.CompositeData;
 
 import org.kasource.jmx.core.bean.ManagedAttributeValue;
 import org.kasource.jmx.core.scheduling.AttributeKey;
@@ -24,12 +22,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private Map<AttributeKey, Set<AttributeValueListener>> listeners = new ConcurrentHashMap<AttributeKey, Set<AttributeValueListener>>();
     private Map<AttributeKey, Object> values = new ConcurrentHashMap<AttributeKey, Object>();
     
+    
     @Resource
-    private MBeanServer server;
+    private JmxService jmxService; 
     
     @Override
     public void addListener(AttributeKey key, AttributeValueListener listener){
-        
+        Object value = jmxService.getAttributeValue(key.getName(), key.getAttributeName());
+        listener.onValueChange(new ManagedAttributeValue(key, value));
         Set<AttributeValueListener> listenerSet = listeners.get(key);
         if(listenerSet == null) {
             listenerSet = new HashSet<AttributeValueListener>();
@@ -74,19 +74,43 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 AttributeKey key = entry.getKey();
                 Set<AttributeValueListener> attributeListeners = entry.getValue();
                 if(listeners != null && !listeners.isEmpty()) {
-                    try {
-                        Object value = server.getAttribute(key.getObjectName(), key.getAttributeName());
-                        if(!values.containsKey(key) || !values.get(key).equals(value)) {
+                   
+                        Object value = jmxService.getAttributeValue(key.getName(), key.getAttributeName());
+                       
+                        if(isNewValue(key, value)) {
                             notifyListeners(attributeListeners, key, value);
                             if(value != null) {
                                 values.put(key, value);
                             }
                         } 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } 
+                    
                 }
             }
+        }
+    }
+    
+    
+    private boolean isNewValue(AttributeKey key, Object value) {
+        try {
+            if (!values.containsKey(key)) {
+                return true;
+            }
+        
+            if(value.getClass().isArray()) {
+                return !Arrays.deepEquals((Object[])values.get(key), (Object[])value);
+            } else if(value instanceof CompositeData) {
+                Object[] valueArray = ((CompositeData) value).values().toArray();
+                Object[] previousArray =((CompositeData) values.get(key)).values().toArray();
+                return !Arrays.deepEquals(valueArray, previousArray);
+            } else if(value instanceof Collection) {
+                Object[] valueArray = ((Collection) value).toArray();
+                Object[] previousArray = ((Collection) values.get(key)).toArray();
+                return !Arrays.deepEquals(valueArray, previousArray);
+            } else {
+                return !values.get(key).equals(value);
+            }
+        } catch(Exception e) {
+            return false;
         }
     }
     

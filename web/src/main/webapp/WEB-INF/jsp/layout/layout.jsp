@@ -22,7 +22,20 @@
 			<link rel="stylesheet" type="text/css" href="style/treeview.css"/>
 			<link rel="stylesheet" type="text/css" href="style/layout.css"/>
 			<link rel="stylesheet" type="text/css" href="style/table.css"/>
-			<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>  	
+			<link rel="stylesheet" type="text/css" href="style/dashboard.css"/>
+			<link rel="stylesheet" type="text/css" href="style/list_menu.css"/>
+			<link rel="stylesheet" type="text/css" href="style/jquery.gridster.css"/>
+			<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+			<script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.1.js"></script>
+			<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>  	
+			<script type="text/javascript" src="script/jquery.gridster.with-extras.js"> </script>
+			<script type="text/javascript" src="script/raphael.2.1.0.min.js"></script>
+    		<script type="text/javascript" src="script/justgage.1.0.1.min.js"></script>
+    		<script type="text/javascript" src="script/dashboard.js"></script>
+    		<script type="text/javascript" src="script/jquery.flot.js"></script>
+    		<script type="text/javascript" src="script/jquery.flot.time.min.js"></script>
+      		<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+			<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script> 
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/dojo/dojo.js"> </script>
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/spring/Spring.js"> </script>
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/spring/Spring-Dojo.js"> </script>		

@@ -12,6 +12,7 @@
 	<jsp:directive.page isELIgnored="false" />
    
 	<c:if test="${fn:length(tree.root.children) > 0}">
+		<h2>Managed Beans</h2>
 			<div class="css-treeview">
 				<ul>
 					<c:forEach var="domain" items="${tree.root.children}">

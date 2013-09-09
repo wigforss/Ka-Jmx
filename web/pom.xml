@@ -7,7 +7,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>ka-jmx</artifactId>
+	<artifactId>ka-jmx-web</artifactId>
 	<packaging>war</packaging>
 	<name>Ka JMX Web</name>
 	<description>Ka JMX Web project</description>
@@ -154,9 +154,9 @@
 				<version>2.6</version>
 			</dependency>
             <dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-		</dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+			</dependency>
         <!-- Runtime -->
              <dependency>
                 <groupId>commons-io</groupId>
@@ -172,6 +172,18 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 			<version>2.2.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.3.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
 			<scope>runtime</scope>
 		</dependency>
 		<!-- Provided -->

@@ -41,7 +41,9 @@
    
  	<import resource="classpath:org/kasource/jmx/core/application-context.xml"/>
     
+ 
    
+   <bean id="jmxValueParser" class="org.kasource.jmx.web.util.JmxValueParserImpl"/>
     
     
 </beans>

@@ -12,6 +12,7 @@ import org.kasource.jmx.core.bean.ManagedBean;
 import org.kasource.jmx.core.bean.ManagedOperation;
 import org.kasource.jmx.core.bean.ManagedOperationParameter;
 import org.kasource.jmx.core.service.JmxService;
+import org.kasource.jmx.web.util.JmxValueParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -26,15 +27,16 @@ public class JmxController {
     @Resource
     private JmxService jmxService;
     
+    @Resource
+    private JmxValueParser jmxValueParser;
    
-   
-    private WebDataBinder dataBinder;
+    
    
     @SuppressWarnings("unused")
     @InitBinder  
     private void initBinder(WebDataBinder binder) {  
+        jmxValueParser.setDataBinder(binder);
        
-        this.dataBinder = binder;
     }  
     
     @RequestMapping(value="/bean/operation/invoke", method = RequestMethod.POST)
@@ -50,8 +52,8 @@ public class JmxController {
         if(parameters != null) {
             
             for(ManagedOperationParameter param : parameters) {
-               Object value = request.getParameter(param.getName());
-               parameterValues.add(dataBinder.convertIfNecessary(value, param.getTargetClass()));
+               String value = request.getParameter(param.getName());
+               parameterValues.add(jmxValueParser.parse(value, param.getTargetClass()));
             }
         }
         try {

@@ -1197,4 +1197,11 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+  <resource-ref>
+      <description>Ka JMX DB Connection</description>
+      <res-ref-name>jdbc/ka-jmx</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+  </resource-ref>
+
 </web-app>

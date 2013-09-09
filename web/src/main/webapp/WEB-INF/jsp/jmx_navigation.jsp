@@ -17,8 +17,9 @@
        org.kasource.Websocket.initialize();     
  	         
 		function refreshTree() {
-			Spring.remoting.submitForm("refreshTreeButton", "refreshTreeForm", { fragments: "jmx_tree"});
+			Spring.remoting.submitForm("refreshTreeButton", "refreshTreeForm", { fragments: "jmx_tree, jmx_dashboards"});
 		}
+		
 		
 		
 		
@@ -41,6 +42,10 @@
 	]]>         
  	</script>
  	
+		<div id="jmx_dashboards">
+			<tiles:insertAttribute name="jmx_dashboards"/>
+		</div>
+		
 		
 		<div id="jmx_tree">
 			<tiles:insertAttribute name="jmx_tree"/>

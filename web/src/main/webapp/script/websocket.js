@@ -35,19 +35,7 @@
     	 org.kasource.Websocket.connect('wss://' + window.location.host + '/ka-jmx/push');
      }
  };
- /*
- org.kasource.Websocket.notifyListeners = function(message) {
-	 var attributeValue = JSON.parse(message);
-	 alert(message);
-	 var objectName = attributeValue.key.name;
-	 var attributeName = attributeValue.key.attributeName;
-	 var key = objectName + "." + attributeName;
-	 var attributeCallbacks = org.kasource.Websocket.listeners.attribute[key];
-	 for (var i = 0; i < attributeCallbacks.length; i++) {
-		 	attributeCallbacks[key](attributeValue);
-		}
- };
- */
+
  org.kasource.Websocket.listeners= {};
  
  function getKeySize(obj) {
@@ -64,7 +52,7 @@
 	 return getKeySize() == 0;
  }
  
- org.kasource.Websocket.subscribe=function(objectName, attribute, id, callback) {
+ org.kasource.Websocket.subscribe=function(objectName, attribute, id, callback, widget, valueType) {
 	 
 	
 	 var key = objectName + "." + attribute;
@@ -73,15 +61,30 @@
 		 attributeListeners = {};
 		 org.kasource.Websocket.listeners[key]=attributeListeners;
 	 }
-	 attributeListeners[id]=callback;
+	 attributeListeners[id]={func: callback, widget: widget};
 	 var jmxAttribute = {
 			 "name": new String(objectName).replace('"','\"'),
 			 "attributeName": attribute
 	 };
+	 
 	 var message = {
-			 "key": jmxAttribute,
+				"key": jmxAttribute,
+				 "subscribe": true
+			 	};
+	 
+	 var message = {};
+	 if(valueType) {
+		 message = {
+			"key": jmxAttribute,
+			 "subscribe": true,
+			 "type": valueType
+		 	};
+	 } else {
+		 message = {
+			"key": jmxAttribute,
 			 "subscribe": true
-	 };
+		};
+	 }
 	
 	 org.kasource.Websocket.socket.send(JSON.stringify(message));
  }; 
@@ -118,7 +121,7 @@
 			    if (attributeListeners.hasOwnProperty(key)) {
 			    	var callback = attributeListeners[key];
 			    	if(callback){
-			    		callback(jmxValue);
+			    		callback.func(jmxValue, callback.widget);
 			    	}
 			    }
 			}

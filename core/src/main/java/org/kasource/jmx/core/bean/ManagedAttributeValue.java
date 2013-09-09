@@ -6,7 +6,7 @@ import org.kasource.jmx.core.scheduling.AttributeKey;
 
 public class ManagedAttributeValue {
     private final AttributeKey key;
-    private final Object value;
+    private Object value;
 
     public ManagedAttributeValue(AttributeKey key, Object value) {
         this.key = key;
@@ -27,6 +27,10 @@ public class ManagedAttributeValue {
      */
     public AttributeKey getKey() {
         return key;
+    }
+    
+    public void setValue(Object value) {
+        this.value = value;
     }
 
 }

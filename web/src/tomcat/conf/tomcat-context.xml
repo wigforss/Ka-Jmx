@@ -1,1 +1,10 @@
-<Context></Context>
+<Context>
+ <Resource name="jdbc/ka-jmx" auth="Container" type="javax.sql.DataSource"
+               maxActive="100" maxIdle="30" maxWait="10000"
+               username="sa" password="" driverClassName="org.hsqldb.jdbcDriver"
+               url="jdbc:hsqldb:mem:ka-jmx"/>
+               
+  <Resource name="mail/Session" auth="Container"
+            type="javax.mail.Session"
+            mail.smtp.host="localhost"/>
+</Context>

@@ -1,16 +1,17 @@
 package org.kasource.jmx.core.bean;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.management.Descriptor;
 
 import org.kasource.jmx.core.util.JavadocResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ManagedEntity implements Comparable<ManagedEntity> {
+    private static final Logger LOG = LoggerFactory.getLogger(ManagedEntity.class);
     private static final Map<String, Class<?>> primitiveClasses = new HashMap<String, Class<?>>();
     
     private final String name;
@@ -32,6 +33,15 @@ public class ManagedEntity implements Comparable<ManagedEntity> {
         primitiveClasses.put("float", float.class);
         primitiveClasses.put("double", double.class);
         primitiveClasses.put("boolean", boolean.class);
+        primitiveClasses.put("[B", byte[].class);
+        primitiveClasses.put("[S", short[].class);
+        primitiveClasses.put("[C", char[].class);
+        primitiveClasses.put("[I", int[].class);
+        primitiveClasses.put("[L", long[].class);
+        primitiveClasses.put("[F", float[].class);
+        primitiveClasses.put("[D", double[].class);
+        primitiveClasses.put("[Z", boolean[].class);
+        
     }
     
     
@@ -54,13 +64,16 @@ public class ManagedEntity implements Comparable<ManagedEntity> {
             try {
                 this.targetClass = Class.forName(typeString);
             } catch (ClassNotFoundException e) {
+                LOG.warn("Could not load class '" + typeString + "'", e);
                 e.printStackTrace();
             }
         }
         this.type = typeString;
         if(typeString.startsWith("[L")) {
             this.type = typeString.substring(2).replace(";", "[]");
-        } 
+        } else if(typeString.startsWith("[")) {
+            this.type = targetClass.getComponentType().getSimpleName() + "[]";
+        }
         
         typeJavaDocUrl = javadocResolver.getDocUrl(type.replace("[]", ""));
         

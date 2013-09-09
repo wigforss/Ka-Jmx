@@ -16,7 +16,7 @@
    
 	
 	
-	
+	<div id="beanView">
 		
 		<div id="jmx_bean">
 			<tiles:insertAttribute name="jmx_bean"/>
@@ -30,17 +30,29 @@
 		<div id="jmx_notifications">
 			<tiles:insertAttribute name="jmx_notifications"/>
 		</div>
+		
 		<p/>
 		
 		<form id="refreshBeanForm" action="${pageContext.request.contextPath}/html/bean" method="post">
 			<input type="hidden" name="objectName" id="refresh-bean-name" value="${fn:escapeXml(mBean.name)}"/>	
 			<input id="refreshBeanButton" name="refresh" title="Refresh" value="Refresh JMX Bean" type="button" onclick="refreshBean()"/>
 		</form>
-
-
+	</div>
+	<div id="dashboardView">
+		<div id="jmx_dashboard">
+			<tiles:insertAttribute name="jmx_dashboard"/>
+		</div>
+	
+		<form id="loadDashboardForm" action="${pageContext.request.contextPath}/html/dashboard" method="post">
+			<input type="hidden" name="dashboardName" id="load-dashboard-name" value=""/>	
+			<input id="loadDashboardButton" value="Load" type="button" onclick="loadDashboard(document.getElementById('load-dashboard-name').value)" class="hidden"/>
+		</form>
+	</div>	
 	<script type="text/javascript">
  	<![CDATA[
 		function loadBean(objectName) {
+			$("#dashboardView").addClass("hidden");
+			$("#beanView").removeClass("hidden");
 			var currentBean = document.getElementById('refresh-bean-name');
 			if(currentBean && currentBean.value && currentBean.value==objectName) {
 				focusOnElement('bean-title');
@@ -54,6 +66,14 @@
 
 		function refreshBean() {
 			Spring.remoting.submitForm("refreshBeanButton", "refreshBeanForm", { fragments: "jmx_bean, jmx_attributes, jmx_operations, jmx_notifications"});
+		}
+		
+		function loadDashboard(dashboardName) {
+			$("#dashboardView").removeClass("hidden");
+			$("#beanView").addClass("hidden");
+			var currentDashboard = document.getElementById("load-dashboard-name");
+			currentDashboard.value = dashboardName;
+			Spring.remoting.submitForm("loadDashboardButton", "loadDashboardForm", { fragments: "jmx_dashboard"});
 		}
 
 	]]>         

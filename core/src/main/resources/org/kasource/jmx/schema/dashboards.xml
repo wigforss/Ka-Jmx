@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://kasource.org/schema/ka-jmx" 
+    		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   			   xsi:schemaLocation="
+        http://kasource.org/schema/ka-jmx 
+       ka-jmx-dashboard.xsd">
+	
+     <dashboard name="Operating System &amp; Java" baseWidth="100" baseHeight="100">
+     	
+     	
+     	
+     	<panel id="os-panel" title="OS Information" row="1" column="1" height="2" width="2">
+     		<textGroup id="osText">
+     			<value subscribe="false" label="Name:">
+     				<attribute attribute="Name" objectName="java.lang:type=OperatingSystem"/>
+     			</value>
+     			<value subscribe="false" label="Version:">
+     				<attribute attribute="Version" objectName="java.lang:type=OperatingSystem"/>
+     			</value>
+     			<value subscribe="false" label="Architecture:">
+     				<attribute attribute="Arch" objectName="java.lang:type=OperatingSystem"/>
+     			</value>
+     			<value subscribe="false" label="Number of CPUs:">
+     				<attribute attribute="AvailableProcessors" objectName="java.lang:type=OperatingSystem"/>
+     			</value>
+     			<value label="System Load Average:">
+     				<attribute attribute="SystemLoadAverage" objectName="java.lang:type=OperatingSystem"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {
+     							return Math.round(value*100) / 100 + " %";
+     						}
+     					]]>
+     				</jsFunction>
+     			</value>
+     			<value label="Total Physical Memory Size:">
+     				<attribute attribute="TotalPhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
+     				<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     						return Math.round(value / (1000 * 1000) * 100) / 100 + " MB";
+     					}
+     					]]>
+     				</jsFunction>
+     			</value> 
+     			<value label="Free Physical Memory Size:">
+     				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
+     				<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     						return Math.round(value / (1000 * 1000) * 100) / 100 + " MB";
+     					}
+     					]]>
+     				</jsFunction>
+     			</value> 			
+     			 <value label="Committed Virtual Memory Size:">
+     				<attribute attribute="CommittedVirtualMemorySize" objectName="java.lang:type=OperatingSystem"/>
+     				<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     						return Math.round(value / (1000 * 1000) * 100) / 100 + " MB";
+     					}
+     					]]>
+     				</jsFunction>
+     			</value> 
+     			<value label="Total Swap Space Size:">
+     				<attribute attribute="TotalSwapSpaceSize" objectName="java.lang:type=OperatingSystem"/>
+     				<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     						return Math.round(value / (1000 * 1000) * 100) / 100 + " MB";
+     					}
+     					]]>
+     				</jsFunction>
+     			</value>
+     			<value label="Open File Descriptors:">
+     				<attribute attribute="OpenFileDescriptorCount" objectName="java.lang:type=OperatingSystem"/>
+     			</value>	
+     		</textGroup>
+     	</panel>
+     	
+     	<panel id="JVM-panel" title="JVM Information" row="3" column="1" height="5" width="4">
+     		<textGroup id="JVM-text">
+     			<value label="Name:" subscribe="false">
+     				<attribute attribute="Name" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="Started:" subscribe="false">
+     				<attribute attribute="StartTime" objectName="java.lang:type=Runtime"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {return new Date(parseInt(value) - new Date().getTimezoneOffset()*60*1000).toJSON().replace("T", " ").replace("Z","");}
+     					]]>
+     				</jsFunction>
+     			</value>
+     			
+     			<value label="VM Name:" subscribe="false">
+     				<attribute attribute="VmName" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="Version:" subscribe="false">
+     				<attribute attribute="VmVersion" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="Specification Vendor:" subscribe="false">
+     				<attribute attribute="SpecVendor" objectName="java.lang:type=Runtime"/>
+     			</value>	
+     			<value label="VM Vendor" subscribe="false">
+     				<attribute attribute="VmVendor" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="Boot Class Path:" subscribe="false">
+     				<attribute attribute="BootClassPath" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="JVM Arguments" subscribe="false">
+     				<attribute attribute="InputArguments" objectName="java.lang:type=Runtime"/>
+     			</value>
+     			<value label="Library Path:" subscribe="false">
+     				<attribute attribute="LibraryPath" objectName="java.lang:type=Runtime"/>
+     			</value>	
+     			<value label="Heap Memory Usage:" type="json">
+     			<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
+     			<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     						return Math.round((value.used / (1000 * 1000))*100)/100 + " MB";
+     					}
+     						]]>
+     				</jsFunction>
+     			</value>
+     			<value label="Uptime" type="text">
+     				<attribute attribute="Uptime" objectName="java.lang:type=Runtime"/>
+     				<jsFunction>
+     					<![CDATA[
+     					function(value) {
+     							var days = Math.floor(value / (1000*60*60*24));
+     							var hours = Math.floor(value / (1000*60*60)) % 24;
+     							var minutes = Math.floor(value / (1000*60)) % 60;
+     							var seconds =  Math.floor(value / (1000)) % 60;
+     							var result = "";
+     							if (days == 1) {
+     								result = result + days + " day ";			
+     							} else if (days > 1) {
+     								result = result + days + " days ";
+     							}
+     							if(hours == 1) {
+     								result = result + hours + " hour ";
+     							} else if (hours > 1) {
+     							 	result = result + hours + " hours ";
+     							}
+     							if (minutes == 1) {
+     								result = result + minutes + " minute ";
+     							} else if (minutes > 1) {
+     							 	result = result + minutes + " minutes ";
+     							}
+     							if (seconds == 1) {
+     								result = result + seconds + " second";
+     							} else {
+     								result = result + seconds + " seconds";
+     							}
+     							return result;
+     						}
+     					]]>
+     				</jsFunction>
+     			</value>			
+     		</textGroup>
+     	</panel>
+     		
+     	<panel id="disk-usage-panel" title="Disk space" row="1" column="3"   width="2" height="2">
+     		<gauge id="disk-usage-gauge" title="Working Directory Volume">
+     			<min value="0" subscribe="false"></min>
+     			<max subscribe="false">
+     				<attribute attribute="TotalSpace" objectName="KaJMX:name=File System,type=Working Directory"/>
+     			</max>
+     			<value label="Disk Usgae MB">
+     				<attribute attribute="DiskUsage" objectName="KaJMX:name=File System,type=Working Directory"/>
+     			</value>
+     		</gauge>
+     	</panel>
+     	
+     	<panel id="os-memory-panel" title="Free Memory" row="1" column="5" height="2" width="4">
+     		<graph id="os-memory-graph" title="Memory" yAxisLabel="Bytes">
+     			
+     			<dataSeries label="Free">
+     				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
+     			</dataSeries> 
+     		
+     		</graph>
+     	</panel>
+     	
+     	 
+     	<panel id="jvm-threads-panel" title="JVM Threads" row="3" column="5" width="4" height="2">
+     		<graph id="jvm-threads" title="JVM Threads" samples="30" yAxisLabel="# Threads">
+     			<dataSeries label="Count">
+     				<attribute attribute="ThreadCount" objectName="java.lang:type=Threading"/>
+     			</dataSeries>
+     			<dataSeries label="Daemon Count">
+     				<attribute attribute="DaemonThreadCount" objectName="java.lang:type=Threading"/>
+     			</dataSeries>
+     			<dataSeries label="Peak">
+     				<attribute attribute="PeakThreadCount" objectName="java.lang:type=Threading"/>
+     			</dataSeries>
+     		</graph>
+     	</panel>
+     	  
+     	<panel id="jvm-heap-panel" title="Heap Memrory" row="3" column="5" width="4" height="2">
+     		<graph id="jvm-heap" title="JVM Heap Memory" samples="30" yAxisLabel="# Threads">
+     			<dataSeries label="Used" type="json">
+     				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {
+     							return value.used;
+     						}
+     						]]>
+     				</jsFunction>
+     			</dataSeries>
+     			<dataSeries label="Max" type="json">
+     				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {
+     							return value.max;
+     						}
+     						]]>
+     				</jsFunction>
+     			</dataSeries>
+     			<dataSeries label="Commited" type="json">
+     				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {
+     							return value.committed;
+     						}
+     						]]>
+     				</jsFunction>
+     			</dataSeries>
+     			<dataSeries label="Init" type="json">
+     				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
+     				<jsFunction>
+     					<![CDATA[
+     						function(value) {
+     							return value.init;
+     						}
+     						]]>
+     				</jsFunction>
+     			</dataSeries>
+     		</graph>
+     	</panel>  
+     	
+     	
+     	
+     	
+     </dashboard>  
+ </configuration>

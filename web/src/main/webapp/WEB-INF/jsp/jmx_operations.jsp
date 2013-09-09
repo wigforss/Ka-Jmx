@@ -130,7 +130,7 @@
 							<input type="button" value="Invoke ${operation.name}" onclick="validateAndPostOperationForm('invokeForm-${operation.name}','result-${operation.name}')"/>
 							<img alt="Show/Hide Result" title="Show/Hide Result" src="style/images/run-build-file-3.png" onclick="$('#result-${operation.name}').toggleClass('hidden')"/>
 							<br/>
-							<textarea class="hidden" rows="20" cols="80" id="result-${operation.name}" readonly="readonly">Operation not invoked.</textarea>
+							<textarea class="hidden" rows="20" cols="80" id="result-${operation.name}" readonly="readonly"><c:out value=""/></textarea>
 						</form>
 						</div>
 						</c:forEach> 
