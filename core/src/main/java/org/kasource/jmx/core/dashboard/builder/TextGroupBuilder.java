@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.kasource.jmx.core.model.dashboard.Attribute;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 
@@ -40,7 +39,7 @@ public class TextGroupBuilder {
     
     private void validateId(String id) {
         if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id may not contain space, :, @, +, $, %, /, + or any brackets");
+            throw new IllegalStateException("id: " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
         }
     }
    

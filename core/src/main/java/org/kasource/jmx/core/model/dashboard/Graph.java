@@ -14,6 +14,7 @@ package org.kasource.jmx.core.model.dashboard;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -24,9 +25,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.ObjectMapper;
 
 
 /**
@@ -55,7 +53,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 })
 @XmlRootElement(name = "graph")
 public class Graph {
-    private static final ObjectMapper json = new ObjectMapper();
     
     @XmlAttribute(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
@@ -65,7 +62,7 @@ public class Graph {
     @XmlElement(required = true)
     protected List<AttributeValue> dataSeries;
     @XmlAttribute
-    protected String title = "Value";
+    protected String title;
     @XmlAttribute
     protected String yAxisLabel;
     @XmlAttribute
@@ -182,15 +179,6 @@ public class Graph {
         this.samples = value;
     }
     
-    
-    @JsonIgnore
-    public String getJson() {
-        try {
-            return json.writeValueAsString(this);
-        } catch (Exception e) {
-           throw new IllegalStateException("could not serialize " + this, e);
-        } 
-    }
 
     /**
      * @return the yAxisLabel

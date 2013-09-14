@@ -34,13 +34,21 @@ public class ManagedEntity implements Comparable<ManagedEntity> {
         primitiveClasses.put("double", double.class);
         primitiveClasses.put("boolean", boolean.class);
         primitiveClasses.put("[B", byte[].class);
+        primitiveClasses.put("[Lbyte", byte[].class);
         primitiveClasses.put("[S", short[].class);
+        primitiveClasses.put("[Lshort", short[].class);
         primitiveClasses.put("[C", char[].class);
+        primitiveClasses.put("[Lchar", char[].class);
         primitiveClasses.put("[I", int[].class);
+        primitiveClasses.put("[Lint", int[].class);
         primitiveClasses.put("[L", long[].class);
+        primitiveClasses.put("[Llong", long[].class);
         primitiveClasses.put("[F", float[].class);
+        primitiveClasses.put("[Lfloat", float[].class);
         primitiveClasses.put("[D", double[].class);
+        primitiveClasses.put("[Ldouble", double[].class);
         primitiveClasses.put("[Z", boolean[].class);
+        primitiveClasses.put("[Lboolean", boolean[].class);
         
     }
     

@@ -5,7 +5,7 @@
         http://kasource.org/schema/ka-jmx 
        ka-jmx-dashboard.xsd">
 	
-     <dashboard name="Operating System &amp; Java" baseWidth="100" baseHeight="100">
+     <dashboard id="os-java" name="Operating System &amp; Java" baseWidth="100" baseHeight="100">
      	
      	
      	
@@ -33,7 +33,7 @@
      					]]>
      				</jsFunction>
      			</value>
-     			<value label="Total Physical Memory Size:">
+     			<value label="Total Physical Memory:">
      				<attribute attribute="TotalPhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
      				<jsFunction>
      					<![CDATA[
@@ -43,7 +43,7 @@
      					]]>
      				</jsFunction>
      			</value> 
-     			<value label="Free Physical Memory Size:">
+     			<value label="Free Physical Memory:">
      				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
      				<jsFunction>
      					<![CDATA[
@@ -53,7 +53,7 @@
      					]]>
      				</jsFunction>
      			</value> 			
-     			 <value label="Committed Virtual Memory Size:">
+     			 <value label="Committed Virtual Memory:">
      				<attribute attribute="CommittedVirtualMemorySize" objectName="java.lang:type=OperatingSystem"/>
      				<jsFunction>
      					<![CDATA[
@@ -63,7 +63,7 @@
      					]]>
      				</jsFunction>
      			</value> 
-     			<value label="Total Swap Space Size:">
+     			<value label="Total Swap Space:">
      				<attribute attribute="TotalSwapSpaceSize" objectName="java.lang:type=OperatingSystem"/>
      				<jsFunction>
      					<![CDATA[
@@ -79,7 +79,7 @@
      		</textGroup>
      	</panel>
      	
-     	<panel id="JVM-panel" title="JVM Information" row="3" column="1" height="5" width="4">
+     	<panel id="JVM-panel" title="JVM Information" row="3" column="1" height="3" width="4">
      		<textGroup id="JVM-text">
      			<value label="Name:" subscribe="false">
      				<attribute attribute="Name" objectName="java.lang:type=Runtime"/>
@@ -174,8 +174,16 @@
      		</gauge>
      	</panel>
      	
-     	<panel id="os-memory-panel" title="Free Memory" row="1" column="5" height="2" width="4">
-     		<graph id="os-memory-graph" title="Memory" yAxisLabel="Bytes">
+     	<panel id="cpu-panel"  title="CPU Load" row="1" column="5" height="2" width="4">
+     		<graph id="cpu-graph" yAxisLabel="%">
+     			<dataSeries label="CPU">
+     				<attribute attribute="SystemLoadAverage" objectName="java.lang:type=OperatingSystem"/>
+     			</dataSeries>
+     		</graph>
+     	</panel>
+     	
+     	<panel id="os-memory-panel" title="Free Memory" row="3" column="5" height="2" width="4">
+     		<graph id="os-memory-graph" yAxisLabel="Bytes">
      			
      			<dataSeries label="Free">
      				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
@@ -185,22 +193,22 @@
      	</panel>
      	
      	 
-     	<panel id="jvm-threads-panel" title="JVM Threads" row="3" column="5" width="4" height="2">
-     		<graph id="jvm-threads" title="JVM Threads" samples="30" yAxisLabel="# Threads">
+     	<panel id="jvm-threads-panel" title="JVM Threads" row="5" column="5" width="4" height="2">
+     		<graph id="jvm-threads" samples="30" yAxisLabel="# Threads">
      			<dataSeries label="Count">
      				<attribute attribute="ThreadCount" objectName="java.lang:type=Threading"/>
      			</dataSeries>
-     			<dataSeries label="Daemon Count">
+     			<dataSeries label="Daemon Count" visible="false">
      				<attribute attribute="DaemonThreadCount" objectName="java.lang:type=Threading"/>
      			</dataSeries>
-     			<dataSeries label="Peak">
+     			<dataSeries label="Peak" visible="false">
      				<attribute attribute="PeakThreadCount" objectName="java.lang:type=Threading"/>
      			</dataSeries>
      		</graph>
      	</panel>
      	  
-     	<panel id="jvm-heap-panel" title="Heap Memrory" row="3" column="5" width="4" height="2">
-     		<graph id="jvm-heap" title="JVM Heap Memory" samples="30" yAxisLabel="# Threads">
+     	<panel id="jvm-heap-panel" title="Heap Memrory" row="7" column="5" width="4" height="2">
+     		<graph id="jvm-heap"  samples="30" yAxisLabel="Bytes">
      			<dataSeries label="Used" type="json">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
@@ -211,7 +219,7 @@
      						]]>
      				</jsFunction>
      			</dataSeries>
-     			<dataSeries label="Max" type="json">
+     			<dataSeries label="Max" type="json" visible="false">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
      					<![CDATA[
@@ -221,7 +229,7 @@
      						]]>
      				</jsFunction>
      			</dataSeries>
-     			<dataSeries label="Commited" type="json">
+     			<dataSeries label="Commited" type="json" visible="false">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
      					<![CDATA[
@@ -231,7 +239,7 @@
      						]]>
      				</jsFunction>
      			</dataSeries>
-     			<dataSeries label="Init" type="json">
+     			<dataSeries label="Init" type="json" visible="false">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
      					<![CDATA[
@@ -243,9 +251,11 @@
      			</dataSeries>
      		</graph>
      	</panel>  
+       
+    
+     	  
      	
-     	
-     	
+     
      	
      </dashboard>  
  </configuration>

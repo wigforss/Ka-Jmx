@@ -53,6 +53,8 @@ public class AttributeValue {
     protected boolean subscribe = true;
     @XmlAttribute
     protected ValueType type = ValueType.TEXT;
+    @XmlAttribute
+    protected boolean visible = true;
     
     /**
      * Gets the value of the attribute property.
@@ -150,12 +152,8 @@ public class AttributeValue {
     /**
      * @param jsFunction the jsFunction to set
      */
-    public void setJsFunction(String jsFunction) {
-        if(jsFunction != null) {
-            this.jsFunction = jsFunction.trim().replace("\"", "\\\"").replace("\n", "\\n").replace("\t", "\\t");
-        } else {
-            this.jsFunction = jsFunction;
-        }
+    public void setJsFunction(String jsFunction) {   
+        this.jsFunction = jsFunction;        
     }
 
     /**
@@ -170,6 +168,20 @@ public class AttributeValue {
      */
     public void setType(ValueType type) {
         this.type = type;
+    }
+
+    /**
+     * @return the visible
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * @param visible the visible to set
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
 }

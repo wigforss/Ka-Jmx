@@ -22,9 +22,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.ObjectMapper;
-
 
 /**
  * <p>Java class for anonymous complex type.
@@ -52,7 +49,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 })
 @XmlRootElement(name = "textGroup")
 public class TextGroup {
-    private static final ObjectMapper json = new ObjectMapper();
+
     
     @XmlAttribute(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
@@ -148,14 +145,6 @@ public class TextGroup {
         this.id = value;
     }
     
-    
-    @JsonIgnore
-    public String getJson() {
-        try {
-            return json.writeValueAsString(this);
-        } catch (Exception e) {
-           throw new IllegalStateException("could not serialize " + this, e);
-        } 
-    }
+  
 
 }

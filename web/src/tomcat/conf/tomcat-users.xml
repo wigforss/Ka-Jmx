@@ -16,6 +16,6 @@
   limitations under the License.
 -->
 <tomcat-users>
-	 <role rolename="jmx_console"/>
-	  <user username="jmx_admin" password="admin" roles="jmx_console"/>
+	 <role rolename="admin-jmx"/>
+	  <user username="jmx_admin" password="admin" roles="admin-jmx"/>
 </tomcat-users>

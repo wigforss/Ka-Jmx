@@ -8,14 +8,16 @@
 	xmlns:tiles="http://tiles.apache.org/tags-tiles">
 
 
-
+<!--  
 	<jsp:output doctype-root-element="html"
 				doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 				doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
+-->
+	<jsp:output doctype-root-element="html" doctype-public="html" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
 	<jsp:directive.page contentType="text/html" />
 	<jsp:directive.page isELIgnored="false" />
-   
-	<html xmlns="http://www.w3.org/1999/xhtml">
+    
+  	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<title><tiles:insertAttribute name="title" ignore="true" /></title>
 			<![CDATA[
@@ -32,16 +34,15 @@
 			<script type="text/javascript" src="script/raphael.2.1.0.min.js"></script>
     		<script type="text/javascript" src="script/justgage.1.0.1.min.js"></script>
     		<script type="text/javascript" src="script/dashboard.js"></script>
-    		<script type="text/javascript" src="script/jquery.flot.js"></script>
-    		<script type="text/javascript" src="script/jquery.flot.time.min.js"></script>
+    		<script type="text/javascript" src="script/widget.js"></script>
       		<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 			<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script> 
-			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/dojo/dojo.js"> </script>
-			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/spring/Spring.js"> </script>
-			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/spring/Spring-Dojo.js"> </script>		
-		    <script type="text/javascript" src="${pageContext.request.contextPath}/script/smoothie.js"></script>  
-		    <script type="text/javascript" src="${pageContext.request.contextPath}/script/jmx_console.js"></script>  
-		    <script type="text/javascript" src="${pageContext.request.contextPath}/script/websocket.js"></script>  
+			<script type="text/javascript" src="resources/dojo/dojo.js"> </script>
+			<script type="text/javascript" src="resources/spring/Spring.js"> </script>
+			<script type="text/javascript" src="resources/spring/Spring-Dojo.js"> </script>		
+		    <script type="text/javascript" src="script/smoothie.js"></script>  
+		    <script type="text/javascript" src="script/jmx_console.js"></script>  
+		    <script type="text/javascript" src="script/websocket.js"></script>  
 		    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
 		    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/additional-methods.min.js"></script> 	
 			]]>

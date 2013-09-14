@@ -88,7 +88,7 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
     @Override
     public Set<ObjectName> getNamesMatching(String pattern) {
         try {
-            return server.queryNames(ObjectName.getInstance(pattern), null);
+            return server.queryNames(ObjectName.getInstance("*:*"),ObjectName.getInstance(pattern));
         } catch (Exception e) {
             LOG.error("Could not getAllNames", e);
             return new HashSet<ObjectName>();

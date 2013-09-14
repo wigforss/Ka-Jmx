@@ -39,7 +39,29 @@
 	border-bottom: groove gray 2px; 
 	padding: 5px 5px 4px 5px;   /* Values clockwise: top, right, bottom, left */
     font: oblique 12px "Segoe UI", Arial, Sans-serif; 
+    clear:both;
+    
  
+}
+
+.title-bar .title-bar-text {
+	float: left;
+	width: 80%;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.title-bar .title-bar-icon {
+	float: right;
 }
 
 .gauge {
@@ -58,29 +80,17 @@
 }
 
 .graph {
-  height: 90%;
+  height: 89%;
   
 }
 
 .dashboard {
-	background-image: linear-gradient(bottom, #F0D6A1 11%, #FFFFFF 100%);
-	 background-image: -o-linear-gradient(bottom, #F0D6A1 11%, #FFFFFF 100%);
-	 background-image: -moz-linear-gradient(bottom, #F0D6A1 11%, #FFFFFF 100%);
-	 background-image: -webkit-linear-gradient(bottom, #F0D6A1 11%, #FFFFFF 100%);
-	 background-image: -ms-linear-gradient(bottom, #F0D6A1 11%, #FFFFFF 100%);
-
-	 background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.11, #F0D6A1),
-		color-stop(1, #FFFFFF)
-	);
+	
 }
 
 div.textGroup{
 	 width:100%; 
-	 height:80%;
+	 height:90%;
 	 padding: 5px 5px 5px 5px;
 	 overflow:auto;
 

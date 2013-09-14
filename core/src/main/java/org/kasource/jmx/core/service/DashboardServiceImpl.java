@@ -22,8 +22,11 @@ public class DashboardServiceImpl implements DashboardService {
     @Resource
     private DashboardDao dao;
     
-    @Resource
+    @Resource(name = "vendorDashboardFactory")
     private DashboardFactory vendorDashboardFactory;
+    
+    @Resource(name = "additionalDashboardFactory")
+    private DashboardFactory additionalDashboardFactory;
     
     @Resource
     private JmxService jmxService;
@@ -38,6 +41,7 @@ public class DashboardServiceImpl implements DashboardService {
         if(dashboards == null) {
             dashboards = dao.getDashboards();
             dashboards.addAll(vendorDashboardFactory.getDashboards());
+            dashboards.addAll(additionalDashboardFactory.getDashboards());
             Collections.sort(dashboards);
             populateValuesDashboards(dashboards);
         }
@@ -80,9 +84,7 @@ public class DashboardServiceImpl implements DashboardService {
     private void populateValuesTextGroup(TextGroup textGroup) {
         for (AttributeValue value : textGroup.getValue()) {
             populateValue(value);
-            if(value.getJsFunction() != null) {
-                value.setJsFunction(value.getJsFunction());
-            }
+            
         }
     }
     

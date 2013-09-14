@@ -4,6 +4,11 @@
                username="sa" password="" driverClassName="org.hsqldb.jdbcDriver"
                url="jdbc:hsqldb:mem:ka-jmx"/>
                
+<Resource name="jdbc/test" auth="Container" type="javax.sql.DataSource"
+               maxActive="50" maxIdle="10" maxWait="10000"
+               username="sa" password="" driverClassName="org.hsqldb.jdbcDriver"
+               url="jdbc:hsqldb:mem:test"/>
+               
   <Resource name="mail/Session" auth="Container"
             type="javax.mail.Session"
             mail.smtp.host="localhost"/>

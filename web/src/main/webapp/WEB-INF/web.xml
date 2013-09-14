@@ -84,7 +84,7 @@
             <url-pattern>/*</url-pattern>
      	</web-resource-collection>              
         <auth-constraint>
-        	<role-name>jmx_console</role-name>
+        	<role-name>admin-jmx</role-name>
         </auth-constraint>
      </security-constraint>  
      
@@ -94,7 +94,7 @@
 	</login-config>
 	
 	<security-role>
-		<role-name>jmx_console</role-name>
+		<role-name>admin-jmx</role-name>
 	</security-role>
 
 	<welcome-file-list>

@@ -49,19 +49,7 @@ public class JmxBeanController {
         
     }  
  
-    @RequestMapping(value="/dashboard", method =  RequestMethod.POST)
-    public ModelAndView getDashboard(@RequestParam("dashboardName") String dashboardName) throws MalformedObjectNameException, NullPointerException {
-        ModelAndView mav = new ModelAndView(VIEW);
-        List<Dashboard> dashboards = dashboardService.getDashboards();
-        for(Dashboard dashboard : dashboards) {
-            if(dashboard.getName().equals(dashboardName)) {
-                mav.addObject("dashboard", dashboard);
-            }
-        }
-       
-        return mav;
-        
-    }
+   
     
     @RequestMapping(value="/bean", method =  RequestMethod.POST)
     public ModelAndView refreshBean(@RequestParam("objectName") String objectName) throws MalformedObjectNameException, NullPointerException {

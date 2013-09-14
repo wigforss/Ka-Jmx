@@ -39,18 +39,31 @@
 		</form>
 	</div>
 	<div id="dashboardView">
-		<div id="jmx_dashboard">
-			<tiles:insertAttribute name="jmx_dashboard"/>
-		</div>
+		<c:forEach var="dashboard" items="${dashboards}">
+			<div id="${dashboard.id}" class="gridster hidden" >
+				<ul class="dashboard">
+				<c:forEach var="panel" items="${dashboard.panel}">
+					
+    					<c:set var="widgetClass" value="${not empty panel.graph ? 'graph' : not empty panel.gauge ? 'gauge' : 'textGroup'}"/>
+    					<c:set var="widgetId" value="${not empty panel.graph ? panel.graph.id : not empty panel.gauge ? panel.gauge.id : panel.textGroup.id}"/>
+    					
+    					<li id="${panel.id}" data-row="${panel.row}" data-col="${panel.column}" data-sizex="${panel.width}" data-sizey="${panel.height}" class="panel" ondblclick="togglePanelSize('${dashboard.id}',this.id,'${widgetId}')">
+    				 		<div class="title-bar"><span class="title-bar-text" title="${panel.title}"><c:out value="${panel.title}"/></span><span class="title-bar-icon"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('${dashboard.id}','${panel.id}','${widgetId}')"/></span></div>
+    						<div id="${widgetId}" class="${widgetClass}"></div>
+    					</li>
+    					
+    			</c:forEach>
+    			</ul>
+			</div>
+ 		</c:forEach>
 	
-		<form id="loadDashboardForm" action="${pageContext.request.contextPath}/html/dashboard" method="post">
-			<input type="hidden" name="dashboardName" id="load-dashboard-name" value=""/>	
-			<input id="loadDashboardButton" value="Load" type="button" onclick="loadDashboard(document.getElementById('load-dashboard-name').value)" class="hidden"/>
-		</form>
 	</div>	
 	<script type="text/javascript">
  	<![CDATA[
 		function loadBean(objectName) {
+			$("#content-layout").addClass("roundbox");
+			$("#content-layout").addClass("boxshadow");
+	
 			$("#dashboardView").addClass("hidden");
 			$("#beanView").removeClass("hidden");
 			var currentBean = document.getElementById('refresh-bean-name');
@@ -68,14 +81,9 @@
 			Spring.remoting.submitForm("refreshBeanButton", "refreshBeanForm", { fragments: "jmx_bean, jmx_attributes, jmx_operations, jmx_notifications"});
 		}
 		
-		function loadDashboard(dashboardName) {
-			$("#dashboardView").removeClass("hidden");
-			$("#beanView").addClass("hidden");
-			var currentDashboard = document.getElementById("load-dashboard-name");
-			currentDashboard.value = dashboardName;
-			Spring.remoting.submitForm("loadDashboardButton", "loadDashboardForm", { fragments: "jmx_dashboard"});
-		}
-
+		
+		
+		
 	]]>         
  	</script>
  	</div>

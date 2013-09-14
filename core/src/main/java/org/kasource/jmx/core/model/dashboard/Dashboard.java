@@ -10,12 +10,17 @@ package org.kasource.jmx.core.model.dashboard;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -44,7 +49,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement(name = "dashboard")
 public class Dashboard implements Comparable<Dashboard>{
-
+    
+    @XmlAttribute(required = true)
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlID
+    @XmlSchemaType(name = "ID")
+    protected String id;
     @XmlElement(required = true)
     protected List<Panel> panel;
     @XmlAttribute(required = true)
@@ -145,6 +155,20 @@ public class Dashboard implements Comparable<Dashboard>{
      */
     public void setPanel(List<Panel> panel) {
         this.panel = panel;
+    }
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

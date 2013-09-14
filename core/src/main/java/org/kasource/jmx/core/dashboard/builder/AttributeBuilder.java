@@ -14,13 +14,14 @@ public class AttributeBuilder {
     private boolean subscribe = true;
     private ValueType type = ValueType.TEXT;
     private String jsFunction;
+    private boolean visible = true;
     
     public AttributeBuilder() {
       
     }
     
     public AttributeBuilder attribute(String objectName, String attributeName) {
-        Attribute attribute = new Attribute();
+        attribute = new Attribute();
         attribute.setObjectName(objectName);
         attribute.setAttribute(attributeName);
         return this;
@@ -51,9 +52,14 @@ public class AttributeBuilder {
         return this;
     }
     
+    public AttributeBuilder visible(boolean initialVisible) {
+        this.visible = initialVisible;
+        return this;
+    }
+    
     public AttributeValue build() {
         AttributeValue attributeValue = new AttributeValue();
-        
+        attributeValue.setVisible(visible);
         attributeValue.setAttribute(attribute);
         attributeValue.setLabel(label);
         attributeValue.setValue(value);

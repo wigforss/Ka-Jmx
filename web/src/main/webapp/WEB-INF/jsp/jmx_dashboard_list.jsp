@@ -16,7 +16,7 @@
 			<ul>
 			<c:forEach var="dashboard" items="${dashboards}">
 				<li>
-					<a href="javascript:loadDashboard('${dashboard.name}')"><c:out value="${dashboard.name}"/></a>
+					<a href="javascript:loadDashboard('${dashboard.id}')"><c:out value="${dashboard.name}"/></a>
 				</li>
 			</c:forEach>
 			</ul>

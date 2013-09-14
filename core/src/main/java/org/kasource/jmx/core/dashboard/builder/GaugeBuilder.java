@@ -2,7 +2,6 @@ package org.kasource.jmx.core.dashboard.builder;
 
 import java.util.regex.Pattern;
 
-import org.kasource.jmx.core.model.dashboard.Attribute;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 
@@ -69,7 +68,7 @@ public class GaugeBuilder {
     
     private void validateId(String id) {
         if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id may not contain space, :, @, +, $, %, /, + or any brackets");
+            throw new IllegalStateException("id " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
         }
     }
     

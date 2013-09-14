@@ -73,7 +73,7 @@ public class PanelBuilder {
     
     private void validateId(String id) {
         if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id may not contain space, :, @, +, $, %, /, + or any brackets");
+            throw new IllegalStateException("id: " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
         }
     }
     
