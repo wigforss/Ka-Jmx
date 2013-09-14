@@ -175,7 +175,7 @@
      	</panel>
      	
      	<panel id="cpu-panel"  title="CPU Load" row="1" column="5" height="2" width="4">
-     		<graph id="cpu-graph" yAxisLabel="%">
+     		<graph id="cpu-graph" yAxisLabel="%" samples="600">
      			<dataSeries label="CPU">
      				<attribute attribute="SystemLoadAverage" objectName="java.lang:type=OperatingSystem"/>
      			</dataSeries>
@@ -183,7 +183,7 @@
      	</panel>
      	
      	<panel id="os-memory-panel" title="Free Memory" row="3" column="5" height="2" width="4">
-     		<graph id="os-memory-graph" yAxisLabel="Bytes">
+     		<graph id="os-memory-graph" yAxisLabel="Bytes" samples="600">
      			
      			<dataSeries label="Free">
      				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
@@ -194,7 +194,7 @@
      	
      	 
      	<panel id="jvm-threads-panel" title="JVM Threads" row="5" column="5" width="4" height="2">
-     		<graph id="jvm-threads" samples="30" yAxisLabel="# Threads">
+     		<graph id="jvm-threads" samples="600" yAxisLabel="# Threads">
      			<dataSeries label="Count">
      				<attribute attribute="ThreadCount" objectName="java.lang:type=Threading"/>
      			</dataSeries>
@@ -208,7 +208,7 @@
      	</panel>
      	  
      	<panel id="jvm-heap-panel" title="Heap Memrory" row="7" column="5" width="4" height="2">
-     		<graph id="jvm-heap"  samples="30" yAxisLabel="Bytes">
+     		<graph id="jvm-heap"  samples="600" yAxisLabel="Bytes">
      			<dataSeries label="Used" type="json">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>

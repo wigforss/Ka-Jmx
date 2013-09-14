@@ -6,7 +6,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.management.ObjectName;
-
+import static org.kasource.jmx.core.dashboard.JavaScriptFunction.*;
 import org.kasource.jmx.core.dashboard.DashboardFactory;
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
@@ -24,9 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContextDashboardFactory implements DashboardFactory {
 
-    private static final String MILLISECONDS_TO_MINUTES = "function(value){return Math.round(value/(1000*60)) + \" minutes\";}";
-    private static final String MILLISECONDS_TO_SECONDS = "function(value){return Math.round(value/(1000*199))/100 + \" seconds\";}";
-   
+  
     @Resource
     private JmxService jmxService;
     
@@ -63,8 +61,8 @@ public class ContextDashboardFactory implements DashboardFactory {
             .text(new AttributeBuilder().attribute(name, "docBase").label("Document Base:").subscribe(false).build())
             .text(new AttributeBuilder().attribute(name, "welcomeFiles").label("Welcome Files:").subscribe(false).build())
             .text(new AttributeBuilder().attribute(name, "workDir").label("Working Directory:").subscribe(false).build())
-            .text(new AttributeBuilder().attribute(name, "processingTime").label("Processing time:").jsFunction(MILLISECONDS_TO_SECONDS).build())
-            .text(new AttributeBuilder().attribute(name, "tldScanTime").label("TLD scan time:").jsFunction(MILLISECONDS_TO_SECONDS).build()).build();
+            .text(new AttributeBuilder().attribute(name, "processingTime").label("Processing time:").jsFunction(MILLISECONDS_TO_SECONDS.getScript()).build())
+            .text(new AttributeBuilder().attribute(name, "tldScanTime").label("TLD scan time:").jsFunction(MILLISECONDS_TO_SECONDS.getScript()).build()).build();
             
         dashboardBuilder.add(new PanelBuilder("panel-"+ contextName.replace('/', '-'), "Context " + contextName, 1, 1).width(3).height(2).textGroup(textGroup).build());
         addCachePanel(dashboardBuilder, contextName);
@@ -91,8 +89,8 @@ public class ContextDashboardFactory implements DashboardFactory {
                                                                           .subscribe(false).build())
                                                           .text(new AttributeBuilder().attribute(name, "sessionCounter").label("Total # created Sessions:").build())
                                                           .text(new AttributeBuilder().attribute(name, "rejectedSessions").label("Total # rejected Sessions:").build())
-                                                          .text(new AttributeBuilder().attribute(name, "sessionMaxAliveTime").jsFunction(MILLISECONDS_TO_MINUTES).label("Longest session time:").build())
-                                                          .text(new AttributeBuilder().attribute(name, "sessionAverageAliveTime").jsFunction(MILLISECONDS_TO_MINUTES).label("Average Session Time:").build())
+                                                          .text(new AttributeBuilder().attribute(name, "sessionMaxAliveTime").jsFunction(MILLISECONDS_TO_MINUTES.getScript()).label("Longest session time:").build())
+                                                          .text(new AttributeBuilder().attribute(name, "sessionAverageAliveTime").jsFunction(MILLISECONDS_TO_MINUTES.getScript()).label("Average Session Time:").build())
                                                           .build();
             dashboardBuilder.add(new PanelBuilder("sessionInfoPanel","Session Info", row, 4).width(2).textGroup(sessionInfo).build());
             int maxActiveSessions = (Integer) jmxService.getAttributeValue(name, "maxActiveSessions");
@@ -124,7 +122,7 @@ public class ContextDashboardFactory implements DashboardFactory {
         if(caheBeans.iterator().hasNext()) {
             ObjectName cacheBean =caheBeans.iterator().next();
             String name = cacheBean.getCanonicalName();
-            Gauge cacheUseGauge = new GaugeBuilder("cacheUseGauge-resource").title("Resorce Cache Usage")
+            Gauge cacheUseGauge = new GaugeBuilder("cacheUseGauge-resource").title("Resorce Cache")
                                                     .min("0")
                                                     .max(new AttributeBuilder().attribute(name, "accessCount").build())
                                                     .value(new AttributeBuilder().attribute(name, "hitsCount").label("Hits").build())  
@@ -149,8 +147,8 @@ public class ContextDashboardFactory implements DashboardFactory {
                                                       .text(new AttributeBuilder().attribute(name, "servletClass").label("Servlet Class:").subscribe(false).build())
                                                       .text(new AttributeBuilder().attribute(name, "stateName").label("State: ").build())
                                                       .text(new AttributeBuilder().attribute(name, "loadOnStartup").label("Startup order:").build())
-                                                      .text(new AttributeBuilder().attribute(name, "classLoadTime").jsFunction(MILLISECONDS_TO_SECONDS).label("Load Time:").build())
-                                                      .text(new AttributeBuilder().attribute(name, "processingTime").jsFunction(MILLISECONDS_TO_SECONDS).label("Processing Time:").build())
+                                                      .text(new AttributeBuilder().attribute(name, "classLoadTime").jsFunction(MILLISECONDS_TO_SECONDS.getScript()).label("Load Time:").build())
+                                                      .text(new AttributeBuilder().attribute(name, "processingTime").jsFunction(MILLISECONDS_TO_SECONDS.getScript()).label("Processing Time:").build())
                                                       .text(new AttributeBuilder().attribute(name, "errorCount").label("# Errors:").build())
                                                       .text(new AttributeBuilder().attribute(name, "requestCount").label("# Requests:").build())                                                   
                                                       .build();

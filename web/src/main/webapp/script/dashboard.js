@@ -20,7 +20,7 @@ function loadDashboard(dashboardId) {
 		$("#"+dashboardId).removeClass("hidden");
 		
 		for (var key in widgets) {
-		    if (widgets[key] && widgets[key].dashboardId == currentDasboard && widgets[key].chart) {
+		    if (widgets[key] && widgets[key].dashboardId == currentDasboard && (widgets[key].chart || widgets[key].gauge)) {
 		    	$('#' + key).empty();
 				widgets[key].render();	
 		    }

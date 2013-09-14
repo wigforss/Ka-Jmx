@@ -67,9 +67,9 @@ Gauge =
 				org.kasource.Websocket.subscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, id+"-max", this.refreshValue, this);
 			}
 			if(this.options.value.subscribe && this.options.value.attribute) {
-				var types = this.listeners[this.options.max.attribute.objectName+"."+this.options.max.attribute.attribute];
+				var types = this.listeners[this.options.value.attribute.objectName+"."+this.options.value.attribute.attribute];
 				if(!types) {
-					this.listeners[this.options.value.attribute.objectName+"."+this.options.value.attribute.attribute]='value';
+					this.listeners[this.options.value.attribute.objectName+"."+this.options.value.attribute.attribute]=['value'];
 				} else {
 					types.push('value');
 				}		
