@@ -21,6 +21,7 @@ import org.kasource.jmx.core.bean.ManagedAttribute;
 import org.kasource.jmx.core.bean.ManagedBean;
 import org.kasource.jmx.core.tree.JmxTree;
 import org.kasource.jmx.core.tree.JmxTreeBuilder;
+import org.kasource.jmx.core.tree.node.RootNode;
 import org.kasource.jmx.core.util.JavadocResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,6 +241,14 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
            throw new IllegalArgumentException("Could not get attribute value for "+name+" attribute: " + attribute, e);
         } 
         
+    }
+
+    @Override
+    public JmxTree filterTree(JmxTree tree, String objectNameFilter, boolean includeChildren) {
+        if(objectNameFilter != null && !objectNameFilter.trim().isEmpty()) {
+           return treeBuilder.filterTree(tree, objectNameFilter, includeChildren);
+        }
+        return tree;
     }
 
     

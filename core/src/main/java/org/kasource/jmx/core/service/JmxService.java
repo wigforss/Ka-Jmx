@@ -28,6 +28,8 @@ public interface JmxService {
     
     JmxTree getJmxTree();
     
+    JmxTree filterTree(JmxTree tree, String objectNameFilter, boolean includeChildren);
+    
     void refreshTree();
     
     void addNotificationListener(NotificationListener listener); 

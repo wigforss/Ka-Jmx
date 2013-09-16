@@ -44,12 +44,16 @@ public abstract class JmxTreeNode implements Comparable<JmxTreeNode>{
         return type;
     }
 
+   
+    
     /**
      * @param children the children to set
      */
     protected void setChildren(Set<? extends JmxTreeNode> children) {
         this.children = children;
     }
+    
+   
     
     @Override
     public int compareTo(JmxTreeNode node) {

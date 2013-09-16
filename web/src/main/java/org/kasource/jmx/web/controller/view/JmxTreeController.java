@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.kasource.jmx.core.service.DashboardService;
 import org.kasource.jmx.core.service.JmxService;
+import org.kasource.jmx.core.tree.JmxTree;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,14 +36,27 @@ public class JmxTreeController {
         mav.addObject("tree", jmxService.getJmxTree());
         mav.addObject("mBean", jmxService.getBeanInfo(objectName));
         mav.addObject("attributeValues", jmxService.getAttributeValues(objectName));
+        mav.addObject("objectNameFilter", "");
+        mav.addObject("filterOnChildren", false);
         return mav;
     }
     
     
     @RequestMapping(value="/tree/refresh", method =  RequestMethod.POST)
     public ModelAndView refreshTree(HttpServletRequest request) throws MalformedObjectNameException, NullPointerException {
-        jmxService.refreshTree();
-        return getTree(request);
+        String nameFilter = request.getParameter("objectNameFilter");
+        String filterOnChildren = request.getParameter("filterOnChildren");
+        boolean filterChildren = filterOnChildren != null && "on".equals(filterOnChildren);
+        JmxTree tree = jmxService.getJmxTree();
+        if(nameFilter != null && !nameFilter.trim().isEmpty()) {
+            tree = jmxService.filterTree(tree, nameFilter, filterChildren);
+        }
+        ModelAndView mav = new ModelAndView(VIEW);
+        mav.addObject("tree", tree);
+        mav.addObject("objectNameFilter", nameFilter == null ? "" : nameFilter);
+    
+        
+        return mav;
     }
     
 }

@@ -50,7 +50,10 @@ public class ContextDashboardFactory implements DashboardFactory {
     private Dashboard getDashboard(ObjectName context) {
         
         String contextName = jmxService.getAttributeValue(context.getCanonicalName(), "name").toString();
-        DashboardBuilder dashboardBuilder = new DashboardBuilder("context-" + contextName.replace('/', '-'), contextName, 120, 120);
+        if(contextName == null || contextName.trim().isEmpty()){
+            contextName = "/";
+        }
+        DashboardBuilder dashboardBuilder = new DashboardBuilder("context-" + contextName.replace('/', '-'),  contextName, 120, 120);
       
     
             
@@ -67,7 +70,11 @@ public class ContextDashboardFactory implements DashboardFactory {
         dashboardBuilder.add(new PanelBuilder("panel-"+ contextName.replace('/', '-'), "Context " + contextName, 1, 1).width(3).height(2).textGroup(textGroup).build());
         addCachePanel(dashboardBuilder, contextName);
         addSessionPanels(dashboardBuilder, contextName, 1, context);
-        
+        ObjectName host = jmxService.getNamesMatching(domain+":type=Host,*").iterator().next();
+        TextGroup filters = getFilters(contextName, host.getKeyProperty("host"));
+        if(filters != null) {
+            dashboardBuilder.add(new PanelBuilder("filter-panel-"+contextName.replace('/', '-'), "Filters", 3, 7).width(2).height(3).textGroup(filters).build());
+        }
         int row = 3;
         String[] servletObjectNames =  (String[]) jmxService.getAttributeValue(context.getCanonicalName(), "servlets");
        for(String servletObjectName : servletObjectNames) {
@@ -161,6 +168,23 @@ public class ContextDashboardFactory implements DashboardFactory {
         
     }
 
+    
+    private TextGroup getFilters(String contextName, String host){
+      
+        Set<ObjectName> filters = jmxService.getNamesMatching(domain+":j2eeType=Filter,WebModule=//"+host+contextName+",*");
+        if(!filters.isEmpty()) {
+            TextGroupBuilder filterInfo = new TextGroupBuilder("filterText-"+contextName.replace('/', '-'));
+            for(ObjectName filter : filters) {
+             
+                filterInfo.text(new AttributeBuilder().attribute(filter.getCanonicalName(), "filterName").label("Name:").subscribe(false).build())
+                .text(new AttributeBuilder().attribute(filter.getCanonicalName(), "filterClass").label("Class:").subscribe(false).build())
+                .text(new AttributeBuilder().attribute(filter.getCanonicalName(), "filterInitParameterMap").label("Params:").subscribe(false).build());
+            }
+            return filterInfo.build();
+        }
+        return null;
+    }
+    
     /**
      * @param domain the domain to set
      */

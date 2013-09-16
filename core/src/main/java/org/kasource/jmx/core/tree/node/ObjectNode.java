@@ -7,21 +7,24 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
+import javax.management.ObjectName;
 
 
 public class ObjectNode extends JmxTreeNode {
 
-    private static final String LABEL_ATTRIBUTES = "Attributes";
-    private static final String LABEL_OPERATIONS = "Operations";
-    private static final String LABEL_NOTIFICATIONS = "Notifications";
+    public static final String LABEL_ATTRIBUTES = "Attributes";
+    public static final String LABEL_OPERATIONS = "Operations";
+    public static final String LABEL_NOTIFICATIONS = "Notifications";
     
     private MBeanInfo info;
     private String name;
+    private ObjectName objectName;
+    private boolean expand;
     
-    public ObjectNode(String label, MBeanInfo info, String name) {
+    public ObjectNode(String label, MBeanInfo info, String name, ObjectName objectName) {
         super(label, JmxTreeNodeType.OBJECT);
         this.info = info;
-
+        this.objectName = objectName;
         this.name = name;
         Set<JmxTreeNode> nodes = new TreeSet<JmxTreeNode>();
         
@@ -42,6 +45,30 @@ public class ObjectNode extends JmxTreeNode {
         setChildren(nodes);
     }
 
+    public ObjectNode(ObjectNode node, String label) {
+        super(label, JmxTreeNodeType.OBJECT);
+        this.info = node.getInfo();
+        this.objectName = node.getObjectName();
+        this.name = node.getName();
+        this.setChildren(node.getChildren());
+    }
+    
+    public ObjectNode(ObjectNode node, Set<JmxTreeNode> children) {
+        super(node.getLabel(), JmxTreeNodeType.OBJECT);
+        this.info = node.getInfo();
+        this.objectName = node.getObjectName();
+        this.name = node.getName();
+        this.setChildren(children);
+    }
+    
+    public ObjectNode(ObjectNode node, String label, Set<JmxTreeNode> children) {
+        super(label, JmxTreeNodeType.OBJECT);
+        this.info = node.getInfo();
+        this.objectName = node.getObjectName();
+        this.name = node.getName();
+        this.setChildren(children);
+    }
+    
     
     private AttributesNode getAttributes() {
         MBeanAttributeInfo[] attributes = info.getAttributes();
@@ -70,6 +97,7 @@ public class ObjectNode extends JmxTreeNode {
         return new NotificationsNode(LABEL_NOTIFICATIONS, notificationNodes);
     }
 
+    
 
     /**
      * @return the info
@@ -84,6 +112,28 @@ public class ObjectNode extends JmxTreeNode {
      */
     public String getName() {
         return name;
+    }
+
+
+    /**
+     * @return the objectName
+     */
+    public ObjectName getObjectName() {
+        return objectName;
+    }
+
+    /**
+     * @return the expand
+     */
+    public boolean isExpand() {
+        return expand;
+    }
+
+    /**
+     * @param expand the expand to set
+     */
+    public void setExpand(boolean expand) {
+        this.expand = expand;
     }
     
 }

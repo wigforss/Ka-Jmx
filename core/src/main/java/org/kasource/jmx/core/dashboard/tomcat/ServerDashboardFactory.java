@@ -66,6 +66,8 @@ public class ServerDashboardFactory implements DashboardFactory {
         
     }
     
+    
+    
     private int addDatasourcePanels(DashboardBuilder dashboardBuilder, int row) {
         Set<ObjectName> datasourceBeans = jmxService.getNamesMatching(domain + ":type=DataSource,*");
         for(ObjectName datasourceBean : datasourceBeans) {

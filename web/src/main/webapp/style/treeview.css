@@ -131,6 +131,10 @@
 		{
 			background-position: 0 -16px;
 		}
+		
+		.filterHit {
+			font: bold oblique 11px "Segoe UI", Arial, Sans-serif;
+		}
 
 		/* webkit adjacent element selector bugfix */
 		@media screen and (-webkit-min-device-pixel-ratio:0)

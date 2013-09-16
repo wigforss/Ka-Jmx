@@ -12,6 +12,8 @@ public class AttributeNode extends JmxTreeNode {
         super(label, JmxTreeNodeType.ATTRIBUTE);
         this.info = info;
     }
+    
+    
 
     /**
      * @return the info
