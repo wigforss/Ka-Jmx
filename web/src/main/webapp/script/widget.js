@@ -98,8 +98,10 @@ Gauge =
 							var minValue = parseFloat(widget.options.min.transform(minValue));
 						}
 						widget.gaugeOptions['min'] = minValue;
-						$('#' + widget.id).empty();
-						widget.gauge = new JustGage(this.gaugeOptions);
+						if (currentDasboard == widget.dashboardId) {
+							$('#' + widget.id).empty();
+							widget.gauge = new JustGage(this.gaugeOptions);
+						}
 						break;
 					case 'max':
 						var maxValue = parseFloat(jmxValue.value);
@@ -107,15 +109,22 @@ Gauge =
 							maxValue = parseFloat(widget.options.max.transform(maxValue));
 						}
 						widget.gaugeOptions['max'] = maxValue;
-						$('#' + widget.id).empty();
-						widget.gauge = new JustGage(widget.gaugeOptions);
+						if (currentDasboard == widget.dashboardId) {
+							$('#' + widget.id).empty();
+							widget.gauge = new JustGage(widget.gaugeOptions);
+						}
 						break;
 					case 'value':
 						var currentValue = parseFloat(jmxValue.value);
 						if(widget.options.value.transform) {
 							currentValue = parseFloat(widget.options.value.transform(currentValue));
 						}
-						gauge.refresh(currentValue);
+						//gauge.refresh(currentValue);
+						widget.gaugeOptions['value']=currentValue;
+						if (currentDasboard == widget.dashboardId) {
+							$('#' + widget.id).empty();
+							widget.gauge = new JustGage(widget.gaugeOptions);
+						}
 						break;
 					}
 				}
@@ -183,13 +192,13 @@ Graph =
 		                  var data = [];
 		                  var time = (new Date()).getTime();
 		                 
-		                  for (var i = 0; i < samples; i++) {
+		               //   for (var i = 0; i < samples; i++) {
 		                      data.push({
 		                    	  x: time,
 		                          y: yValue,
 		                          marker: {enabled: false}
 		                      });
-		                  }
+		                 // }
 		                  return data;
 		            	 
 		              })()
@@ -341,20 +350,22 @@ graphPainter = {}
 
 graphPainter.addPoint = function(graph) {
 		var time = (new Date()).getTime();
-	  	for (var i = 0; i < graph.currentValues.length; i++) {
-	  			var shift = true;
-	  			var paint = false;
-	  			if(graph.dashboardId == currentDasboard) {
-	  				paint = true;
-	  			}
-	  			if(graph.options.samples <= 0) {
-	  				shift = false;
-	  			}
-	  			graph.chart.series[i].addPoint({
+		var shift = true;
+		var paint = false;
+		
+		if(graph.dashboardId == currentDasboard) {
+			paint = true;
+		}
+		if(graph.options.samples <= 0 || graph.chart.series[0].data.length <= graph.options.samples ) {
+				shift = false;
+		}
+	  	for (var i = 0; i < graph.currentValues.length; i++) {		
+	  				graph.chart.series[i].addPoint({
 	  									x: time,
 	  									y: parseFloat(graph.currentValues[i]),
 	  									marker: {enabled: false}
 	  									}, paint, shift);
+	  			
 	  	}
 }
 
