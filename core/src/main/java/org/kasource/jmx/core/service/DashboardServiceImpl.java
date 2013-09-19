@@ -12,6 +12,7 @@ import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
 import org.kasource.jmx.core.model.dashboard.Panel;
+import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 import org.kasource.jmx.core.util.JmxValueFormatter;
 import org.springframework.stereotype.Service;
@@ -61,8 +62,10 @@ public class DashboardServiceImpl implements DashboardService {
                 populateValuesGraph(panel.getGraph());
             } else if (panel.getGauge() != null) {
                 populateValuesGauge(panel.getGauge());
-            } else {
+            } else if(panel.getTextGroup() != null){
                 populateValuesTextGroup(panel.getTextGroup());
+            } else if(panel.getPie() != null) {
+                populateValuesPieChart(panel.getPie());
             }
         }
     }
@@ -85,6 +88,12 @@ public class DashboardServiceImpl implements DashboardService {
         for (AttributeValue value : textGroup.getValue()) {
             populateValue(value);
             
+        }
+    }
+    
+    private void populateValuesPieChart(Pie pie) {
+        for(AttributeValue data : pie.getDataSeries()) {
+            populateValue(data);
         }
     }
     

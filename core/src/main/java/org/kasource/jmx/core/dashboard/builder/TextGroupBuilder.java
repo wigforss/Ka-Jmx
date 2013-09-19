@@ -2,21 +2,16 @@ package org.kasource.jmx.core.dashboard.builder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 
-public class TextGroupBuilder {
-    private static final Pattern ID_REG_EXP = Pattern.compile("\\s|:|@|\\$|%|&|/|\\+|,|\\(|\\)|\\{|\\}|\\[|\\]");
-
+public class TextGroupBuilder extends AbstractWidgetBuilder {
     private List<AttributeValue> values = new ArrayList<AttributeValue>();
-
-    private String id;
     private String title;
     
     public TextGroupBuilder(String id) {
-        this.id = id;
+        super(id);
     }
     
     public TextGroupBuilder title(String title) {
@@ -37,19 +32,12 @@ public class TextGroupBuilder {
         return this;
     }
     
-    private void validateId(String id) {
-        if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id: " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
-        }
-    }
    
     public TextGroup build() {
-        if(id == null || id.trim().isEmpty()) {
-            throw new IllegalStateException("A non empty id must be set");
-        }
-        validateId(id);
+       
+        validateId();
         TextGroup textGroup = new TextGroup();
-        textGroup.setId(id);
+        textGroup.setId(getId());
         textGroup.setValue(values);
         textGroup.setTitle(title);
         return textGroup;

@@ -1,7 +1,6 @@
 package org.kasource.jmx.web.controller.view;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.kasource.jmx.core.bean.ManagedAttribute;
 import org.kasource.jmx.core.bean.ManagedBean;
-import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.service.DashboardService;
 import org.kasource.jmx.core.service.JmxService;
 import org.kasource.jmx.core.util.JmxValueFormatter;

@@ -44,8 +44,8 @@
 				<ul class="dashboard">
 				<c:forEach var="panel" items="${dashboard.panel}">
 					
-    					<c:set var="widgetClass" value="${not empty panel.graph ? 'graph' : not empty panel.gauge ? 'gauge' : 'textGroup'}"/>
-    					<c:set var="widgetId" value="${not empty panel.graph ? panel.graph.id : not empty panel.gauge ? panel.gauge.id : panel.textGroup.id}"/>
+    					<c:set var="widgetClass" value="${not empty panel.graph ? 'graph' : not empty panel.gauge ? 'gauge' : not empty panel.textGroup ? 'textGroup' : 'pie'}"/>
+    					<c:set var="widgetId" value="${not empty panel.graph ? panel.graph.id : not empty panel.gauge ? panel.gauge.id : not empty panel.textGroup ? panel.textGroup.id : panel.pie.id}"/>
     					
     					<li id="${panel.id}" data-row="${panel.row}" data-col="${panel.column}" data-sizex="${panel.width}" data-sizey="${panel.height}" class="panel" ondblclick="togglePanelSize('${dashboard.id}',this.id,'${widgetId}')">
     				 		<div class="title-bar"><span class="title-bar-text" title="${panel.title}"><c:out value="${panel.title}"/></span><span class="title-bar-icon"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('${dashboard.id}','${panel.id}','${widgetId}')"/></span></div>

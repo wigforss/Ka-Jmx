@@ -119,11 +119,10 @@ Gauge =
 						if(widget.options.value.transform) {
 							currentValue = parseFloat(widget.options.value.transform(currentValue));
 						}
-						//gauge.refresh(currentValue);
+						
 						widget.gaugeOptions['value']=currentValue;
 						if (currentDasboard == widget.dashboardId) {
-							$('#' + widget.id).empty();
-							widget.gauge = new JustGage(widget.gaugeOptions);
+							gauge.refresh(currentValue);
 						}
 						break;
 					}
@@ -192,13 +191,13 @@ Graph =
 		                  var data = [];
 		                  var time = (new Date()).getTime();
 		                 
-		               //   for (var i = 0; i < samples; i++) {
+		              
 		                      data.push({
 		                    	  x: time,
 		                          y: yValue,
 		                          marker: {enabled: false}
 		                      });
-		                 // }
+		                
 		                  return data;
 		            	 
 		              })()
@@ -396,7 +395,134 @@ graphFactory.get = function(dashboardId, widgetId, options) {
 	return widgets[widgetId];
 }
 
+Pie = 
+	function (dashboardId, id, options) {
+		this.id = id;
+		this.options = options;
+		this.chart = {};
+		this.dataSeriesIndex={};
+		this.dashboardId = dashboardId;
+		this.chartOptions = {};
+		this.initialize = function() {
+			
+			
+			
+			var seriesTitle = this.options.title;
+			if(!seriesTitle) {
+				seriesTitle = '';
+			}
+			var data = [];
+			for (var i = 0; i < this.options.dataSeries.length; i++) {	
+				var yValue = parseFloat(this.options.dataSeries[i].value);
+				if(this.options.dataSeries[i].jsFunction) {
+					this.options.dataSeries[i].transform = eval('('+this.options.dataSeries[i].jsFunction+')');
+					yValue = parseFloat(this.options.dataSeries[i].transform(this.options.dataSeries[i].value));
+				}
+						
+				data.push({name: this.options.dataSeries[i].label, y: yValue});
+			}
+			var series = [{
+	            type: 'pie',
+	            name: seriesTitle,
+	            data: data
+				}]
+			
+			
+			var title = '';
+			this.chartOptions = {
+			        chart: {
+			        	renderTo: this.id,
+			            plotBackgroundColor: null,
+			            plotBorderWidth: null,
+			            plotShadow: true
+			        },
+			        title: {
+			              text: title
+			        },
+			        credits: {
+			        	enabled: false  
+			          },
+			        tooltip: {
+			    	    pointFormat: '{series.name}: <b>{point.y}</b>'
+			        },
+			        plotOptions: {
+			            pie: {
+			                allowPointSelect: true,
+			                cursor: 'pointer',
+			                dataLabels: {
+			                    enabled: true,
+			                    color: '#000000',
+			                    connectorColor: '#000000',
+			                   
+			                }
+			            }
+			        },
+			        series: series
+			    };
+			this.chart = new Highcharts.Chart(this.chartOptions);
+		}
+		
+		this.subscribe = function() {
+			for (var i = 0; i < this.options.dataSeries.length; i++) {
+				var objectName = this.options.dataSeries[i].attribute.objectName;
+				var attribute = this.options.dataSeries[i].attribute.attribute;
+				var index = this.dataSeriesIndex[objectName+"."+attribute];
+				if(!index) {
+					this.dataSeriesIndex[objectName+"."+attribute]=[i];
+				} else {
+					index.push(i);
+				}
+				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this);
+			}
+		}
+		
+		this.render = function() {
+			this.chart = new Highcharts.Chart(this.chartOptions);
+		}
+		
+		this.refreshValue = function(jmxValue, widget) {
+			var attribute = jmxValue.key.attributeName;
+			var objectName = jmxValue.key.name;
+			var indices = widget.dataSeriesIndex[objectName+"."+attribute];
+			var yValue =  parseFloat(jmxValue.value);
+			
+			
+			
+			if(indices) {
+				for (var i = 0; i < indices.length; i++) {
+					var index = indices[i];
+					if(widget.options.dataSeries[index].transform) {
+						yValue =  parseFloat(widget.options.dataSeries[index].transform(jmxValue.value));
+					}
+					
+					
+					if (currentDasboard == widget.dashboardId) {
+						widget.chart.series[0].data[index].update(yValue, true);
+					} else {
+						widget.chart.series[0].data[index].update(yValue, false);
+					}
+				}
+			}
+		}
+		
+		this.close = function() {
+			for (var i = 0; i < this.options.dataSeries.length; i++) {
+				var objectName = this.options.dataSeries[i].attribute.objectName;
+				var attribute = this.options.dataSeries[i].attribute.attribute;
+				org.kasource.Websocket.unsubscribe(objectName, attribute, this.id+"-"+i);
+			}
+		}
+}
 
+pieFactory = {};
+
+pieFactory.get = function(dashboardId, widgetId, options) {
+	widgets[widgetId] = new Pie(dashboardId, widgetId, options);
+	widgets[widgetId].initialize();
+	widgets[widgetId].subscribe();
+	
+	return widgets[widgetId];
+}
 
 
 TextGroup = 
@@ -495,3 +621,4 @@ textGroupFactory.get = function(dashboardId, widgetId, data) {
 widgetFactory['textGroup']=textGroupFactory;
 widgetFactory['gauge'] = gaugeFactory;
 widgetFactory['graph'] = graphFactory;
+widgetFactory['pie'] = pieFactory;

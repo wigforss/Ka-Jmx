@@ -30,6 +30,7 @@
 					<xs:element ref="graph" minOccurs="1" maxOccurs="1"/>
 					<xs:element ref="textGroup" minOccurs="1" maxOccurs="1"/>
 					<xs:element ref="gauge" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="pie" minOccurs="1" maxOccurs="1"/>
 				</xs:choice>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:ID" use="required"/>
@@ -53,7 +54,15 @@
 		</xs:complexType>
 	</xs:element>
 	
-	
+	<xs:element name="pie">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="dataSeries" type="attributeValue" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="title" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
 	
 	<xs:element name="attribute">
 		<xs:complexType>

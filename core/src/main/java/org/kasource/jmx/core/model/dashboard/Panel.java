@@ -52,7 +52,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType(name = "", propOrder = {
     "graph",
     "textGroup",
-    "gauge"
+    "gauge",
+    "pie"
 })
 @XmlRootElement(name = "panel")
 public class Panel {
@@ -62,6 +63,7 @@ public class Panel {
     @XmlID
     @XmlSchemaType(name = "ID")
     protected String id;
+    protected Pie pie;
     protected Graph graph;
     protected TextGroup textGroup;
     protected Gauge gauge;
@@ -282,6 +284,20 @@ public class Panel {
      */
     public void setId(String value) {
         this.id = value;
+    }
+
+    /**
+     * @return the pie
+     */
+    public Pie getPie() {
+        return pie;
+    }
+
+    /**
+     * @param pie the pie to set
+     */
+    public void setPie(Pie pie) {
+        this.pie = pie;
     }
 
 }

@@ -2,16 +2,15 @@ package org.kasource.jmx.core.dashboard.builder;
 
 
 
-import java.util.regex.Pattern;
-
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
 import org.kasource.jmx.core.model.dashboard.Panel;
+import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 
-public class PanelBuilder {
-    private static final Pattern ID_REG_EXP = Pattern.compile("\\s|:|@|\\$|%|&|/|\\+|,|\\(|\\)|\\{|\\}|\\[|\\]");
-    private String id;
+public class PanelBuilder extends AbstractWidgetBuilder {
+  
+   
     private String title;
     private int row;
     private int column;
@@ -20,9 +19,10 @@ public class PanelBuilder {
     private Gauge gauge;
     private Graph graph;
     private TextGroup textGroup;
+    private Pie pie;
     
     public PanelBuilder(String id, String title, int row, int column) {
-        this.id = id;
+        super(id);
         this.title = title;
         this.row = row;
         this.column = column;
@@ -70,18 +70,17 @@ public class PanelBuilder {
         return this;
     }
     
-    
-    private void validateId(String id) {
-        if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id: " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
-        }
+    public PanelBuilder pie(Pie pieChart) {
+        this.pie = pieChart;
+        return this;
     }
     
+    
+    
+    
     public Panel build() {
-        if(id == null || id.trim().isEmpty()) {
-            throw new IllegalStateException("A non empty id must be set");
-        }
-        validateId(id);
+        
+        validateId();
         if(title == null || title.trim().isEmpty()) {
             throw new IllegalStateException("A non empty title must be set");
         }
@@ -93,21 +92,16 @@ public class PanelBuilder {
         }
         
         Panel panel = new Panel();
-        panel.setId(id);
+        panel.setId(getId());
         panel.setColumn(column);
         panel.setRow(row);
         panel.setTitle(title);
         panel.setHeight(height);
         panel.setWidth(width);
-        if(textGroup != null && gauge == null && graph == null) {
-            panel.setTextGroup(textGroup);
-        } else if(gauge != null && textGroup == null && graph == null) {
-            panel.setGauge(gauge);
-        } else if (graph != null && textGroup == null && gauge == null) {
-            panel.setGraph(graph);
-        } else {
-            throw new IllegalStateException("Only one of Grah, Gauge or TextGroup may be set.");
-        }
+        panel.setTextGroup(textGroup);
+        panel.setGauge(gauge);
+        panel.setGraph(graph);
+        panel.setPie(pie);
         return panel;
     }
 }

@@ -53,8 +53,10 @@ function renderDashboard(json) {
 			widgetFactory['graph'].get(dashboard.id, panel.graph.id, panel.graph);
 		} else if(panel.gauge) {
 			widgetFactory['gauge'].get(dashboard.id, panel.gauge.id, panel.gauge);
-		} else {
+		} else if(panel.textGroup){
 			widgetFactory['textGroup'].get(dashboard.id, panel.textGroup.id, panel.textGroup);
+		} else {
+			widgetFactory['pie'].get(dashboard.id, panel.pie.id, panel.pie);
 		}
 	}
 		}, 500);

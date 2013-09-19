@@ -9,6 +9,7 @@ public class SaveResult {
 
     private Map<String, Object> errors = new HashMap<String, Object>();
     private List<String> saved = new ArrayList<String>();
+    
     /**
      * @return the errors
      */

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import static org.kasource.jmx.core.dashboard.JavaScriptFunction.*;
 import org.kasource.jmx.core.dashboard.DashboardFactory;
@@ -13,10 +14,12 @@ import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
 import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
 import org.kasource.jmx.core.dashboard.builder.GraphBuilder;
 import org.kasource.jmx.core.dashboard.builder.PanelBuilder;
+import org.kasource.jmx.core.dashboard.builder.PieBuilder;
 import org.kasource.jmx.core.dashboard.builder.TextGroupBuilder;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
+import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
@@ -75,8 +78,30 @@ public class ContextDashboardFactory implements DashboardFactory {
         if(filters != null) {
             dashboardBuilder.add(new PanelBuilder("filter-panel-"+contextName.replace('/', '-'), "Filters", 3, 7).width(2).height(3).textGroup(filters).build());
         }
+        
+        
+        
         int row = 3;
         String[] servletObjectNames =  (String[]) jmxService.getAttributeValue(context.getCanonicalName(), "servlets");
+        
+        if(servletObjectNames.length > 1) {
+        
+            PieBuilder requestPieChartBuilder = new PieBuilder("request-pie-"+contextName.replace('/', '-')).title("# Requests"); 
+            PieBuilder processingPieChartBuilder = new PieBuilder("process-pie-"+contextName.replace('/', '-')).title("Processing Time"); 
+            PieBuilder errorPieChartBuilder = new PieBuilder("error-pie-"+contextName.replace('/', '-')).title("# Errors"); 
+            for(String servletObjectName : servletObjectNames) {
+                try {
+                    String servletName = ObjectName.getInstance(servletObjectName).getKeyProperty("name");
+                    requestPieChartBuilder.addData(new AttributeBuilder().attribute(servletObjectName, "requestCount").label(servletName).build());
+                    errorPieChartBuilder.addData(new AttributeBuilder().attribute(servletObjectName, "errorCount").label(servletName).build());
+                    processingPieChartBuilder.addData(new AttributeBuilder().attribute(servletObjectName, "processingTime").label(servletName).build());
+                }  catch (Exception e) {}
+            }
+            dashboardBuilder.add(new PanelBuilder("request-pie-panel"+contextName.replace('/', '-'),"Number of Requests", 3, 7).width(2).height(2).pie(requestPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("process-pie-panel"+contextName.replace('/', '-'),"Processing Time (ms)", 5, 7).width(2).height(2).pie(processingPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("error-pie-panel"+contextName.replace('/', '-'),"Number of Errors", 7, 7).width(2).height(2).pie(errorPieChartBuilder.build()).build());
+        }
+        
        for(String servletObjectName : servletObjectNames) {
             addServletPanel(dashboardBuilder, contextName, servletObjectName, row);
             row += 2;

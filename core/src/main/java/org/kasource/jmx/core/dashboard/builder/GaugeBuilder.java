@@ -1,21 +1,19 @@
 package org.kasource.jmx.core.dashboard.builder;
 
-import java.util.regex.Pattern;
-
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 
-public class GaugeBuilder {
-    private static final Pattern ID_REG_EXP = Pattern.compile("\\s|:|@|\\$|%|&|/|\\+|,|\\(|\\)|\\{|\\}|\\[|\\]");
+public class GaugeBuilder extends AbstractWidgetBuilder {
+   
     
     private AttributeValue min;
     private AttributeValue max;
     private AttributeValue value;
     private String title;
-    private String id;
+  
     
     public GaugeBuilder(String id) {
-        this.id = id;
+       super(id);
     }
     
     public GaugeBuilder max(String maxValue) {
@@ -66,18 +64,12 @@ public class GaugeBuilder {
     }
     
     
-    private void validateId(String id) {
-        if(ID_REG_EXP.matcher(id).find()) {
-            throw new IllegalStateException("id " + id + " may not contain space, :, @, +, $, %, /, + or any brackets");
-        }
-    }
+    
     
     public Gauge build() {
-        if(id == null || id.trim().isEmpty()) {
-            throw new IllegalStateException("A non empty id must be set");
-        }
+        
        
-        validateId(id);
+        validateId();
         if(max == null) {
             throw new IllegalStateException("Max value must be set");
         }
@@ -88,7 +80,7 @@ public class GaugeBuilder {
             throw new IllegalStateException("Value must be set");
         }
         Gauge gauge = new Gauge();
-        gauge.setId(id);
+        gauge.setId(getId());
         gauge.setMax(max);
         gauge.setMin(min);
         gauge.setValue(value);
