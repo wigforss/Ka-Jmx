@@ -24,6 +24,8 @@ public interface JmxService {
     
     void setAttributes(String objectName, Map<String, Object> attributeValues);
     
+    void setAttribute(String objectName, String attributeValues, Object value);
+    
     Set<ObjectName> getNamesMatching(String pattern);
     
     JmxTree getJmxTree();

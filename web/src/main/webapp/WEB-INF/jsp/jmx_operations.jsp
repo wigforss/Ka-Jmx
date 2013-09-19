@@ -14,11 +14,12 @@
 				 	<div id="operations">
 						<p/>
 						<h2>Operations</h2>
-						<c:forEach var="operation" items="${mBean.operations}">
+					<!--  	<c:forEach var="operation" items="${mBean.operations}">
 							<a id="a-operation-${operation.name}" href="#invokeForm-${operation.name}"><c:out value="${operation.name}"/></a><br/> 
-						</c:forEach>		
+						</c:forEach> -->		
 					 	<c:forEach var="operation" items="${mBean.operations}" varStatus="operationStatus">
-					 		<div id="operation-${operationStatus.index}">
+					 		<a id="a-operation-${operation.name}" href="javascript:toggleHidden('operation-${operationStatus.index}')"><c:out value="${operation.name}"/></a><br/>
+					 		<div id="operation-${operationStatus.index}" class="hidden">
 							<form id="invokeForm-${operation.name}" action="${pageContext.request.contextPath}/json/bean" method="post">
 								<input type="hidden" name="objectName" value="${fn:escapeXml(mBean.name)}"/>
 								<input type="hidden" name="operationName" value="${operation.name}"/>

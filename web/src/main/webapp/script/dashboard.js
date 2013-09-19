@@ -6,8 +6,7 @@ dashboards={};
 
 function loadDashboard(dashboardId) {
 	currentDasboard = dashboardId;
-	$("#content-layout").removeClass("roundbox");
-	$("#content-layout").removeClass("boxshadow");
+	
 	$("#dashboardView").removeClass("hidden");
 	$("#beanView").addClass("hidden");
 	// Hide all dashboards

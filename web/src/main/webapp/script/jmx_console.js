@@ -6,6 +6,10 @@ function appendToArea(data, areaId) {
 	$('#'+areaId).val(getCurrentDate() + ':\n' + data + '\n\n' + $('#'+areaId).val())
 }
 
+function toggleHidden(elementId) {
+	$('#'+elementId).toggleClass('hidden');
+}
+
 function validateAndPostOperationForm(formId, areaId) {
 	var formValidate = $("#"+formId).validate(true);
  	formValidate.form();

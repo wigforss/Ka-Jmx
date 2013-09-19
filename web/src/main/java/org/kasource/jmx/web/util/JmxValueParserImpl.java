@@ -1,5 +1,6 @@
 package org.kasource.jmx.web.util;
 
+import java.lang.reflect.Constructor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,23 +59,33 @@ public class JmxValueParserImpl implements JmxValueParser {
         } else if(value.equals(nullStringValue)) {
             return null;
         } else if(Date.class.isAssignableFrom(clazz)) {
-           return parseDate(value);
+           return parseDate(value, clazz);
         } 
         
         return dataBinder.convertIfNecessary(value.trim(), clazz);
     }
     
-    private Date parseDate(String value) {
-
+    private Object parseDate(String value, Class<?> clazz) {
+        Date date = null;
         String pattern = dateTimePattern;
         if(value.length() == datePattern.length()) {
             pattern = datePattern;
         } 
         try {
-            return new SimpleDateFormat(pattern).parse(value);
+            date =  new SimpleDateFormat(pattern).parse(value);
         } catch(ParseException pe) {
             throw new IllegalArgumentException("Could not parse " + value + " as date with pattern " + pattern);
         }
+        if(!clazz.equals(Date.class)) {
+            Constructor<?> cons;
+            try {
+                cons = clazz.getConstructor(long.class);
+                return cons.newInstance(date.getTime());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Could not create instance of with long." + clazz, e);
+            } 
+        }
+        return date;
     }
     
     private String[] asArray(String value) {

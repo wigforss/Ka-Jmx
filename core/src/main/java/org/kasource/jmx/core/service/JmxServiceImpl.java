@@ -11,11 +11,16 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.management.Attribute;
 import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
 
 import org.kasource.jmx.core.bean.ManagedAttribute;
 import org.kasource.jmx.core.bean.ManagedBean;
@@ -112,7 +117,16 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
 
     }
     
-    
+    @Override
+    public void setAttribute(String objectName, String attributeName, Object value) {
+        Attribute attribute = new Attribute(attributeName, value);
+        try {
+            server.setAttribute(getObjectName(objectName), attribute);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not save attribute " + attributeName + " value" + value + " on " + objectName, e);
+        } 
+        
+    }
  
 
     @Override
@@ -250,6 +264,8 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         }
         return tree;
     }
+
+   
 
     
     

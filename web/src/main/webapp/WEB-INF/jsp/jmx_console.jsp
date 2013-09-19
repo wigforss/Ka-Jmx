@@ -61,9 +61,7 @@
 	<script type="text/javascript">
  	<![CDATA[
 		function loadBean(objectName) {
-			$("#content-layout").addClass("roundbox");
-			$("#content-layout").addClass("boxshadow");
-	
+			currentDasboard = 'none';
 			$("#dashboardView").addClass("hidden");
 			$("#beanView").removeClass("hidden");
 			var currentBean = document.getElementById('refresh-bean-name');
