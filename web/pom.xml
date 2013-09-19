@@ -8,51 +8,17 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ka-jmx-web</artifactId>
-	<packaging>war</packaging>
-	<name>Ka JMX Web</name>
+	<name>Ka JMX Generic Web</name>
 	<description>Ka JMX Web project</description>
 	<url>http://kasource.org</url>
+	<packaging>jar</packaging>
 	<properties>
 		<ka-websocket.version>0.3-SNAPSHOT</ka-websocket.version>
 		<spring.webflow.version>2.3.1.RELEASE</spring.webflow.version>
 	</properties>
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.1</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/webapp</source>
-								<source>src/main/tomcat</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.0</version>
-                    <configuration>
-                        <path>/ka-jmx</path>
-                        <charset>UTF-8</charset>
-                        <contextReloadable>true</contextReloadable>                    
-                
-                        <backgroundProcessorDelay>10</backgroundProcessorDelay>
-                         <configurationDir>src/tomcat</configurationDir>                        
-                        <contextFile>src/tomcat/conf/tomcat-context.xml</contextFile>
-                    </configuration>
-                </plugin>    
-		</plugins>
+		
+               
 	</build>
 	<dependencies>
 		<!-- Dependencies -->
@@ -60,10 +26,6 @@
 			<groupId>org.kasource.kajmx</groupId>
 			<artifactId>ka-jmx-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.kasource.commons</groupId>
-			<artifactId>ka-commons</artifactId>
 		</dependency>
 		 <dependency>
 			<groupId>org.kasource.websocket</groupId>
@@ -108,11 +70,7 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		
-       <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>1.2</version>
-            </dependency>
+      
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
                 <artifactId>spring-webflow</artifactId>
@@ -224,15 +182,5 @@
 		</dependency>
 	</dependencies>
 	
-	<profiles>
-		<profile>
-			<id>tomcat</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<websocket.implementation>org.kasource.web.websocket.impl.tomcat.TomcatWebsocketImpl</websocket.implementation>
-			</properties>
-		</profile>
-	</profiles>
+	
 </project>

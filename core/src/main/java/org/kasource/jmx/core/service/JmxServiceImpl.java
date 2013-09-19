@@ -227,8 +227,8 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
                 Object value = server.getAttribute(name, attribute.getName());
                 attributeValues.put(attribute.getName(), value);
             } catch (Exception e) {
-                LOG.error("Could not set attribute value for: " + name + " attribute " + attribute.getName(), e);
-                e.printStackTrace();
+                LOG.warn("Could not set attribute value for: " + name + " attribute " + attribute.getName(), e);
+              
             }
         }
         return attributeValues;

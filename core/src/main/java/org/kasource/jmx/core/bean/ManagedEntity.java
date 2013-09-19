@@ -73,7 +73,7 @@ public class ManagedEntity implements Comparable<ManagedEntity> {
                 this.targetClass = Class.forName(typeString);
             } catch (ClassNotFoundException e) {
                 LOG.warn("Could not load class '" + typeString + "'", e);
-                e.printStackTrace();
+               
             }
         }
         this.type = typeString;

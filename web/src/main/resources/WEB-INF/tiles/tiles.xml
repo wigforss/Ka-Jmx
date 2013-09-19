@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+   <definition name="baseLayout" template="/WEB-INF/jsp/layout/layout.jsp" templateType="jsp">
+    <put-attribute name="title" value="Ka JMX Console" cascade="true"/>
+    <put-attribute name="header" value="/WEB-INF/jsp/layout/header.jsp" cascade="true"/>
+    <put-attribute name="navigation" value="/WEB-INF/jsp/navigation.jsp" cascade="true"/>
+    <put-attribute name="footer" value="/WEB-INF/jsp/layout/footer.jsp" cascade="true"/>
+   </definition>
+    
+  
+   <definition name="jmx_console" extends="baseLayout">
+    <put-attribute name="body" value="/WEB-INF/jsp/console.jsp" cascade="true"/>
+    <put-attribute name="jmx_tree" value="/WEB-INF/jsp/tree.jsp" cascade="true"/>
+    <put-attribute name="jmx_dashboards" value="/WEB-INF/jsp/dashboard_list.jsp" cascade="true"/>
+    <put-attribute name="jmx_dashboard" value="/WEB-INF/jsp/dashboard.jsp" cascade="true"/>
+    <put-attribute name="jmx_bean" value="/WEB-INF/jsp/bean.jsp" cascade="true"/>
+    <put-attribute name="jmx_attributes" value="/WEB-INF/jsp/attributes.jsp" cascade="true"/>
+    <put-attribute name="jmx_operations" value="/WEB-INF/jsp/operations.jsp" cascade="true"/>
+    <put-attribute name="jmx_notifications" value="/WEB-INF/jsp/notifications.jsp" cascade="true"/>
+   </definition>
+    
+ </tiles-definitions>

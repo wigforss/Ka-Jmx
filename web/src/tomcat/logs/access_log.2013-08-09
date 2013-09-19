@@ -1,2 +1,0 @@
-0:0:0:0:0:0:0:1%0 - jmx_admin [09/Aug/2013:09:06:23 +0200] "POST /ka-jmx/html/bean/attributes HTTP/1.1" 400 968 http-bio-8080-exec-9 54841500
-0:0:0:0:0:0:0:1%0 - jmx_admin [09/Aug/2013:09:06:30 +0200] "POST /ka-jmx/html/bean/attributes HTTP/1.1" 400 968 http-bio-8080-exec-2 10745
