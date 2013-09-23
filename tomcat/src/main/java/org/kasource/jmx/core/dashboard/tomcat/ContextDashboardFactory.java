@@ -98,10 +98,11 @@ public class ContextDashboardFactory implements DashboardFactory {
                     processingPieChartBuilder.addData(new AttributeBuilder().attribute(servletObjectName, "processingTime").label(servletName).build());
                 }  catch (Exception e) {}
             }
-            dashboardBuilder.add(new PanelBuilder("request-pie-panel"+contextName.replace('/', '-'),"Number of Requests", 3, 7).width(2).height(2).pie(requestPieChartBuilder.build()).build());
-            dashboardBuilder.add(new PanelBuilder("process-pie-panel"+contextName.replace('/', '-'),"Processing Time (ms)", 5, 7).width(2).height(2).pie(processingPieChartBuilder.build()).build());
-            dashboardBuilder.add(new PanelBuilder("error-pie-panel"+contextName.replace('/', '-'),"Number of Errors", 7, 7).width(2).height(2).pie(errorPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("request-pie-panel"+contextName.replace('/', '-'),"Number of Requests", row, 1).width(2).height(2).pie(requestPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("process-pie-panel"+contextName.replace('/', '-'),"Processing Time (ms)", row, 3).width(2).height(2).pie(processingPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("error-pie-panel"+contextName.replace('/', '-'),"Number of Errors", row, 5).width(2).height(2).pie(errorPieChartBuilder.build()).build());
         }
+        row += 2;
         
        for(String servletObjectName : servletObjectNames) {
             addServletPanel(dashboardBuilder, contextName, servletObjectName, row);

@@ -35,6 +35,8 @@ public class ServerDashboardFactory implements DashboardFactory {
     
     private String domain = "Tomcat";
     
+    
+   
     @Override
     public List<Dashboard> getDashboards() {
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
