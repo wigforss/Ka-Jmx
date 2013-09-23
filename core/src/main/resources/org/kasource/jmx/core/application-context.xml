@@ -24,6 +24,13 @@
      
 	 <aop:aspectj-autoproxy proxy-target-class="true"/>
 	 
+	 <bean id="jmxService" class="org.kasource.jmx.core.service.JmxServiceImpl"/>
+	 
+	 <bean id="notificationListener" class="org.springframework.jmx.export.NotificationListenerBean">
+	 	<constructor-arg ref="jmxService"/>
+	 </bean>
+	
+	 
 	 <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
 	 	  <property name="locateExistingServerIfPossible" value="true"/>
 	 </bean>
@@ -33,6 +40,7 @@
         <property name="assembler" ref="assembler"/>
         <property name="namingStrategy" ref="namingStrategy"/>
         <property name="autodetect" value="true"/>
+        <property name="notificationListeners" ref="notificationListener"/>
     </bean>
 
     <bean id="jmxAttributeSource"

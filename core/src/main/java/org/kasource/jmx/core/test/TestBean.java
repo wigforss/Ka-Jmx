@@ -2,20 +2,25 @@ package org.kasource.jmx.core.test;
 
 import java.util.Date;
 
+import javax.management.Notification;
+
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.jmx.export.notification.NotificationPublisher;
+import org.springframework.jmx.export.notification.NotificationPublisherAware;
 import org.springframework.stereotype.Component;
 
 
 @ManagedResource(objectName="KaJMX:name=Test", description="Bean used for testing")
 @Component
-public class TestBean {
+public class TestBean implements NotificationPublisherAware{
     private TestEnum testEnum;
     private Date started = new Date();
     private int[] intArray = {1,2,3,4};
     private short[] shortArray = {1,2,3,4};
     private byte[] byteArray = {1,2,3,4};
     private boolean[] booleanArray = {true,false,true,false};
-    
+    private NotificationPublisher notificationPublisher;
     /**
      * @return the testEnum
      */
@@ -109,6 +114,16 @@ public class TestBean {
     @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Boolean array test")
     public void setBooleanArray(boolean[] booleanArray) {
         this.booleanArray = booleanArray;
+    }
+
+    @Override
+    public void setNotificationPublisher(NotificationPublisher notificationPublisher) {
+        this.notificationPublisher = notificationPublisher;        
+    }
+    
+    @ManagedOperation
+    public void publishNotification() {
+        notificationPublisher.sendNotification(new Notification("test", this, 0));
     }
 
 }

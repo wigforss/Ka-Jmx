@@ -17,7 +17,9 @@ import javax.management.InvalidAttributeValueException;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
+import javax.management.MBeanServerNotification;
 import javax.management.Notification;
+import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
@@ -35,7 +37,6 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 
 @ManagedResource(objectName="KaJMX:name=JmxService", description="JMX Service used by the JMX Console")
-@Service
 public class JmxServiceImpl implements JmxService, NotificationListener {
     private static final Logger LOG = LoggerFactory.getLogger(JmxServiceImpl.class);
     
@@ -62,26 +63,30 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
     @SuppressWarnings("unused")
     @PostConstruct
     private void initialize() {
-      
+        
         registerAsNotificationListener();
     }
 
     private void registerAsNotificationListener() {
         Set<ObjectName> objectNames = getAllNames();
         for (ObjectName objectName : objectNames) {
-            try {
-                MBeanInfo beanInfo = server.getMBeanInfo(objectName);
-                if (beanInfo.getNotifications().length > 0) {
-                    server.addNotificationListener(objectName, this, null, null);
-                }
-            } catch (Exception e) {
-                LOG.error("Could not register notification listeners", e);
-            }
-
+            registerAsNotificationListener(objectName);
         }
 
     }
 
+    private void registerAsNotificationListener(ObjectName objectName) {
+        try {
+            MBeanInfo beanInfo = server.getMBeanInfo(objectName);
+            if (beanInfo.getNotifications().length > 0) {
+                server.addNotificationListener(objectName, this, null, null);
+            }
+        } catch (Exception e) {
+            LOG.error("Could not register notification listeners", e);
+        }
+    }
+    
+    
     private Set<ObjectName> getAllNames() {
         try {
             return server.queryNames(ObjectName.getInstance("*:*"), null);
@@ -205,6 +210,19 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
 
     @Override
     public void handleNotification(Notification notification, Object handback) {
+        if(notification instanceof MBeanServerNotification) {
+            MBeanServerNotification mbeanNotification = (MBeanServerNotification) notification;
+            if(mbeanNotification.getType().equals("JMX.mbean.registered")) {
+                jmxTree = null;
+               
+               registerAsNotificationListener(mbeanNotification.getMBeanName());
+                
+            } else if(mbeanNotification.getType().equals("JMX.mbean.unregistered")) {
+                jmxTree = null;
+            }
+        } else {
+            System.out.println(notification);
+        }
         for (NotificationListener listener : listeners) {
             listener.handleNotification(notification, handback);
         }
@@ -264,6 +282,8 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         }
         return tree;
     }
+
+   
 
    
 
