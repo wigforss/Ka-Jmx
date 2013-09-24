@@ -19,6 +19,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.DashboardWidget;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -48,7 +50,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlRootElement(name = "gauge")
-public class Gauge {
+public class Gauge implements DashboardWidget {
    
     
     @XmlAttribute(required = true)
@@ -173,6 +175,11 @@ public class Gauge {
      */
     public void setId(String value) {
         this.id = value;
+    }
+
+    @Override
+    public String getType() {
+        return "gauge";
     }
 
 }

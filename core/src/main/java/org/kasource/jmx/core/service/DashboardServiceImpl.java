@@ -14,6 +14,8 @@ import org.kasource.jmx.core.model.dashboard.Graph;
 import org.kasource.jmx.core.model.dashboard.Panel;
 import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
+import org.kasource.jmx.core.model.dashboard.ValueType;
+import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,9 @@ public class DashboardServiceImpl implements DashboardService {
     
     @Resource
     private JmxValueFormatter jmxValueFormatter;
+    
+    @Resource
+    private JmxValueConverter jmxValueConverter;
     
     private List<Dashboard> dashboards;
     
@@ -98,19 +103,27 @@ public class DashboardServiceImpl implements DashboardService {
     }
     
     private void populateValue(AttributeValue value) {
-        if(value != null) {
+       if(value != null) {
             if(value.getLabel() == null && value.getAttribute() != null) {
                 value.setLabel(value.getAttribute().getAttribute());
             } else if(value.getLabel() == null){
                 value.setLabel("");
             }
-            if(value.getValue() == null && value.getAttribute() != null) {
+            Object data = value.getValue();
+            if(data == null && value.getAttribute() != null) {
                 Object jmxAttributeValue = jmxService.getAttributeValue(value.getAttribute().getObjectName(), value.getAttribute().getAttribute());
-       
-                if(jmxAttributeValue != null) {
-                    value.setValue(jmxValueFormatter.format(jmxAttributeValue).toString());
-                }
+                data = jmxAttributeValue;
             }
+            if(data != null) {
+                if (ValueType.TEXT.equals(value.getType())){
+                    value.setValue(jmxValueFormatter.format(data).toString());
+                } else {
+                    value.setValue(jmxValueConverter.convert(data));
+                }
+                 
+            }
+            
         }
+        
     }
 }

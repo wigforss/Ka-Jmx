@@ -7,8 +7,6 @@
 	
      <dashboard id="os-java" name="Operating System &amp; Java" baseWidth="100" baseHeight="100">
      	
-     	
-     	
      	<panel id="os-panel" title="OS Information" row="1" column="1" height="2" width="2">
      		<textGroup id="osText">
      			<value subscribe="false" label="Name:">
@@ -78,12 +76,12 @@
      			</value>	
      		</textGroup>
      	</panel>
-     	
+     	 
      	<panel id="JVM-panel" title="JVM Information" row="3" column="1" height="3" width="4">
      		<textGroup id="JVM-text">
-     			<value label="Name:" subscribe="false">
+     		 	<value label="Name:" subscribe="false">
      				<attribute attribute="Name" objectName="java.lang:type=Runtime"/>
-     			</value>
+     			</value> 
      			<value label="Started:" subscribe="false">
      				<attribute attribute="StartTime" objectName="java.lang:type=Runtime"/>
      				<jsFunction>
@@ -158,13 +156,15 @@
      						}
      					]]>
      				</jsFunction>
-     			</value>			
+     			</value>	
      		</textGroup>
      	</panel>
      		
      	<panel id="disk-usage-panel" title="Disk space" row="1" column="3"   width="2" height="2">
      		<gauge id="disk-usage-gauge" title="Working Directory Volume">
-     			<min value="0" subscribe="false"></min>
+     			<min subscribe="false">
+     				<value>0</value>
+     			</min>
      			<max subscribe="false">
      				<attribute attribute="TotalSpace" objectName="KaJMX:name=File System,type=Working Directory"/>
      			</max>
@@ -173,7 +173,7 @@
      			</value>
      		</gauge>
      	</panel>
-     	
+     	 
      	<panel id="cpu-panel"  title="CPU Load" row="1" column="5" height="2" width="4">
      		<graph id="cpu-graph" yAxisLabel="%" samples="600">
      			<dataSeries label="CPU">
@@ -206,7 +206,6 @@
      			</dataSeries>
      		</graph>
      	</panel>
-     	  
      	<panel id="jvm-heap-panel" title="Heap Memrory" row="7" column="5" width="4" height="2">
      		<graph id="jvm-heap"  samples="600" yAxisLabel="Bytes">
      			<dataSeries label="Used" type="json">

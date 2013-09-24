@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.DashboardWidget;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -48,7 +50,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlRootElement(name = "textGroup")
-public class TextGroup {
+public class TextGroup implements DashboardWidget {
 
     
     @XmlAttribute(required = true)
@@ -143,6 +145,11 @@ public class TextGroup {
      */
     public void setId(String value) {
         this.id = value;
+    }
+
+    @Override
+    public String getType() {
+        return "textGroup";
     }
     
   

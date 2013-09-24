@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "attributeValue", propOrder = {
     "attribute",
+    "value",
     "jsFunction"
 })
 public class AttributeValue {
@@ -47,8 +48,7 @@ public class AttributeValue {
     protected Attribute attribute;
     @XmlAttribute
     protected String label;
-    @XmlAttribute(name = "value")
-    protected String value;
+    protected Object value;
     @XmlAttribute
     protected boolean subscribe = true;
     @XmlAttribute
@@ -112,7 +112,7 @@ public class AttributeValue {
      *     {@link String }
      *     
      */
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -124,7 +124,7 @@ public class AttributeValue {
      *     {@link String }
      *     
      */
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

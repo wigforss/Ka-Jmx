@@ -84,8 +84,8 @@ function onJmxAttributeValue(jmxValue) {
 		if(timerTask) {
 			window.clearInterval(timerTask);
 		}
-		chartData.append(new Date().getTime(), jmxValue.value);
-		jmx.Timer[attribute] = setInterval(function(){chartData.append(new Date().getTime(), jmxValue.value)},500);
+		chartData.append(new Date().getTime(), parseFloat(jmxValue.value));
+		jmx.Timer[attribute] = setInterval(function(){chartData.append(new Date().getTime(), parseFloat(jmxValue.value))},500);
 	} else {	
 		$('#refresh-value-'+attribute).text(jmxValue.value);	  	
 	}

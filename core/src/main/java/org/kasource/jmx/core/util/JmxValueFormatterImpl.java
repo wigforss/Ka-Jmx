@@ -1,5 +1,6 @@
 package org.kasource.jmx.core.util;
 
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,8 +11,16 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.management.openmbean.CompositeData;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public class JmxValueFormatterImpl implements JmxValueFormatter {
     private static final long ONE_DAY_IN_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
@@ -41,6 +50,8 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
            }
         } else if(value instanceof CompositeData) {
             return toMap((CompositeData)value);
+        } else if(value instanceof Element) {
+            return parseXmlElement((Element) value);
         }
         
         return value;
@@ -53,6 +64,28 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         }
         return data;
     }
+    
+    private Object parseXmlElement(Element element) {
+        if(element.getFirstChild() instanceof Text) {
+            Text text = (Text) element.getFirstChild();
+            return text.getData();
+        }
+       
+        return toXml(element);
+    }
+    
+    private String toXml(Node node) {
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            StreamResult result = new StreamResult(new StringWriter());
+            DOMSource source = new DOMSource(node);
+            transformer.transform(source, result);
+            return result.getWriter().toString();
+          } catch(TransformerException ex) {
+              throw new IllegalArgumentException("Could not transform "  +node + " to XML", ex);
+          }
+    }
+    
     
     private Object asList(Object value) {
         Class<?> componentClass = value.getClass().getComponentType();

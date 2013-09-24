@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 
 import org.kasource.jmx.core.scheduling.Subscription;
 import org.kasource.jmx.core.service.SubscriptionService;
+import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
 import org.kasource.web.websocket.annotations.OnWebSocketEvent;
 import org.kasource.web.websocket.annotations.WebSocketListener;
@@ -21,13 +22,16 @@ public class PushController {
     @Resource
     private JmxValueFormatter jmxValueFormatter;
     
+    @Resource
+    private JmxValueConverter jmxValueConverter;
+    
     @OnWebSocketEvent
     public void subscribe(WebSocketTextObjectMessageEvent event) {
         Subscription subscription = event.getMessageAsObject(Subscription.class);
         if(subscription.isSubscribe()) {
-            subscriptionService.addListener(subscription.getKey(), new WebSocketAttributeListener(event.getSource(), event.getClientId(), subscription,jmxValueFormatter, subscriptionService));
+            subscriptionService.addListener(subscription.getKey(), new WebSocketAttributeListener(event.getSource(), event.getClientId(), subscription,jmxValueFormatter, jmxValueConverter, subscriptionService));
         } else {
-            subscriptionService.removeListener(subscription.getKey(), new WebSocketAttributeListener(event.getSource(), event.getClientId(), subscription, jmxValueFormatter, subscriptionService));
+            subscriptionService.removeListener(subscription.getKey(), new WebSocketAttributeListener(event.getSource(), event.getClientId(), subscription, jmxValueFormatter, jmxValueConverter, subscriptionService));
         }
     }
 }

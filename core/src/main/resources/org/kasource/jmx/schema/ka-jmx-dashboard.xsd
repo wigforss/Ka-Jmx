@@ -99,10 +99,11 @@
 	<xs:complexType name="attributeValue">
 			<xs:sequence>
 				<xs:element ref="attribute" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="value" type="xs:anyType" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="jsFunction" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			
 			</xs:sequence>
 			<xs:attribute name="label" type="xs:string" use="optional"/>
-			<xs:attribute name="value" type="xs:string" use="optional"/>
 			<xs:attribute name="subscribe" type="xs:boolean" use="optional" default="true"/>
 			<xs:attribute name="type" type="valueType" use="optional" default="text"/>
 			<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"/>

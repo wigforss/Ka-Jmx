@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.DashboardWidget;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -52,7 +54,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "dataSeries"
 })
 @XmlRootElement(name = "graph")
-public class Graph {
+public class Graph implements DashboardWidget {
     
     @XmlAttribute(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
@@ -192,6 +194,11 @@ public class Graph {
      */
     public void setyAxisLabel(String yAxisLabel) {
         this.yAxisLabel = yAxisLabel;
+    }
+
+    @Override
+    public String getType() {
+       return "graph";
     }
 
    

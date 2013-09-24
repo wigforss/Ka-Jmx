@@ -69,4 +69,6 @@
     
     <bean id="jmxValueFormatter" class="org.kasource.jmx.core.util.JmxValueFormatterImpl"/>
     
+    <bean id="jmxValueConverter" class="org.kasource.jmx.core.util.JmxValueConverterImpl"/>
+    
 </beans>

@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.DashboardWidget;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -48,7 +50,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "dataSeries"
 })
 @XmlRootElement(name = "pie")
-public class Pie {
+public class Pie implements DashboardWidget {
 
     @XmlElement(required = true)
     protected List<AttributeValue> dataSeries;
@@ -142,6 +144,11 @@ public class Pie {
      */
     public void setDataSeries(List<AttributeValue> dataSeries) {
         this.dataSeries = dataSeries;
+    }
+
+    @Override
+    public String getType() {
+       return "pie";
     }
 
 }

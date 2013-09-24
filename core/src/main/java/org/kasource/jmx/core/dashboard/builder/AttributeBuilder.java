@@ -10,7 +10,7 @@ public class AttributeBuilder {
    
     private Attribute attribute;
     private String label; 
-    private String value;
+    private Object value;
     private boolean subscribe = true;
     private ValueType type = ValueType.TEXT;
     private String jsFunction;
@@ -27,7 +27,7 @@ public class AttributeBuilder {
         return this;
     }
     
-    public AttributeBuilder value(String value) {
+    public AttributeBuilder value(Object value) {
         this.value = value;
         return this;
     }

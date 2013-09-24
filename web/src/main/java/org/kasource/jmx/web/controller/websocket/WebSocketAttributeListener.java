@@ -5,6 +5,7 @@ import org.kasource.jmx.core.model.dashboard.ValueType;
 import org.kasource.jmx.core.scheduling.AttributeValueListener;
 import org.kasource.jmx.core.scheduling.Subscription;
 import org.kasource.jmx.core.service.SubscriptionService;
+import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
 import org.kasource.web.websocket.RecipientType;
 import org.kasource.web.websocket.channel.NoSuchWebSocketClient;
@@ -19,10 +20,11 @@ public class WebSocketAttributeListener implements AttributeValueListener {
     private WebSocketChannel channel;
     private String clientId;
     private JmxValueFormatter jmxValueFormatter;
+    private JmxValueConverter jmxValueConverter;
     private SubscriptionService subscriptionService;
     private Subscription subscription;
     
-    public WebSocketAttributeListener(WebSocketChannel channel, String clientId, Subscription subscription, JmxValueFormatter jmxValueFormatter, SubscriptionService subscriptionService) {
+    public WebSocketAttributeListener(WebSocketChannel channel, String clientId, Subscription subscription, JmxValueFormatter jmxValueFormatter, JmxValueConverter jmxValueConverter ,SubscriptionService subscriptionService) {
         this.channel = channel;
         this.clientId = clientId;
         this.jmxValueFormatter = jmxValueFormatter;
@@ -33,13 +35,19 @@ public class WebSocketAttributeListener implements AttributeValueListener {
     @Override
     public void onValueChange(ManagedAttributeValue value) {
         try {
-            
+            if(TEXT_TYPE.equals(subscription.getType())) {
+                value.setValue(jmxValueFormatter.format(value.getValue()).toString());
+            } else {
+                value.setValue(jmxValueConverter.convert(value.getValue()));
+            }
+            /*
             value.setValue(jmxValueFormatter.format(value.getValue()));
             if(TEXT_TYPE.equals(subscription.getType())) {
                 if(!value.getValue().getClass().isPrimitive()) {
                     value.setValue(value.getValue().toString());
                 }
             }
+            */
             channel.sendMessage(value, clientId, RecipientType.CLIENT_ID);
         } catch(NoSuchWebSocketClient nswc) {
             subscriptionService.removeListener(this);

@@ -300,4 +300,19 @@ public class Panel {
         this.pie = pie;
     }
 
+    public Object getWidget() {
+        if(textGroup !=  null) {
+            return textGroup;
+        } else if(graph !=  null) {
+            return graph;
+        } else if(gauge !=  null) {
+            return gauge;
+        } else if(pie != null) {
+            return pie;
+        }
+        
+       return null;
+        
+    }
+    
 }

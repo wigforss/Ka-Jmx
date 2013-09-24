@@ -15,21 +15,38 @@ Gauge =
 		this.dashboardId = dashboardId;
 		
 		this.initialize = function() {
-			var minValue = this.options.min.value;
-			var maxValue = this.options.max.value;
-			var currentValue = this.options.value.value;
-			if(this.options.min.jsFunction) {
+			var minValue = 0;
+			if(!this.options.min.jsFunction && this.options.min.value) {
+				minValue = parseFloat(this.options.min.value);
+			} else if(this.options.min.jsFunction) {
 				this.options.min.transform = eval('('+this.options.min.jsFunction+')');
-				var minValue = this.options.min.transform(minValue);
+				if(this.options.min.value) {
+					 minValue = this.options.min.transform(this.options.min.value);
+				}
 			}
-			if(this.options.max.jsFunction) {
+			
+			var maxValue = 0;
+			if(!this.options.max.jsFunction && this.options.max.value) {
+				maxValue = parseFloat(this.options.max.value);
+			} else if(this.options.max.jsFunction) {
 				this.options.max.transform = eval('('+this.options.max.jsFunction+')');
-				var maxValue = this.options.min.transform(maxValue);
+				if(this.options.max.value) {
+					 maxValue = this.options.max.transform(this.options.max.value);
+				}
 			}
-			if(this.options.value.jsFunction) {
+			
+			var currentValue = 0;
+			if(!this.options.value.jsFunction && this.options.value.value) {
+				currentValue = parseFloat(this.options.value.value);
+			} else if(this.options.value.jsFunction) {
 				this.options.value.transform = eval('('+this.options.value.jsFunction+')');
-				var currentValue = this.options.value.transform(currentValue);
+				if(this.options.value.value) {
+					currentValue = this.options.value.transform(this.options.value.value);
+				}
 			}
+			
+			
+			
 			var title = '';
 			if(this.options.title) {
 				title = this.options.title;
@@ -93,9 +110,13 @@ Gauge =
 					var type = types[i];
 					switch(type) {
 					case 'min':
-						var minValue = parseFloat(jmxValue.value);
-						if(widget.options.min.transform) {
-							var minValue = parseFloat(widget.options.min.transform(minValue));
+						var minValue = 0;
+						if (jmxValue.value) {
+							if(widget.options.min.transform) {
+								var minValue = parseFloat(widget.options.min.transform(jmxValue.value));
+							} else {
+								minValue = parseFloat(jmxValue.value);
+							}
 						}
 						widget.gaugeOptions['min'] = minValue;
 						if (currentDasboard == widget.dashboardId) {
@@ -104,9 +125,13 @@ Gauge =
 						}
 						break;
 					case 'max':
-						var maxValue = parseFloat(jmxValue.value);
-						if(widget.options.max.transform) {
-							maxValue = parseFloat(widget.options.max.transform(maxValue));
+						var maxValue = 0;
+						if(jmxValue.value) {
+							if(widget.options.max.transform) {
+								maxValue = parseFloat(widget.options.max.transform(jmxValue.value));
+							} else {
+								maxValue = parseFloat(jmxValue.value);
+							}
 						}
 						widget.gaugeOptions['max'] = maxValue;
 						if (currentDasboard == widget.dashboardId) {
@@ -115,9 +140,13 @@ Gauge =
 						}
 						break;
 					case 'value':
-						var currentValue = parseFloat(jmxValue.value);
-						if(widget.options.value.transform) {
-							currentValue = parseFloat(widget.options.value.transform(currentValue));
+						var currentValue = 0;
+						if(jmxValue.value) {
+							if(widget.options.value.transform) {
+								currentValue = parseFloat(widget.options.value.transform(jmxValue.value));
+							} else {
+								currentValue = parseFloat(jmxValue.value);
+							}
 						}
 						
 						widget.gaugeOptions['value']=currentValue;
@@ -132,14 +161,14 @@ Gauge =
 		
 		this.close = function() {
 			if(this.options.min.subscribe && this.options.min.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, this.id+"-min");	
+				org.kasource.Websocket.unsubscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, this.id+"-min", this.options.min.type);	
 			}
 			if(this.options.max.subscribe && this.options.max.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, this.id+"-max");
+				org.kasource.Websocket.unsubscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, this.id+"-max", this.options.max.type);
 				
 			}
 			if(this.options.value.subscribe && this.options.value.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, this.id+"-value");
+				org.kasource.Websocket.unsubscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, this.id+"-value", this.options.type);
 			}
 		}
 		
@@ -175,10 +204,14 @@ Graph =
 			var useLegend = (this.options.dataSeries.length > 1);
 			for (var i = 0; i < this.options.dataSeries.length; i++) {
 				
-				var yValue = parseFloat(this.options.dataSeries[i].value);
-				if(this.options.dataSeries[i].jsFunction) {
+				var yValue = 0;
+				if (this.options.dataSeries[i].jsFunction) {
 					this.options.dataSeries[i].transform = eval('('+this.options.dataSeries[i].jsFunction+')');
-					yValue = parseFloat(this.options.dataSeries[i].transform(this.options.dataSeries[i].value));
+					if(this.options.dataSeries[i].value) {
+						yValue = parseFloat(this.options.dataSeries[i].transform(this.options.dataSeries[i].value));
+					}
+				} else if (this.options.dataSeries[i].value){
+					yValue = parseFloat(this.options.dataSeries[i].value);
 				}
 				
 				
@@ -306,7 +339,7 @@ Graph =
 				} else {
 					index.push(i);
 				}
-				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this);
+				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this, this.options.dataSeries[i].type);
 			}
 			
 		}
@@ -315,14 +348,16 @@ Graph =
 			var attribute = jmxValue.key.attributeName;
 			var objectName = jmxValue.key.name;
 			var indices = widget.dataSeriesIndex[objectName+"."+attribute];
-			if(indices) {
+			if(indices && jmxValue.value) {
 				for (var i = 0; i < indices.length; i++) {
 					var index = indices[i];
+				
 					if(widget.options.dataSeries[i].transform) {
-						widget.currentValues[index]=widget.options.dataSeries[i].transform(jmxValue.value);
+						widget.currentValues[index]=parseFloat(widget.options.dataSeries[i].transform(jmxValue.value));
 					} else {
-						widget.currentValues[index]=jmxValue.value;
+						widget.currentValues[index]=parseFloat(jmxValue.value);
 					}
+					
 				}
 			}
 			
@@ -413,10 +448,14 @@ Pie =
 			}
 			var data = [];
 			for (var i = 0; i < this.options.dataSeries.length; i++) {	
-				var yValue = parseFloat(this.options.dataSeries[i].value);
+				var yValue = 0;
 				if(this.options.dataSeries[i].jsFunction) {
 					this.options.dataSeries[i].transform = eval('('+this.options.dataSeries[i].jsFunction+')');
-					yValue = parseFloat(this.options.dataSeries[i].transform(this.options.dataSeries[i].value));
+					if(this.options.dataSeries[i].value) {
+						yValue = parseFloat(this.options.dataSeries[i].transform(this.options.dataSeries[i].value));
+					}
+				} else if (this.options.dataSeries[i].value){
+					yValue = parseFloat(this.options.dataSeries[i].value);
 				}
 						
 				data.push({name: this.options.dataSeries[i].label, y: yValue});
@@ -472,7 +511,7 @@ Pie =
 				} else {
 					index.push(i);
 				}
-				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this);
+				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this, this.options.dataSeries[i].type);
 			}
 		}
 		
@@ -485,10 +524,8 @@ Pie =
 			var objectName = jmxValue.key.name;
 			var indices = widget.dataSeriesIndex[objectName+"."+attribute];
 			var yValue =  parseFloat(jmxValue.value);
-			
-			
-			
-			if(indices) {
+				
+			if(indices && jmxValue.value) {
 				for (var i = 0; i < indices.length; i++) {
 					var index = indices[i];
 					if(widget.options.dataSeries[index].transform) {
@@ -551,10 +588,12 @@ TextGroup =
 				table += '<tr><td class="text-label">';
 				table += this.data.value[i].label;
 				table += '</td><td class="text-value">';
-				if(this.data.value[i].transform) {
-					table += this.data.value[i].transform(this.data.value[i].value);
-				} else {
-					table += this.data.value[i].value;
+				if(this.data.value[i].value) {
+					if(this.data.value[i].transform) {
+						table += this.data.value[i].transform(this.data.value[i].value);
+					} else {
+						table += this.data.value[i].value;
+					}
 				}
 				table +='</td></tr>';
 			}
@@ -588,8 +627,11 @@ TextGroup =
 					var row = rows[i];
 					var item = widget.data.value[row];
 					var value = jmxValue.value
-					if(item.transform) {
+					if(value && item.transform) {
 						value = item.transform(value);
+					}
+					if(!value) {
+						value='';
 					}
 					$('#'+id).find('tr:nth-child('+(row+1)+')').find('td:nth-child(2)').text(value);
 				}

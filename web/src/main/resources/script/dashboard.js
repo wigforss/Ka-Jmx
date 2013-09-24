@@ -39,7 +39,7 @@ function renderDashboard(json) {
 		widget_base_dimensions: [dashboard.baseWidth, dashboard.baseHeight],
 		extra_cols: 10,
 		draggable: {
-			handle: '.title-bar'
+			handle: '.title-bar-text'
 		}
 		});
 		
@@ -49,15 +49,8 @@ function renderDashboard(json) {
 	
 	for(var i = 0; i < dashboard.panel.length; i++) {
 		var panel = dashboard.panel[i];
-		if(panel.graph) {
-			widgetFactory['graph'].get(dashboard.id, panel.graph.id, panel.graph);
-		} else if(panel.gauge) {
-			widgetFactory['gauge'].get(dashboard.id, panel.gauge.id, panel.gauge);
-		} else if(panel.textGroup){
-			widgetFactory['textGroup'].get(dashboard.id, panel.textGroup.id, panel.textGroup);
-		} else {
-			widgetFactory['pie'].get(dashboard.id, panel.pie.id, panel.pie);
-		}
+		widgetFactory[panel.widget.type].get(dashboard.id, panel.widget.id, panel.widget);
+		
 	}
 		}, 500);
 	
