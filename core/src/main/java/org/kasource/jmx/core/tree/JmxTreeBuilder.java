@@ -1,6 +1,6 @@
 package org.kasource.jmx.core.tree;
 
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,9 +26,13 @@ import org.kasource.jmx.core.tree.node.ObjectNode;
 import org.kasource.jmx.core.tree.node.OperationNode;
 import org.kasource.jmx.core.tree.node.OperationsNode;
 import org.kasource.jmx.core.tree.node.RootNode;
-import org.kasource.jmx.core.util.JavadocResolver;
 import org.springframework.stereotype.Component;
 
+/***
+ * Builds Tree of Managed Beans.
+ * 
+ * @author rikardwi
+ **/
 @Component
 public class JmxTreeBuilder {
 
@@ -37,9 +41,17 @@ public class JmxTreeBuilder {
     @Resource
     private MBeanServer server;
     
- 
-    public JmxTree filterTree(JmxTree tree, String objectNameFilter, boolean includeChildren) {
-        String nameFilter = objectNameFilter.trim().toLowerCase();
+    /**
+     * Returns a filtered tree from the supplied tree.
+     * 
+     * @param tree              Tree to filter.
+     * @param filter            Name to filter on.
+     * @param includeChildren   true to include attributes, operations and notifications, false to only filter on ObjectName.
+     * 
+     * @return a new Tree with the filter result.
+     **/
+    public JmxTree filterTree(JmxTree tree, String filter, boolean includeChildren) {
+        String nameFilter = filter.trim().toLowerCase();
         Set<DomainNode> domainNodes = new TreeSet<DomainNode>();
         
         for(JmxTreeNode domain : tree.getRoot().getChildren()) {
@@ -72,6 +84,14 @@ public class JmxTreeBuilder {
         return jmxTree;
     }
     
+    /**
+     * Returns the matching child nodes of a ManagedObject.
+     * 
+     * @param nameFilter    Name to filter on
+     * @param objectNode    The object to inspect.
+     * 
+     * @return the matching child nodes of objectNode.
+     **/
     private Set<JmxTreeNode> getMatchingChildren(String nameFilter, ObjectNode objectNode) {
         AttributesNode attributesNode = null;
         OperationsNode operationsNode = null;

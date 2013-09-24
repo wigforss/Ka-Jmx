@@ -5,6 +5,11 @@ import org.kasource.jmx.core.model.dashboard.Attribute;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.ValueType;
 
+/**
+ * Builder for Attribute.
+ * 
+ * @author rikardwi
+ **/
 public class AttributeBuilder {
 
    

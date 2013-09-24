@@ -2,6 +2,11 @@ package org.kasource.jmx.core.tree.node;
 
 import javax.management.MBeanOperationInfo;
 
+/**
+ * JMX Operations node of the JMX Tree.
+ *  
+ * @author rikardwi
+ **/
 public class OperationNode extends JmxTreeNode {
 
     private MBeanOperationInfo info;

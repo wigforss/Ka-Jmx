@@ -3,6 +3,11 @@ package org.kasource.jmx.core.dashboard.builder;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 
+/**
+ * Builder for Gauge.
+ * 
+ * @author rikardwi
+ **/
 public class GaugeBuilder extends AbstractWidgetBuilder {
    
     

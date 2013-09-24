@@ -19,6 +19,11 @@ import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
 import org.springframework.stereotype.Service;
 
+/**
+ * Default implementation of DashboardService.
+ * 
+ * @author rikardwi
+ **/
 @Service
 public class DashboardServiceImpl implements DashboardService {
 

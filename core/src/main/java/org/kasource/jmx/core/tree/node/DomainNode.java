@@ -3,6 +3,11 @@ package org.kasource.jmx.core.tree.node;
 
 import java.util.Set;
 
+/**
+ * The Domain Node of the JMX Tree.
+ * 
+ * @author rikardwi
+ **/
 public class DomainNode extends JmxTreeNode {
 
     private boolean expand;

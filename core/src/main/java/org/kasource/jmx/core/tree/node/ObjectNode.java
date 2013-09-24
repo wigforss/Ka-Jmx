@@ -9,7 +9,11 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectName;
 
-
+/**
+ * JMX Object node of the JMX Tree.
+ *  
+ * @author rikardwi
+ **/
 public class ObjectNode extends JmxTreeNode {
 
     public static final String LABEL_ATTRIBUTES = "Attributes";

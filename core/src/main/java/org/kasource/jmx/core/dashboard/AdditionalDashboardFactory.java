@@ -11,6 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Creates aditional Dashboards from an "external class".
+ * 
+ * @author rikardwi
+ **/
 @Component("additionalDashboardFactory")
 public class AdditionalDashboardFactory implements DashboardFactory {
 

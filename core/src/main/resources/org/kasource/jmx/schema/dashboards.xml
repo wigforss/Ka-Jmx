@@ -6,7 +6,6 @@
        ka-jmx-dashboard.xsd">
 	
      <dashboard id="os-java" name="Operating System &amp; Java" baseWidth="100" baseHeight="100">
-     	
      	<panel id="os-panel" title="OS Information" row="1" column="1" height="2" width="2">
      		<textGroup id="osText">
      			<value subscribe="false" label="Name:">
@@ -206,6 +205,7 @@
      			</dataSeries>
      		</graph>
      	</panel>
+     	
      	<panel id="jvm-heap-panel" title="Heap Memrory" row="7" column="5" width="4" height="2">
      		<graph id="jvm-heap"  samples="600" yAxisLabel="Bytes">
      			<dataSeries label="Used" type="json">
@@ -249,12 +249,6 @@
      				</jsFunction>
      			</dataSeries>
      		</graph>
-     	</panel>  
-       
-    
-     	  
-     	
-     
-     	
+     	</panel>       	
      </dashboard>  
  </configuration>

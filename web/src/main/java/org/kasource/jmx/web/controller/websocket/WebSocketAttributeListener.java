@@ -28,6 +28,7 @@ public class WebSocketAttributeListener implements AttributeValueListener {
         this.channel = channel;
         this.clientId = clientId;
         this.jmxValueFormatter = jmxValueFormatter;
+        this.jmxValueConverter = jmxValueConverter;
         this.subscriptionService=subscriptionService;
         this.subscription = subscription;
     }
@@ -40,14 +41,7 @@ public class WebSocketAttributeListener implements AttributeValueListener {
             } else {
                 value.setValue(jmxValueConverter.convert(value.getValue()));
             }
-            /*
-            value.setValue(jmxValueFormatter.format(value.getValue()));
-            if(TEXT_TYPE.equals(subscription.getType())) {
-                if(!value.getValue().getClass().isPrimitive()) {
-                    value.setValue(value.getValue().toString());
-                }
-            }
-            */
+          
             channel.sendMessage(value, clientId, RecipientType.CLIENT_ID);
         } catch(NoSuchWebSocketClient nswc) {
             subscriptionService.removeListener(this);

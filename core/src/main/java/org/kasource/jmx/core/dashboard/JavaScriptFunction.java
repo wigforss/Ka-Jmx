@@ -1,5 +1,11 @@
 package org.kasource.jmx.core.dashboard;
 
+/**
+ * Enumerations of JavaScript functions that might be reused for
+ * attribute value transformation by Dashbaord widgets.
+ * 
+ * @author rikardwi
+ **/
 public enum JavaScriptFunction {
     BYTES_TO_BYTES("function(value){return value + \" bytes\";}"), 
     BYTES_TO_KB("function(value){return (value/1000) + \" KB\";}"), 

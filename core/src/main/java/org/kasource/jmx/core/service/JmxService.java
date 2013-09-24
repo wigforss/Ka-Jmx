@@ -10,6 +10,11 @@ import javax.management.ObjectName;
 import org.kasource.jmx.core.bean.ManagedBean;
 import org.kasource.jmx.core.tree.JmxTree;
 
+/**
+ * JMX ManagedBean Service.
+ * 
+ * @author rikardwi
+ **/
 public interface JmxService {
 
     ManagedBean getBeanInfo(String objectName);

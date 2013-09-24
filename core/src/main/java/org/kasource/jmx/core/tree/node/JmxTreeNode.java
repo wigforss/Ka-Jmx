@@ -6,7 +6,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
-
+/**
+ * Abstract base class for JMX Tree Nodes.
+ * 
+ * @author rikardwi
+ **/
 public abstract class JmxTreeNode implements Comparable<JmxTreeNode>{
     private String label;
     private Set<? extends JmxTreeNode> children = new TreeSet<JmxTreeNode>();

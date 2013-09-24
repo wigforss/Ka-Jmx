@@ -1,7 +1,7 @@
 package org.kasource.jmx.core.util;
 
 /**
- * Converts an Object to a representation more suitable for JSON conversion.
+ * Converts an Object to a representation more suitable for JSON serialization.
  * 
  * @author rikardwi
  **/

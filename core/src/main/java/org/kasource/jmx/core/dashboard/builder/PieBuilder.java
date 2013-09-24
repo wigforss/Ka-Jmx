@@ -8,6 +8,11 @@ import java.util.List;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Pie;
 
+/**
+ * Builder for Pie.
+ * 
+ * @author rikardwi
+ **/
 public class PieBuilder extends AbstractWidgetBuilder {
    
     private List<AttributeValue> dataSeries = new ArrayList<AttributeValue>();

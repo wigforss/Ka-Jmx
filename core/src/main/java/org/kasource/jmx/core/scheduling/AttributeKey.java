@@ -73,4 +73,9 @@ public class AttributeKey {
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
     }
+    
+    @Override
+    public String toString() {
+        return "AttributeKey[ObjectName: " + name + " Attribute: " + attributeName+"]";
+    }
 }

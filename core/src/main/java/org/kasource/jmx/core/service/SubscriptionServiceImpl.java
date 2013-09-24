@@ -13,12 +13,19 @@ import javax.management.openmbean.CompositeData;
 import org.kasource.jmx.core.bean.ManagedAttributeValue;
 import org.kasource.jmx.core.scheduling.AttributeKey;
 import org.kasource.jmx.core.scheduling.AttributeValueListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/**
+ * Default implementation of SubscriptionService.
+ * 
+ * @author rikardwi
+ **/
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-    
+    private static final Logger LOG = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     private Map<AttributeKey, Set<AttributeValueListener>> listeners = new ConcurrentHashMap<AttributeKey, Set<AttributeValueListener>>();
     private Map<AttributeKey, Object> values = new ConcurrentHashMap<AttributeKey, Object>();
     
@@ -110,6 +117,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 return !values.get(key).equals(value);
             }
         } catch(Exception e) {
+            LOG.error("Could not verify value change for attribute "+ key, e);
             return false;
         }
     }

@@ -2,6 +2,10 @@ package org.kasource.jmx.core.dashboard.builder;
 
 import java.util.regex.Pattern;
 
+/**
+ * Abstract base class for widgets
+ * @author rikardwi
+ **/
 public abstract class AbstractWidgetBuilder {
     private static final Pattern ID_REG_EXP = Pattern.compile("\\s|:|@|\\$|%|&|/|\\+|,|\\(|\\)|\\{|\\}|\\[|\\]");
     private String id;

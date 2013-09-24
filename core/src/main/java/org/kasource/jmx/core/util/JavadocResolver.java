@@ -8,6 +8,11 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Resolves JavaDoc URL for a class.
+ * 
+ * @author rikardwi
+ **/
 @Component
 public class JavadocResolver {
 
@@ -16,6 +21,13 @@ public class JavadocResolver {
     @Resource (name = "javadocProperties")
     private Properties doc;
     
+    /**
+     * Returns a HTTP URL for a class.
+     * 
+     * @param className Name of a class to find URL for.
+     * 
+     * @return HTTP URL for a class.
+     **/
     public String getDocUrl(String className) {
         
         if(!cache.containsKey(className)) {
@@ -31,6 +43,13 @@ public class JavadocResolver {
        
     }
     
+    /**
+     * Return JavaDoc URL for class.
+     * 
+     * @param className Class name to find JavaDoc for.
+     * 
+     * @return JavaDoc URL for class.
+     **/
     private String resolveDocByClass(String className) {
         String urlBase = doc.getProperty(className);
         if(urlBase != null) {
@@ -39,6 +58,14 @@ public class JavadocResolver {
         return null;
     }
     
+    /**
+     * Return JavaDoc URL for package. Check package names recursively per dot, starting 
+     * with the most specific package.
+     * 
+     * @param className Package Name to find JavaDoc for.
+     * 
+     * @return JavaDoc URL for package
+     **/
     private String resolveDocByPackage(String className) {
         int index = className.lastIndexOf(".");
         String packageName = className;

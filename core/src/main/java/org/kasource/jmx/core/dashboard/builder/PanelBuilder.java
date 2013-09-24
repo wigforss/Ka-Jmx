@@ -8,6 +8,11 @@ import org.kasource.jmx.core.model.dashboard.Panel;
 import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 
+/**
+ * Builder for Panel.
+ * 
+ * @author rikardwi
+ **/
 public class PanelBuilder extends AbstractWidgetBuilder {
   
    

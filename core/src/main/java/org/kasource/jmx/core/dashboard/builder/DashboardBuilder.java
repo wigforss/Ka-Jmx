@@ -6,10 +6,13 @@ import java.util.List;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Panel;
 
+/**
+ * Builder for Dashboard.
+ * 
+ * @author rikardwi
+ **/
 public class DashboardBuilder extends AbstractWidgetBuilder {
-  
     
-   
     private String name;
     private int baseWidth;
     private int baseHeight;

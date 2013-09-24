@@ -16,7 +16,11 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.Resource;
 
 
-
+/**
+ * XML (JAXB) DAO for Dashboards.
+ * 
+ * @author rikardwi
+ **/
 public class DashboardXmlDao implements DashboardDao {
 
     private Resource sourceXml;

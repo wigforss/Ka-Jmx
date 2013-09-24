@@ -6,6 +6,11 @@ import java.util.List;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Graph;
 
+/**
+ * Builder for Graph.
+ * 
+ * @author rikardwi
+ **/
 public class GraphBuilder extends AbstractWidgetBuilder {
  
     

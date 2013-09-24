@@ -11,31 +11,28 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.management.Attribute;
 import javax.management.AttributeList;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.InvalidAttributeValueException;
-import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerNotification;
 import javax.management.Notification;
-import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
-import javax.management.ReflectionException;
 
 import org.kasource.jmx.core.bean.ManagedAttribute;
 import org.kasource.jmx.core.bean.ManagedBean;
 import org.kasource.jmx.core.tree.JmxTree;
 import org.kasource.jmx.core.tree.JmxTreeBuilder;
-import org.kasource.jmx.core.tree.node.RootNode;
 import org.kasource.jmx.core.util.JavadocResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.stereotype.Service;
 
+/**
+ * Default implementation of JmxService.
+ * 
+ * @author rikardwi
+ **/
 @ManagedResource(objectName="KaJMX:name=JmxService", description="JMX Service used by the JMX Console")
 public class JmxServiceImpl implements JmxService, NotificationListener {
     private static final Logger LOG = LoggerFactory.getLogger(JmxServiceImpl.class);

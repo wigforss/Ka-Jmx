@@ -6,6 +6,11 @@ import java.util.List;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 
+/**
+ * Builder for TextGroup.
+ * 
+ * @author rikardwi
+ **/
 public class TextGroupBuilder extends AbstractWidgetBuilder {
     private List<AttributeValue> values = new ArrayList<AttributeValue>();
     private String title;

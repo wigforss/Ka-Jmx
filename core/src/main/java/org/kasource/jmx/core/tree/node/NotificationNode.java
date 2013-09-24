@@ -2,6 +2,11 @@ package org.kasource.jmx.core.tree.node;
 
 import javax.management.MBeanNotificationInfo;
 
+/**
+ * JMX Notification node of the JMX Tree.
+ *  
+ * @author rikardwi
+ **/
 public class NotificationNode extends JmxTreeNode {
 
     private MBeanNotificationInfo info;

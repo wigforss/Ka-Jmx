@@ -22,18 +22,39 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
+/**
+ * Default implementation of JmxValueFormatter that formats a value to a presentation friendly representation.
+ * 
+ * @author rikardwi
+ **/
 public class JmxValueFormatterImpl implements JmxValueFormatter {
     private static final long ONE_DAY_IN_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
-
+    
+    /**
+     * Looks up the null place holder from properties
+     **/
     @Value("${null.placeholder}")
     private String nullStringValue;
     
+    /**
+     * Looks up the date pattern from properties
+     **/
     @Value("${date.pattern}")
     private String datePattern;
     
+    /**
+     * Looks up the date time pattern from properties
+     **/
     @Value("${date.time.pattern}")
     private String dateTimePattern;
     
+    /**
+     * Returns a formatted representation for the value.
+     * 
+     * @param value Value to format.
+     * 
+     * @return a formatted representation for the value.
+     **/
     @Override
     public Object format(Object value) {
         if (value == null) {
@@ -57,6 +78,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return value;
     }
 
+    /**
+     * Returns the CompositeData value as a Map.
+     * 
+     * @param value CompositeData value to format.
+     * 
+     * @return the CompositeData value as a Map.
+     */
     private Map<String, Object> toMap(CompositeData value) {
         Map<String, Object> data = new HashMap<String, Object>();
         for(String key : value.getCompositeType().keySet()) {
@@ -65,7 +93,14 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return data;
     }
     
-    private Object parseXmlElement(Element element) {
+    /**
+     * Returns the XML Element as a String.
+     * 
+     * @param element XML Element to format.
+     * 
+     * @return XML Element as a String.
+     **/
+    private String parseXmlElement(Element element) {
         if(element.getFirstChild() instanceof Text) {
             Text text = (Text) element.getFirstChild();
             return text.getData();
@@ -74,6 +109,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return toXml(element);
     }
     
+    /**
+     * Returns the XML node as String of XML.
+     * 
+     * @param node Node to convert to String of XML
+     * 
+     * @return the XML node as String of XML.
+     **/
     private String toXml(Node node) {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -86,7 +128,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
           }
     }
     
-    
+    /**
+     * Returns the array value as a List.
+     * 
+     * @param value Array to convert into a list.
+     * 
+     * @return the array value as a List.
+     **/
     private Object asList(Object value) {
         Class<?> componentClass = value.getClass().getComponentType();
         if (componentClass.isPrimitive()) {
@@ -108,6 +156,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         }
     }
 
+    /**
+     * Returns value as an Integer List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as an Integer List.
+     **/
     private List<Integer> asIntList(Object value) {
         int[] values = (int[]) value;
         List<Integer> list = new ArrayList<Integer>(values.length);
@@ -117,6 +172,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a Long List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a Long List.
+     **/
     private List<Long> asLongList(Object value) {
         long[] values = (long[]) value;
         List<Long> list = new ArrayList<Long>(values.length);
@@ -126,6 +188,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a Short List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a Short List.
+     **/
     private List<Short> asShortList(Object value) {
         short[] values = (short[]) value;
         List<Short> list = new ArrayList<Short>(values.length);
@@ -135,6 +204,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a Byte List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a Byte List.
+     **/
     private List<Byte> asByteList(Object value) {
         byte[] values = (byte[]) value;
         List<Byte> list = new ArrayList<Byte>(values.length);
@@ -144,6 +220,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a Character List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a Character List.
+     **/
     private List<Character> asCharList(Object value) {
         char[] values = (char[]) value;
         List<Character> list = new ArrayList<Character>(values.length);
@@ -153,6 +236,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a Boolean List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a Boolean List.
+     **/
     private List<Boolean> asBooleanList(Object value) {
         boolean[] values = (boolean[]) value;
         List<Boolean> list = new ArrayList<Boolean>(values.length);
@@ -162,6 +252,13 @@ public class JmxValueFormatterImpl implements JmxValueFormatter {
         return list;
     }
 
+    /**
+     * Returns value as a T List.
+     * 
+     * @param value array to convert.
+     * 
+     * @return value as a T List.
+     **/
     private <T> List<T> asList(Object value, Class<T> ofClass) {
         @SuppressWarnings("unchecked")
         T[] values = (T[]) value;

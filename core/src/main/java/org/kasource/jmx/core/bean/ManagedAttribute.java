@@ -21,10 +21,7 @@ public class ManagedAttribute extends ManagedEntity {
         this.readable = info.isReadable();
     }
     
-    
-
    
-
     /**
      * @return the writable
      */
@@ -39,8 +36,5 @@ public class ManagedAttribute extends ManagedEntity {
         return readable;
     }
 
-   
-
-    
     
 }
