@@ -175,7 +175,7 @@ public class ConnectorDashboardFactory implements DashboardFactory {
     
    
     private Graph getProcessingGraph(ObjectName requestProcessor, String port) {
-        Graph processingGraph = new GraphBuilder("processingGraph-"+port).samples(600)
+        Graph processingGraph = new GraphBuilder("processingGraph-"+port).samples(600).decimals(0)
                                                   .addData(new AttributeBuilder().attribute(requestProcessor.getCanonicalName(), "bytesSent").label("Sent").build())
                                                   .addData(new AttributeBuilder().attribute(requestProcessor.getCanonicalName(), "bytesReceived").label("Received").build())
                                                   .build();
@@ -203,7 +203,7 @@ public class ConnectorDashboardFactory implements DashboardFactory {
     }
 
     private Graph getThreadGraph(ObjectName threadPool, String port) {
-        Graph threadPoolGraph = new GraphBuilder("threadPoolGraph-"+port).samples(600)
+        Graph threadPoolGraph = new GraphBuilder("threadPoolGraph-"+port).samples(600).decimals(0)
         .addData(new AttributeBuilder().attribute(threadPool.getCanonicalName(), "currentThreadCount").label("Count").visible(false).build())
         .addData(new AttributeBuilder().attribute(threadPool.getCanonicalName(), "currentThreadsBusy").label("Busy").build())
         .addData(new AttributeBuilder().attribute(threadPool.getCanonicalName(), "maxThreads").label("Max").visible(false).build())

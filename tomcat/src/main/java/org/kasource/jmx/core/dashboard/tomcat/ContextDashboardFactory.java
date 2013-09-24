@@ -187,7 +187,7 @@ public class ContextDashboardFactory implements DashboardFactory {
                                                       .text(new AttributeBuilder().attribute(name, "requestCount").label("# Requests:").build())                                                   
                                                       .build();
         dashboardBuilder.add(new PanelBuilder("servletInfoPanel-"+idSuffix,"Servlet " + servletName, row, 1).width(2).height(2).textGroup(servletInfo).build());
-        Graph processingGraph = new GraphBuilder("processingGraph-"+idSuffix).yAxisLabel("Time (ms)")
+        Graph processingGraph = new GraphBuilder("processingGraph-"+idSuffix).yAxisLabel("Time (ms)").decimals(0)
                                                    .addData(new AttributeBuilder().attribute(name, "minTime").label("Minimum").build())
                                                    .addData(new AttributeBuilder().attribute(name, "maxTime").label("Maximum").build())
                                                    .build();

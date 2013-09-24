@@ -55,7 +55,7 @@ public class AttributeValue {
     protected ValueType type = ValueType.TEXT;
     @XmlAttribute
     protected boolean visible = true;
-    
+   
     /**
      * Gets the value of the attribute property.
      * 
@@ -183,5 +183,7 @@ public class AttributeValue {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
+   
 
 }

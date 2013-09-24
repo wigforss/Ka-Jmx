@@ -51,6 +51,7 @@
 			<xs:attribute name="title" type="xs:string" use="optional"/>
 			<xs:attribute name="yAxisLabel" type="xs:string" use="optional"/>
 			<xs:attribute name="samples" type="xs:int" use="optional" default="30"/>
+			<xs:attribute name="decimals" type="xs:int" use="optional" default="2"/>
 		</xs:complexType>
 	</xs:element>
 	

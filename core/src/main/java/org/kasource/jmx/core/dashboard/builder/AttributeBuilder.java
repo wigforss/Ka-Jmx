@@ -21,6 +21,7 @@ public class AttributeBuilder {
     private String jsFunction;
     private boolean visible = true;
     
+    
     public AttributeBuilder() {
       
     }
@@ -41,6 +42,8 @@ public class AttributeBuilder {
         this.label = label;
         return this;
     }
+    
+  
     
     public AttributeBuilder subscribe(boolean subscribeToChanges) {
         this.subscribe = subscribeToChanges;
@@ -63,6 +66,7 @@ public class AttributeBuilder {
     }
     
     public AttributeValue build() {
+      
         AttributeValue attributeValue = new AttributeValue();
         attributeValue.setVisible(visible);
         attributeValue.setAttribute(attribute);
@@ -71,6 +75,7 @@ public class AttributeBuilder {
         attributeValue.setSubscribe(subscribe);
         attributeValue.setType(type);
         attributeValue.setJsFunction(jsFunction);
+      
         return attributeValue;
     }
     

@@ -182,9 +182,9 @@
      	</panel>
      	
      	<panel id="os-memory-panel" title="Free Memory" row="3" column="5" height="2" width="4">
-     		<graph id="os-memory-graph" yAxisLabel="Bytes" samples="600">
+     		<graph id="os-memory-graph" yAxisLabel="Bytes" samples="600" decimals="0">
      			
-     			<dataSeries label="Free">
+     			<dataSeries label="Free" >
      				<attribute attribute="FreePhysicalMemorySize" objectName="java.lang:type=OperatingSystem"/>
      			</dataSeries> 
      		
@@ -193,8 +193,8 @@
      	
      	 
      	<panel id="jvm-threads-panel" title="JVM Threads" row="5" column="5" width="4" height="2">
-     		<graph id="jvm-threads" samples="600" yAxisLabel="# Threads">
-     			<dataSeries label="Count">
+     		<graph id="jvm-threads" samples="600" yAxisLabel="# Threads" decimals="0">
+     			<dataSeries label="Count" >
      				<attribute attribute="ThreadCount" objectName="java.lang:type=Threading"/>
      			</dataSeries>
      			<dataSeries label="Daemon Count" visible="false">
@@ -207,7 +207,7 @@
      	</panel>
      	
      	<panel id="jvm-heap-panel" title="Heap Memrory" row="7" column="5" width="4" height="2">
-     		<graph id="jvm-heap"  samples="600" yAxisLabel="Bytes">
+     		<graph id="jvm-heap"  samples="600" yAxisLabel="Bytes" decimals="0">
      			<dataSeries label="Used" type="json">
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
@@ -238,7 +238,7 @@
      						]]>
      				</jsFunction>
      			</dataSeries>
-     			<dataSeries label="Init" type="json" visible="false">
+     			<dataSeries label="Init" type="json" visible="false" >
      				<attribute attribute="HeapMemoryUsage" objectName="java.lang:type=Memory"/>
      				<jsFunction>
      					<![CDATA[

@@ -103,7 +103,7 @@ public class ServerDashboardFactory implements DashboardFactory {
             
             dashboardBuilder.add(new PanelBuilder("datasourceIdlePanel-"+row,"Idle" + datasourceBean.getKeyProperty("name"), row+1, 3).gauge(idleGauge).build());
             
-            Graph connectionUsage = new GraphBuilder("connectionUsage-"+row).yAxisLabel("# Connections").samples(600)
+            Graph connectionUsage = new GraphBuilder("connectionUsage-"+row).yAxisLabel("# Connections").samples(600).decimals(0)
                                                     .addData(new AttributeBuilder().attribute(name, "numActive").label("Active").build())
                                                     .addData(new AttributeBuilder().attribute(name, "numIdle").label("Idle").build())
                                                     .addData(new AttributeBuilder().attribute(name, "maxActive").label("Max").subscribe(false).build())

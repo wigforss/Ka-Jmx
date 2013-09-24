@@ -69,7 +69,9 @@ public class Graph implements DashboardWidget {
     protected String yAxisLabel;
     @XmlAttribute
     protected int samples = 30;
-
+    @XmlAttribute
+    protected int decimals = 2;
+    
     /**
      * Gets the value of the dataSeries property.
      * 
@@ -199,6 +201,20 @@ public class Graph implements DashboardWidget {
     @Override
     public String getType() {
        return "graph";
+    }
+
+    /**
+     * @return the decimals
+     */
+    public int getDecimals() {
+        return decimals;
+    }
+
+    /**
+     * @param decimals the decimals to set
+     */
+    public void setDecimals(int decimals) {
+        this.decimals = decimals;
     }
 
    

@@ -19,6 +19,7 @@ public class GraphBuilder extends AbstractWidgetBuilder {
    
     private String yAxisLabel;
     private int samples = 30;
+    private int decimals = 2;
     
     public GraphBuilder(String id) {
         super(id);
@@ -46,18 +47,25 @@ public class GraphBuilder extends AbstractWidgetBuilder {
         return this;
     }
     
+    public GraphBuilder decimals(int numberOfDecimails) {
+        this.decimals = numberOfDecimails;
+        return this;
+    }
     
     
     
     public Graph build() {
         Graph graph = new Graph();
-        
+        if(decimals < 0) {
+            throw new IllegalArgumentException("Number of decimals "+ decimals + " must be 0 or more");
+        }
         validateId();
         graph.setId(getId());
         graph.setSamples(samples);
         graph.setyAxisLabel(yAxisLabel);
         graph.setTitle(title);
         graph.setDataSeries(dataSeries);
+        graph.setDecimals(decimals);
         return graph;
     }
 }
