@@ -1,226 +1,132 @@
 TrafficLight = 
-	function (containerId, title, state, value, prefix, suffix) {
-	
+	function (containerId, options) {
+		this.options = {title: '', state: 'none', value: '', prefix: '', suffix: '', red:'#FF0000', yellow: '#FFFF00', green: '#00FF00'};
 		this.id = containerId;
-		this.state = 'red';
-		if(state) {
-			if(state.toLowerCase() == 'yellow') {
-				this.state = 'yellow';
-			} else if(state.toLowerCase() == 'green') {
-				this.state = 'green';
+		this.state = 'none';
+		this.mergeOptions = function(options, overrideOptions) {
+			if (overrideOptions != null) {
+				for ( var key in overrideOptions) {
+					if (overrideOptions.hasOwnProperty(key)) {
+					options[key] = overrideOptions[key];
+					}
+				}
 			}
+			return options;
+		}
+	
+		if(options) {
+			this.options = this.mergeOptions(this.options, options);
 		}
 		
-	    this.title = '';
-	    if(title) {
-	    	this.title=title;
-	    }
-	    
-	    this.value = '';
-	    if(value) {
-	    	this.value = value;
-	    }
-	    
-	    this.prefix = '';
-	    if(prefix) {
-	    	this.prefix = prefix;
-	    }
-	    
-	    this.suffix = '';
-	    if(suffix) {
-	    	this.suffix = suffix;
-	    }
+		
+		
+	   
 	    
 	    this.getTooltip = function() {
-	    	var tooltip = this.title;
-		    if(this.value) {
-		    	if(this.prefix) {
-		    		tooltip = tooltip + ' ' + this.prefix + ' ' + this.value;
-		    	} else if(this.suffix) {
-		    		tooltip = tooltip + ' ' + this.value + ' ' + suffix; 
+	    
+		    if(this.options.value) {
+		    	if(this.options.prefix) {
+		    		return this.options.title + ' ' + this.options.prefix + ' ' + this.options.value;
+		    	} else if(this.options.suffix) {
+		    		return this.options.title + ' ' + this.options.value + ' ' + this.options.suffix; 
 		    	} else {
-		    		tooltip = tooltip + ' ' + this.value; 
+		    		return this.options.title + ' ' + this.options.value; 
 		    	}
 		    	
 		    }
-		    return tooltip;
+		    return this.options.title;
 	    }
 	    
 	    var container = document.getElementById(this.id);
 		var paper = new Raphael(container, container.offsetWidth, container.offsetHeight); 
-	    this.redGlow = paper.set();
-	    this.yellowGlow = paper.set();
-	    this.greenGlow = paper.set();
-	    this.rectangle = paper.rect(0, 0, 60, 160); 
-	    this.rectangle.glow({
+	    var redGlow = paper.set();
+	    var yellowGlow = paper.set();
+	    var greenGlow = paper.set();
+	    var rectangle = paper.rect(0, 0, 60, 160); 
+	    rectangle.glow({
 	        color: '#444',
 	        offsety: 3,
 	        offsetx: 3
 	    });
 	    
+	    this.lights={};
 	    
 	    var tooltip = this.getTooltip();
 	    
-	    this.rectangle.attr({stroke: '#000', 'stroke-width': 4, gradient: '90-#292929-#4D4D4D', title: tooltip});
-	    this.circleRed = paper.circle(30, 30, 20);
-	    this.circleRed.attr({fill: 'rgba(255,0,0,0.2)', stroke: '#292828', 'stroke-width': 2, title: tooltip});
-	    this.redGlow.push(this.circleRed.glow({opacity: 0.7, color: "#FF0000", width: 20}));
-	    this.redGlow.hide();
+	    rectangle.attr({stroke: '#000', 'stroke-width': 4, gradient: '90-#292929-#4D4D4D', title: tooltip});
+	    var circleRed = paper.circle(30, 30, 20);
+	    circleRed.attr({fill: this.options.red, opacity:0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    redGlow.push(circleRed.glow({opacity: 0.7, color: this.options.red, width: 20}));
+	    redGlow.hide();
 	    
-	    this.circleYellow = paper.circle(30, 80, 20); 
-	    this.circleYellow.attr({fill: 'rgba(255,255,0,0.2)', stroke: '#292828', 'stroke-width': 2, title: tooltip});
-	    this.yellowGlow.push(this.circleYellow.glow({opacity: 0.7, color: "#FFFF00", width: 20}));
-	    this.yellowGlow.hide();
+	    this.lights['red'] = {graphics: circleRed, glow: redGlow};
 	    
+	    var circleYellow = paper.circle(30, 80, 20); 
+	    circleYellow.attr({fill: this.options.yellow, opacity:0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    yellowGlow.push(circleYellow.glow({opacity: 0.7, color: this.options.yellow, width: 20}));
+	    yellowGlow.hide();
 	    
-	    this.circleGreen = paper.circle(30, 130, 20);
-	    this.circleGreen.attr({fill: 'rgba(0,255,0,0.2)', stroke: '#292828', 'stroke-width': 2, title: tooltip});
-	    this.greenGlow.push(this.circleGreen.glow({opacity: 0.7, color: "#00FF00", width: 20}));
-	    this.greenGlow.hide();
+	    this.lights['yellow'] = {graphics: circleYellow, glow: yellowGlow};
 	    
+	    var circleGreen = paper.circle(30, 130, 20);
+	    circleGreen.attr({fill: this.options.green, opacity: 0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    greenGlow.push(circleGreen.glow({opacity: 0.7, color: this.options.green, width: 20}));
+	    greenGlow.hide();
+	    
+	    this.lights['green'] = {graphics: circleGreen, glow: greenGlow};
 	   
+	   
+	    this.transition = function(fromLight, toLight) {
+	    	
+	    	if(fromLight != toLight) {
+	    		var otherLight;
+	    		for (var key in this.lights) {
+	    		    if(key != fromLight && key != toLight) {
+	    		    	otherLight = key;
+	    		    }
+	    		}
+	    		
+	    		
+	    		if(this.lights[otherLight]) {
+	    			this.lights[otherLight].graphics.attr({opacity: 0.2});
+	    			this.lights[otherLight].glow.hide();
+	    		}
 	    
-	    this.redToYellow = function () {
-			this.fromRed();
-			this.toYellow();
-		}
-	    
-	    this.fromRed = function() {
-	    	this.circleGreen.attr({fill: 'rgba(0,255,0,0.2)'});
-			this.greenGlow.hide();
-			this.redGlow.hide();
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 1.0-(i*0.1);
-		    	this.circleRed.animate({fill: 'rgba(255,0,0,'+alpha+')'}, 100*i, 'bounce');
-		    	
-		    }
+	    		if(this.lights[fromLight]) {
+	    			this.lights[fromLight].glow.hide();
+	    			for(var i=0; i < 8; i++) {
+	    				var alpha = 1.0-(i*0.1);
+	    				this.lights[fromLight].graphics.animate({opacity: alpha}, 100*i, 'bounce');
+			    	
+	    			}
+	    		}
+	    		if(this.lights[toLight]) {
+	    			for(var i=0; i < 8; i++) {
+	    				var alpha = 0.2+(i*0.1);
+	    				this.lights[toLight].graphics.animate({opacity: alpha}, 100*i, 'bounce');
+	    			}
+	    			var glow = this.lights[toLight].glow;
+	    			setTimeout(function(){glow.show()},800);
+	    		}
+	    	}
 	    }
-	   
-		
-		this.yellowToRed = function () {
-			this.fromYellow();
-			this.toRed();
-		}
-		
-		this.toRed = function() {
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 0.2+(i*0.1);
-		    	this.circleRed.animate({fill: 'rgba(255,0,0,'+alpha+')'}, 100*i, 'bounce');
-		    }
-			var glow = this.redGlow;
-			 setTimeout(function(){glow.show()},800);
-		}
-		
-		this.yellowToGreen = function () {
-			this.fromYellow();
-			this.toGreen();
-			
-		}
-		
-		this.toGreen = function() {
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 0.2+(i*0.1);
-		    	this.circleGreen.animate({fill: 'rgba(0,255,0,'+alpha+')'}, 100*i, 'bounce');
-		    }
-			var glow = this.greenGlow;
-			 setTimeout(function(){glow.show()},800);
-		}
-		
-		this.fromYellow = function() {
-			this.circleRed.attr({fill: 'rgba(255,0,0,0.2)'});
-			this.redGlow.hide();
-			this.yellowGlow.hide();
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 1.0-(i*0.1);
-		    	this.circleYellow.animate({fill: 'rgba(255,255,0,'+alpha+')'}, 100*i, 'bounce');
-		    }
-		}
-		
-		
-		this.toYellow = function() {
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 0.2+(i*0.1);
-		    	this.circleYellow.animate({fill: 'rgba(255,255,0,'+alpha+')'}, 100*i, 'bounce');
-		    }
-			var glow = this.yellowGlow;
-			setTimeout(function(){glow.show()},800);
-		}
-		
-		this.fromGreen = function() {
-			this.circleRed.attr({fill: 'rgba(255,0,0,0.2)'});
-			this.redGlow.hide();
-			this.greenGlow.hide();
-			for(var i=0; i < 8; i++) {
-		    	var alpha = 1.0-(i*0.1);
-		    	this.circleGreen.animate({fill: 'rgba(0,255,0,'+alpha+')'}, 100*i, 'bounce');
-		    }
-		}
-		
-		this.greenToYellow = function () {
-			this.fromGreen();
-			this.toYellow();
-			
-		}
+	    
+	  
 		
 		this.setValue = function(newValue) {
-			this.value = newValue;
+			this.options.value = newValue;
 			var newTooltip = this.getTooltip();
-			this.rectangle.attr({title: newTooltip});
-			this.circleRed.attr({title: newTooltip});
-			this.circleYellow.attr({title: newTooltip});
-			this.circleGreen.attr({title: newTooltip});
+		
+			for (var key in this.lights) {
+				this.lights[key].graphics.attr({title: newTooltip});
+			}
 		}
 		
 		this.setState = function(newState) {
-			switch(newState) {
-		    case 'red':
-		    	switch(this.state) {
-		    	case 'red':
-		    		this.toRed();
-		    		break;
-		    	case 'yellow':
-		    		this.yellowToRed();
-		    		break;
-		    	case 'green':
-		    		this.fromGreen();
-		    		this.toRed();
-		    		break;
-		    	}
-				this.state = 'red';
-		    	break;
-		    case 'yellow':
-		    	switch(this.state) {
-		    	case 'red':
-		    		this.redToYellow();
-		    		break;
-		    	case 'yellow':
-		    		this.toYellow();
-		    		break;
-		    	case 'green':
-		    		this.greenToYellow();
-		    		break;
-		    	}
-		  
-				this.state = 'yellow';
-		    	break;
-		    case 'green':
-		    	switch(this.state) {
-		    	case 'red':
-		    		this.fromRed();
-		    		this.toGreen();
-		    		break;
-		    	case 'yellow':
-		    		this.yellowToGreen();
-		    		break;
-		    	case 'green':
-		    		this.toGreen();
-		    		break;
-		    	}
-				this.state = 'green';
-		    	break;
-		    }
-			
+			this.transition(this.state, newState);
+			this.state = newState;
+			this.options.state = newState;
 		}
 		
-		 this.setState(this.state);
+		this.setState(this.options.state);
 }
