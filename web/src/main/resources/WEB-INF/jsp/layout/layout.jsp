@@ -33,6 +33,8 @@
 			<script type="text/javascript" src="script/jquery.gridster.with-extras.js"> </script>
 			<script type="text/javascript" src="script/raphael.2.1.0.min.js"></script>
     		<script type="text/javascript" src="script/justgage.1.0.1.min.js"></script>
+    		<script type="text/javascript" src="script/led-panel.js"></script>  
+		    <script type="text/javascript" src="script/traffic-light.js"></script>  
     		<script type="text/javascript" src="script/dashboard.js"></script>
     		<script type="text/javascript" src="script/widget.js"></script>
       		<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
@@ -42,7 +44,7 @@
 			<script type="text/javascript" src="resources/spring/Spring-Dojo.js"> </script>		
 		    <script type="text/javascript" src="script/smoothie.js"></script>  
 		    <script type="text/javascript" src="script/jmx_console.js"></script>  
-		    <script type="text/javascript" src="script/websocket.js"></script>  
+		    <script type="text/javascript" src="script/websocket.js"></script>   
 		    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script> 
 		    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/additional-methods.min.js"></script> 	
 			]]>

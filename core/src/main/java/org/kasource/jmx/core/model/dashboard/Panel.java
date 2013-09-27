@@ -9,6 +9,8 @@
 package org.kasource.jmx.core.model.dashboard;
 
 
+
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,7 +55,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "graph",
     "textGroup",
     "gauge",
-    "pie"
+    "pie",
+    "ledPanel",
+    "trafficLight"
 })
 @XmlRootElement(name = "panel")
 public class Panel {
@@ -67,6 +71,8 @@ public class Panel {
     protected Graph graph;
     protected TextGroup textGroup;
     protected Gauge gauge;
+    protected LedPanel ledPanel;
+    protected TrafficLight trafficLight;
     @XmlAttribute(required = true)
     protected String title;
     @XmlAttribute(required = true)
@@ -309,10 +315,42 @@ public class Panel {
             return gauge;
         } else if(pie != null) {
             return pie;
+        } else if(trafficLight != null) {
+            return trafficLight;
+        } else if(ledPanel != null) {
+            return ledPanel;
         }
         
        return null;
         
+    }
+
+    /**
+     * @return the ledPanel
+     */
+    public LedPanel getLedPanel() {
+        return ledPanel;
+    }
+
+    /**
+     * @param ledPanel the ledPanel to set
+     */
+    public void setLedPanel(LedPanel ledPanel) {
+        this.ledPanel = ledPanel;
+    }
+
+    /**
+     * @return the trafficLight
+     */
+    public TrafficLight getTrafficLight() {
+        return trafficLight;
+    }
+
+    /**
+     * @param trafficLight the trafficLight to set
+     */
+    public void setTrafficLight(TrafficLight trafficLight) {
+        this.trafficLight = trafficLight;
     }
     
 }

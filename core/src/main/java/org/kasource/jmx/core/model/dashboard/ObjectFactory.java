@@ -10,6 +10,8 @@ package org.kasource.jmx.core.model.dashboard;
 
 
 
+
+
 import javax.xml.bind.annotation.XmlRegistry;
 
 
@@ -45,6 +47,14 @@ public class ObjectFactory {
     public AttributeValue createAttributeValue() {
         return new AttributeValue();
     }
+    
+    /**
+     * Create an instance of {@link LedPanel }
+     * 
+     */
+    public LedPanel createLedPanel() {
+        return new LedPanel();
+    }
 
     /**
      * Create an instance of {@link TextGroup }
@@ -77,6 +87,15 @@ public class ObjectFactory {
     public Graph createGraph() {
         return new Graph();
     }
+    
+    /**
+     * Create an instance of {@link TrafficLight }
+     * 
+     */
+    public TrafficLight createTrafficLight() {
+        return new TrafficLight();
+    }
+
 
     /**
      * Create an instance of {@link Configuration }

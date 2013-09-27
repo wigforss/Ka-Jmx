@@ -19,9 +19,12 @@ LedPanel =
 			this.options = this.mergeOptions(this.options, options);
 		}
 		
+		this.options.layout = this.options.layout.toLowerCase();
+		
 		var container = document.getElementById(this.id);
-	    var paper = new Raphael(container, container.offsetWidth, container.offsetHeight); 
-	    
+	    var paper = new Raphael(container); 
+	    paper.setViewBox(0, 0, container.offsetWidth, container.offsetHeight, true);
+	   
 	    var panelWidth = 0;
 		var panelHeight = 0;
 		if(this.options.layout == 'horizontal') {
@@ -48,22 +51,24 @@ LedPanel =
 	    	if(this.options.layout == 'horizontal') {
 	    		led = paper.circle(30, 30+(i*50), 20);
 	    		if(this.options.showLabels) {
-	    			label = paper.text(80, 30+(i*50), options.data[i].title);
+	    			label = paper.text(75, 30 + (i*50), options.data[i].title);
+	    			
 	    		}
 	    	} else {
 	    		led = paper.circle(30+(i*50), 30, 20);
 	    		if(this.options.showLabels) {
-	    			label = paper.text(30+(i*50), 80, options.data[i].title);
+	    			label = paper.text(30 + (i*50), 75, options.data[i].title);
+	    			
 	    		}
 	    		
 	    	}
 	    	if(this.options.showLabels) {
-	    		label.attr({"font-size":16, "font-family": "Segoe UI, Arial, Helvetica, sans-serif", "font-weight": "bold"});
+	    		label.attr({"font-size":16, "font-family": "Segoe UI, Arial, Helvetica, sans-serif", "font-weight": "bold", "text-anchor": "start"});
 	    		var bbox = label.getBBox();
 	    		var labelBox = paper.rect(bbox.x, bbox.y+bbox.height/2-1,bbox.width,2).attr('stroke','none');
 	    		
-    			label.rotate(this.options.labelRotation);
-    			labelBox.rotate(this.options.labelRotation);
+    			label.rotate(this.options.labelRotation,bbox.x,bbox.y);
+    			labelBox.rotate(this.options.labelRotation,bbox.x,bbox.y);
     			
     			ledGlow.push(labelBox.glow({color: this.options.color, opacity: 0.3, width: 10}));
 	    	}

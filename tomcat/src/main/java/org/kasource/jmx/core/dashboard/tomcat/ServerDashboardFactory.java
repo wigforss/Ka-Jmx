@@ -18,11 +18,14 @@ import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
 import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
 import org.kasource.jmx.core.dashboard.builder.GraphBuilder;
+import org.kasource.jmx.core.dashboard.builder.LedPanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.PanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.TextGroupBuilder;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
+import org.kasource.jmx.core.model.dashboard.LayoutType;
+import org.kasource.jmx.core.model.dashboard.LedPanel;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
@@ -55,19 +58,36 @@ public class ServerDashboardFactory implements DashboardFactory {
                                     .text(new AttributeBuilder().attribute(domain + ":type=Server", "serverInfo").label("Server:").build());
         
         Set<ObjectName> hosts = jmxService.getNamesMatching(domain + ":type=Host,*");
+        ObjectName hostBean = null;
         if(hosts.iterator().hasNext()) {
-            ObjectName hostBean = hosts.iterator().next();
+            hostBean = hosts.iterator().next();
             serverInfoBuilder.text(new AttributeBuilder().attribute(hostBean.getCanonicalName(), "appBase").label("Application Base:").build());
             serverInfoBuilder.text(new AttributeBuilder().attribute(hostBean.getCanonicalName(), "autoDeploy").label("Auto Deploy:").build());
         }
         TextGroup serverInfo = serverInfoBuilder.build();
         dashboardBuilder.add(new PanelBuilder("serverInfoPanel","Server Info", row, 1).width(2).height(2).textGroup(serverInfo).build());
+        if(hostBean != null) {
+            LedPanel ledPanel = getServerLedPanlel(hostBean);
+            dashboardBuilder.add(new PanelBuilder("serverInfo-led-panel","Server State", row, 3).ledPanel(ledPanel).build());
+        }
         addDatasourcePanels(dashboardBuilder, row + 2);
        
         
         
     }
     
+    private LedPanel getServerLedPanlel(ObjectName hostBean) {
+        String name = hostBean.getCanonicalName();
+        return new LedPanelBuilder("serverInfo-leds").layout(LayoutType.VERTICAL)
+                                                    .addData(new AttributeBuilder().attribute(name, "stateName").label("Started").jsFunction("function(value){return value === \"STARTED\";}").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "deployOnStartup").label("Deploy on Startup").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "autoDeploy").label("Auto Deploy").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "unpackWARs").label("Unpack WARs").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "createDirs").label("Create Directories").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "deployXML").label("Deploy Context XML").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "startChildren").label("Start Child Containers").build())         
+                                                    .build();
+    }
     
     
     private int addDatasourcePanels(DashboardBuilder dashboardBuilder, int row) {

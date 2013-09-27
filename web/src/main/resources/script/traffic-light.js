@@ -123,6 +123,7 @@ TrafficLight =
 		}
 		
 		this.setState = function(newState) {
+			newState = newState.toLowerCase();
 			this.transition(this.state, newState);
 			this.state = newState;
 			this.options.state = newState;

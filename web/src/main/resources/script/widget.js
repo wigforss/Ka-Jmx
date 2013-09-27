@@ -503,15 +503,17 @@ Pie =
 		
 		this.subscribe = function() {
 			for (var i = 0; i < this.options.dataSeries.length; i++) {
-				var objectName = this.options.dataSeries[i].attribute.objectName;
-				var attribute = this.options.dataSeries[i].attribute.attribute;
-				var index = this.dataSeriesIndex[objectName+"."+attribute];
-				if(!index) {
-					this.dataSeriesIndex[objectName+"."+attribute]=[i];
-				} else {
-					index.push(i);
+				if(this.options.dataSeries[i].attribute && this.options.dataSeries[i].subscribe) {
+					var objectName = this.options.dataSeries[i].attribute.objectName;
+					var attribute = this.options.dataSeries[i].attribute.attribute;
+					var index = this.dataSeriesIndex[objectName+"."+attribute];
+					if(!index) {
+						this.dataSeriesIndex[objectName+"."+attribute]=[i];
+					} else {
+						index.push(i);
+					}
+					org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this, this.options.dataSeries[i].type);
 				}
-				org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this, this.options.dataSeries[i].type);
 			}
 		}
 		
@@ -544,9 +546,11 @@ Pie =
 		
 		this.close = function() {
 			for (var i = 0; i < this.options.dataSeries.length; i++) {
-				var objectName = this.options.dataSeries[i].attribute.objectName;
-				var attribute = this.options.dataSeries[i].attribute.attribute;
-				org.kasource.Websocket.unsubscribe(objectName, attribute, this.id+"-"+i);
+				if(this.options.dataSeries[i].attribute && this.options.dataSeries[i].subscribe) {
+					var objectName = this.options.dataSeries[i].attribute.objectName;
+					var attribute = this.options.dataSeries[i].attribute.attribute;
+					org.kasource.Websocket.unsubscribe(objectName, attribute, this.id+"-"+i);
+				}
 			}
 		}
 }
@@ -660,7 +664,149 @@ textGroupFactory.get = function(dashboardId, widgetId, data) {
 	return widgets[widgetId];
 }
 
+
+
+LedPanelWidget = 
+	function (dashboardId, id, options) {
+		this.id = id;
+		this.options = options;
+		this.dashboardId = dashboardId;
+		this.dataIndex = {};
+		this.ledPanel = {};
+		this.ledPanelOptions={};
+		
+		this.initialize = function() {
+			var leds = [];
+			for (var i = 0; i < this.options.data.length; i++) {
+				var enabledValue = false;
+				if(this.options.data[i].jsFunction) {
+					this.options.data[i].transform = eval('('+this.options.data[i].jsFunction+')');
+					if(this.options.data[i].value) {
+						enabledValue = this.toBoolean(this.options.data[i].transform(this.options.data[i].value));
+					}
+				} else if(this.options.data[i].value){
+					enabledValue = this.toBoolean(this.options.data[i].value);
+				}
+				leds.push({title: this.options.data[i].label, enabled: enabledValue});
+			}
+			this.ledPanelOptions = {layout: this.options.layout, color: this.options.color, showLabels: this.options.showLabels, data: leds};
+			
+		}
+			
+		
+		this.render = function() {
+			this.ledPanel = new LedPanel(this.id, this.ledPanelOptions);
+	    }
+	
+		this.subscribe = function() {
+			for (var i = 0; i < this.options.data.length; i++) {
+				if(this.options.data[i].attribute && this.options.data[i].subscribe) {
+					var objectName = this.options.data[i].attribute.objectName;
+					var attribute = this.options.data[i].attribute.attribute;
+					var index = this.dataIndex[objectName+"."+attribute];
+					if(!index) {
+						this.dataIndex[objectName+"."+attribute]=[i];
+					} else {
+						index.push(i);
+					}
+					org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+i, this.refreshValue, this, this.options.data[i].type);
+				}
+			}
+		}
+	
+		this.toBoolean = function(value) {
+			if(value && value === true) {
+				return true;
+			}
+			if(value && value.toLowerCase() === 'true') {
+				return true;
+			}
+			return false;
+		}
+		
+		this.refreshValue = function(jmxValue, widget) {
+			var attribute = jmxValue.key.attributeName;
+			var objectName = jmxValue.key.name;
+			var indices = widget.dataIndex[objectName+"."+attribute];
+			
+			if(indices && jmxValue.value) {
+				
+				for (var i = 0; i < indices.length; i++) {
+					var index = indices[i];
+					var value;
+					if(widget.options.data[index].transform) {
+						value = widget.toBoolean(widget.options.data[index].transform(jmxValue.value));
+					} else {
+						value = widget.toBoolean(jmxValue.value);
+					}
+					widget.ledPanel.enableLed(index, value);
+				}
+			}
+		}
+	
+		this.close = function() {
+			for (var i = 0; i < this.options.data.length; i++) {
+				if(this.options.data[i].attribute && this.options.data[i].subscribe) {
+					var objectName = this.options.data[i].attribute.objectName;
+					var attribute = this.options.data[i].attribute.attribute;
+					org.kasource.Websocket.unsubscribe(objectName, attribute, this.id+"-"+i);
+				}
+			}
+		}
+}
+
+ledPanelFactory = {};
+
+ledPanelFactory.get = function(dashboardId, widgetId, options) {
+	widgets[widgetId] = new LedPanelWidget(dashboardId, widgetId, options);
+	widgets[widgetId].initialize();
+	widgets[widgetId].render();
+	widgets[widgetId].subscribe();
+	return widgets[widgetId];
+}
+
+TrafficLightWidget = 
+	function (dashboardId, id, options) {
+		this.id = id;
+		this.options = options;
+		this.dashboardId = dashboardId;
+		
+		this.initialize = function() {
+			
+		}
+	
+		this.render = function() {
+		
+	    }
+	
+		this.subscribe = function() {
+		
+		}
+	
+		this.refreshValue = function(jmxValue, widget) {
+		
+		}
+	
+		this.close = function() {
+		
+	}
+}
+
+trafficLightFactory = {};
+
+trafficLightFactory.get = function(dashboardId, widgetId, options) {
+	widgets[widgetId] = new TrafficLightWidget(dashboardId, widgetId, options);
+	widgets[widgetId].initialize();
+	widgets[widgetId].render();
+	widgets[widgetId].subscribe();
+	return widgets[widgetId];
+}
+
+
+
 widgetFactory['textGroup']=textGroupFactory;
 widgetFactory['gauge'] = gaugeFactory;
 widgetFactory['graph'] = graphFactory;
 widgetFactory['pie'] = pieFactory;
+widgetFactory['ledPanel'] = ledPanelFactory;
+widgetFactory['trafficLight'] = trafficLightFactory;

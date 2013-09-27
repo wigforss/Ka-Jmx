@@ -11,9 +11,11 @@ import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
+import org.kasource.jmx.core.model.dashboard.LedPanel;
 import org.kasource.jmx.core.model.dashboard.Panel;
 import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
+import org.kasource.jmx.core.model.dashboard.TrafficLight;
 import org.kasource.jmx.core.model.dashboard.ValueType;
 import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
@@ -76,6 +78,10 @@ public class DashboardServiceImpl implements DashboardService {
                 populateValuesTextGroup(panel.getTextGroup());
             } else if(panel.getPie() != null) {
                 populateValuesPieChart(panel.getPie());
+            } else if(panel.getLedPanel() != null) {
+                populateValuesLedPanel(panel.getLedPanel());
+            } else if(panel.getTrafficLight() != null)  {
+                populateValuesTrafficLight(panel.getTrafficLight());
             }
         }
     }
@@ -94,6 +100,14 @@ public class DashboardServiceImpl implements DashboardService {
         populateValue(gauge.getValue());
     }
     
+    private void populateValuesTrafficLight(TrafficLight trafficLight) {
+        populateValue(trafficLight.getRed());
+        populateValue(trafficLight.getYellow());
+        populateValue(trafficLight.getGreen());
+        populateValue(trafficLight.getValue());
+    }
+    
+    
     private void populateValuesTextGroup(TextGroup textGroup) {
         for (AttributeValue value : textGroup.getValue()) {
             populateValue(value);
@@ -103,6 +117,12 @@ public class DashboardServiceImpl implements DashboardService {
     
     private void populateValuesPieChart(Pie pie) {
         for(AttributeValue data : pie.getDataSeries()) {
+            populateValue(data);
+        }
+    }
+    
+    private void populateValuesLedPanel(LedPanel ledPanel) {
+        for(AttributeValue data : ledPanel.getData()) {
             populateValue(data);
         }
     }

@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
  **/
 public abstract class AbstractWidgetBuilder {
     private static final Pattern ID_REG_EXP = Pattern.compile("\\s|:|@|\\$|%|&|/|\\+|,|\\(|\\)|\\{|\\}|\\[|\\]");
+    private static final Pattern COLOR_REG_EXP = Pattern.compile("^#[A-F0-9]{6}",Pattern.CASE_INSENSITIVE);
     private String id;
     
     public AbstractWidgetBuilder(String id) {
@@ -23,6 +24,17 @@ public abstract class AbstractWidgetBuilder {
         }
     }
 
+    protected void validateColor(String colorString) {
+        if(colorString == null || colorString.trim().isEmpty()) {
+            throw new IllegalStateException("A non empty color must be set");
+        }
+        /*
+        if(COLOR_REG_EXP.matcher(colorString).matches()) {
+            throw new IllegalStateException(colorString + " is not a valid color, # followed by 6 hex digits is expected.");
+        }
+        */
+    }
+    
     /**
      * @return the id
      */

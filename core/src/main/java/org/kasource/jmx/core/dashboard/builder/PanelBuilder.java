@@ -4,9 +4,11 @@ package org.kasource.jmx.core.dashboard.builder;
 
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
+import org.kasource.jmx.core.model.dashboard.LedPanel;
 import org.kasource.jmx.core.model.dashboard.Panel;
 import org.kasource.jmx.core.model.dashboard.Pie;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
+import org.kasource.jmx.core.model.dashboard.TrafficLight;
 
 /**
  * Builder for Panel.
@@ -25,6 +27,8 @@ public class PanelBuilder extends AbstractWidgetBuilder {
     private Graph graph;
     private TextGroup textGroup;
     private Pie pie;
+    private LedPanel ledPanel;
+    private TrafficLight trafficLight;
     
     public PanelBuilder(String id, String title, int row, int column) {
         super(id);
@@ -80,6 +84,15 @@ public class PanelBuilder extends AbstractWidgetBuilder {
         return this;
     }
     
+    public PanelBuilder ledPanel(LedPanel ledPanel) {
+        this.ledPanel = ledPanel;
+        return this;
+    }
+    
+    public PanelBuilder trafficLight(TrafficLight trafficLight) {
+        this.trafficLight = trafficLight;
+        return this;
+    }
     
     
     
@@ -107,6 +120,8 @@ public class PanelBuilder extends AbstractWidgetBuilder {
         panel.setGauge(gauge);
         panel.setGraph(graph);
         panel.setPie(pie);
+        panel.setLedPanel(ledPanel);
+        panel.setTrafficLight(trafficLight);
         return panel;
     }
 }

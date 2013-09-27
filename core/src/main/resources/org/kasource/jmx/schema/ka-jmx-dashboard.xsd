@@ -27,10 +27,12 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:choice>
-					<xs:element ref="graph" minOccurs="1" maxOccurs="1"/>
-					<xs:element ref="textGroup" minOccurs="1" maxOccurs="1"/>
-					<xs:element ref="gauge" minOccurs="1" maxOccurs="1"/>
-					<xs:element ref="pie" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="graph" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="textGroup" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="gauge" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="pie" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="ledPanel" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="trafficLight" minOccurs="0" maxOccurs="1"/>
 				</xs:choice>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:ID" use="required"/>
@@ -62,6 +64,42 @@
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:ID" use="required"/>
 			<xs:attribute name="title" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="trafficLight">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="red" type="attributeValue" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="yellow" type="attributeValue" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="green" type="attributeValue" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="value" type="attributeValue" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="suffix" type="xs:string" use="optional"/>
+			<xs:attribute name="prefix" type="xs:string" use="optional"/>
+			<xs:attribute name="title" type="xs:string" use="optional"/>
+			<xs:attribute name="state" type="trafficLightState" use="optional"/>
+			<xs:attribute name="ascending" type="xs:boolean" use="optional" default="true"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="ledPanel">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="data" type="attributeValue" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="layout" type="layoutType" use="optional" default="vertical"/>
+			<xs:attribute name="showLabels" type="xs:boolean" default="true"/>
+			<xs:attribute name="color" type="xs:string" use="optional" default="#00FF00">
+				<xs:annotation>
+					<xs:documentation>
+						Color of LED lights, will default to green if not set. Common color formats accepted like RGB Hex with initial # or rgb(0-255, 0-255, 0-255) and
+						named colors. 
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	
@@ -115,6 +153,21 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="text"/>
             <xs:enumeration value="json"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="layoutType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="trafficLightState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="red"/>
+            <xs:enumeration value="yellow"/>
+            <xs:enumeration value="green"/>
         </xs:restriction>
     </xs:simpleType>
 	
