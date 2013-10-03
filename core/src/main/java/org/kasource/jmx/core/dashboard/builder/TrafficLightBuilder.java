@@ -1,5 +1,6 @@
 package org.kasource.jmx.core.dashboard.builder;
 
+import org.kasource.jmx.core.model.dashboard.AttributeType;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.TrafficLight;
 import org.kasource.jmx.core.model.dashboard.TrafficLightState;
@@ -15,6 +16,7 @@ public class TrafficLightBuilder extends AbstractWidgetBuilder {
     private String title;
     private TrafficLightState state;
     private boolean ascending = true;
+    private AttributeType attributeType = AttributeType.NUMERIC;
     
     public TrafficLightBuilder(String id) {
         super(id);
@@ -65,6 +67,11 @@ public class TrafficLightBuilder extends AbstractWidgetBuilder {
         return this;
     }
     
+    public TrafficLightBuilder  attributeType(AttributeType attributeType) {
+        this.attributeType = attributeType;
+        return this;
+    }
+    
     
     public TrafficLight build() {
         validateId();
@@ -91,7 +98,7 @@ public class TrafficLightBuilder extends AbstractWidgetBuilder {
         trafficLight.setTitle(title);
         trafficLight.setState(state);
         trafficLight.setAscending(ascending);
-       
+        trafficLight.setAttributeType(attributeType);
         return trafficLight;
     }
 
