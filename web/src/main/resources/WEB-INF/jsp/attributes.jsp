@@ -52,7 +52,7 @@
 								
 							</td>
 							<td>
-							<input id="refresh-${attribute.name}" type="button" title="Auto refresh value" value="" class="refreshButton" onclick="toggleSubscription('${fn:escapeXml(mBean.name)}','${attribute.name}')"/>
+							<input id="refresh-${attribute.name}" type="button" title="Auto refresh value" value="" class="refreshButton" onclick="org.kasource.jmx.console.toggleSubscription('${fn:escapeXml(mBean.name)}','${attribute.name}')"/>
 								
 							</td>
 							
@@ -142,13 +142,13 @@
 										<c:when test="${fn:toLowerCase(attribute.type) == 'float'}">
 											<input type="text" name="${attribute.name}"
 												value="${attributeValues[attribute.name]}" size="34" 
-												number="true" min="1.4E-45" max="3.4028235E38" required="true"
+												number="true" min="-3.4028235E38" max="3.4028235E38" required="true"
 												onchange="$('#changedId-${attribute.name}').prop('checked',true)"/>
 										</c:when>
 										<c:when test="${fn:toLowerCase(attribute.type) == 'double'}">
 											<input type="text" name="${attribute.name}"
 												value="${attributeValues[attribute.name]}" size="66" 
-												number="true" min="4.9E-324" max="1.7976931348623157E308" required="true"
+												number="true" min="-1.7976931348623157E308" max="1.7976931348623157E308" required="true"
 												onchange="$('#changedId-${attribute.name}').prop('checked',true)"/>
 										</c:when>
 										<c:when test="${fn:toLowerCase(attribute.type) == 'date' or fn:toLowerCase(attribute.type) == 'java.sql.Date' or fn:toLowerCase(attribute.type) == 'java.sql.Timestamp'}">
