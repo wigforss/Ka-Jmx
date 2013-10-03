@@ -9,7 +9,7 @@
 	<artifactId>ka-jmx-base</artifactId>
 	<packaging>pom</packaging>
 	<name>Ka-JMX Base Project</name>
-	<version>0.2</version>
+	<version>0.3-SNAPSHOT</version>
 	<description>
 		Ka-JMX base project, which builds all modules.
 	</description>
