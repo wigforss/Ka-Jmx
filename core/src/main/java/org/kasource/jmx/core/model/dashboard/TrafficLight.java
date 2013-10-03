@@ -8,6 +8,7 @@
 
 package org.kasource.jmx.core.model.dashboard;
 
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -83,7 +85,9 @@ public class TrafficLight implements DashboardWidget {
     protected TrafficLightState state;
     @XmlAttribute
     protected boolean ascending = true;
-
+    @XmlAttribute(required = true)
+    protected AttributeType attributeType = AttributeType.NUMERIC;
+    
     /**
      * Gets the value of the red property.
      * 
@@ -327,6 +331,29 @@ public class TrafficLight implements DashboardWidget {
     @Override
     public String getType() {
         return "trafficLight";
+    }
+
+    /**
+     * @return the attributeType
+     */
+    public AttributeType getAttributeType() {
+        return attributeType;
+    }
+
+    /**
+     * @param attributeType the attributeType to set
+     */
+    public void setAttributeType(AttributeType attributeType) {
+        this.attributeType = attributeType;
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        populator.populateValue(red);
+        populator.populateValue(yellow);
+        populator.populateValue(green);
+        populator.populateValue(value);
+        
     }
 
 }

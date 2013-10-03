@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -215,6 +216,14 @@ public class Graph implements DashboardWidget {
      */
     public void setDecimals(int decimals) {
         this.decimals = decimals;
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        for(AttributeValue data : dataSeries) {
+            populator.populateValue(data);
+        }
+        
     }
 
    

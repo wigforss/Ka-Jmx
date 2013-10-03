@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -149,6 +150,14 @@ public class Pie implements DashboardWidget {
     @Override
     public String getType() {
        return "pie";
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        for(AttributeValue data : dataSeries) {
+            populator.populateValue(data);
+        }
+        
     }
 
 }

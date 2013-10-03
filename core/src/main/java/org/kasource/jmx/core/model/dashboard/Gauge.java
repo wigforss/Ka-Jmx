@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -66,6 +67,8 @@ public class Gauge implements DashboardWidget {
     protected AttributeValue value;
     @XmlAttribute
     protected String title;
+    @XmlAttribute
+    protected int decimals = 2;
 
     /**
      * Gets the value of the min property.
@@ -180,6 +183,28 @@ public class Gauge implements DashboardWidget {
     @Override
     public String getType() {
         return "gauge";
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        populator.populateValue(min);
+        populator.populateValue(max);
+        populator.populateValue(value);
+        
+    }
+
+    /**
+     * @return the decimals
+     */
+    public int getDecimals() {
+        return decimals;
+    }
+
+    /**
+     * @param decimals the decimals to set
+     */
+    public void setDecimals(int decimals) {
+        this.decimals = decimals;
     }
 
 }

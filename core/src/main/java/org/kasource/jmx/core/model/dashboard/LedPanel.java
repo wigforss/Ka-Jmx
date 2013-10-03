@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -61,7 +62,7 @@ public class LedPanel implements DashboardWidget {
     @XmlSchemaType(name = "ID")
     protected String id;
     @XmlAttribute
-    protected LayoutType layout = LayoutType.VERTICAL;
+    protected LayoutType layout = LayoutType.HORIZONTAL;
     @XmlAttribute
     protected boolean showLabels = true;
     @XmlAttribute
@@ -196,6 +197,14 @@ public class LedPanel implements DashboardWidget {
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        for(AttributeValue attribute : data) {
+            populator.populateValue(attribute);
+        }
+        
     }
 
 }

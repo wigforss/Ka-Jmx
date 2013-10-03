@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
 import org.kasource.jmx.core.dashboard.DashboardWidget;
 
 
@@ -150,6 +151,15 @@ public class TextGroup implements DashboardWidget {
     @Override
     public String getType() {
         return "textGroup";
+    }
+
+    @Override
+    public void populateValues(AttributeValuePopulator populator) {
+        for (AttributeValue data : value) {
+            populator.populateValue(data);
+            
+        }
+        
     }
     
   

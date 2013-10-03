@@ -9,4 +9,6 @@ public interface DashboardWidget {
      String getId();
     
      String getType();
+     
+     void populateValues(AttributeValuePopulator populator);
 }

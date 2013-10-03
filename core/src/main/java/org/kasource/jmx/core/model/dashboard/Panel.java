@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.kasource.jmx.core.dashboard.DashboardWidget;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -57,7 +59,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "gauge",
     "pie",
     "ledPanel",
-    "trafficLight"
+    "trafficLight",
+    "heatMap"
 })
 @XmlRootElement(name = "panel")
 public class Panel {
@@ -73,6 +76,7 @@ public class Panel {
     protected Gauge gauge;
     protected LedPanel ledPanel;
     protected TrafficLight trafficLight;
+    protected HeatMap heatMap;
     @XmlAttribute(required = true)
     protected String title;
     @XmlAttribute(required = true)
@@ -306,7 +310,7 @@ public class Panel {
         this.pie = pie;
     }
 
-    public Object getWidget() {
+    public DashboardWidget getWidget() {
         if(textGroup !=  null) {
             return textGroup;
         } else if(graph !=  null) {
@@ -319,6 +323,8 @@ public class Panel {
             return trafficLight;
         } else if(ledPanel != null) {
             return ledPanel;
+        } else if(heatMap != null) {
+            return heatMap;
         }
         
        return null;
@@ -351,6 +357,20 @@ public class Panel {
      */
     public void setTrafficLight(TrafficLight trafficLight) {
         this.trafficLight = trafficLight;
+    }
+
+    /**
+     * @return the heatMap
+     */
+    public HeatMap getHeatMap() {
+        return heatMap;
+    }
+
+    /**
+     * @param heatMap the heatMap to set
+     */
+    public void setHeatMap(HeatMap heatMap) {
+        this.heatMap = heatMap;
     }
     
 }
