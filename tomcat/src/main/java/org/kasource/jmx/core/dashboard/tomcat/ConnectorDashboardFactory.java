@@ -10,16 +10,21 @@ import javax.annotation.Resource;
 import javax.management.ObjectName;
 
 import org.kasource.jmx.core.dashboard.DashboardFactory;
+import org.kasource.jmx.core.dashboard.JavaScriptFunction;
+
 import static org.kasource.jmx.core.dashboard.JavaScriptFunction.*;
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
 import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
 import org.kasource.jmx.core.dashboard.builder.GraphBuilder;
+import org.kasource.jmx.core.dashboard.builder.LedPanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.PanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.TextGroupBuilder;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
+import org.kasource.jmx.core.model.dashboard.LayoutType;
+import org.kasource.jmx.core.model.dashboard.LedPanel;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
 import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
@@ -93,10 +98,9 @@ public class ConnectorDashboardFactory implements DashboardFactory {
                                                              .height(2)
                                                              .graph(getThreadGraph(threadPool, port))
                                                              .build());
-        dashboardBuilder.add(new PanelBuilder("error-panel"+port, "Error Rate", 1, 5).gauge(getProcessingErrorGauge(requestProcessor, port))
+        dashboardBuilder.add(new PanelBuilder("led-panel-panel"+port, "Status", 1, 5).width(2).height(3).ledPanel(getLedPanel(requestProcessor, threadPool, protocolHandler, port))
                                                              .build());
-        dashboardBuilder.add(new PanelBuilder("thread-use-panel"+port, "Thread Usage", 2, 5).gauge(getThreadUsageGauge(threadPool, port))
-                    .build());
+        
         dashboardBuilder.add(new PanelBuilder("processed-panel"+port, "Processed bytes", 6, 1)
         .width(4)
         .height(2)
@@ -162,15 +166,25 @@ public class ConnectorDashboardFactory implements DashboardFactory {
                                                         .text(new AttributeBuilder().attribute(threads, "connectionCount").label("Connection Count:").build())
                                                         .text(new AttributeBuilder().attribute(processor, "requestCount").label("# Requests:").build())
                                                         .text(new AttributeBuilder().attribute(processor, "errorCount").label("# Errors:").build())
-                                                        .text(new AttributeBuilder().attribute(threads, "daemon").label("Daemon:").subscribe(false).build())
-                                                        .text(new AttributeBuilder().attribute(threads, "deferAccept").label("TCP Defer Accept:").subscribe(false).build())
-                                                        .text(new AttributeBuilder().attribute(threads, "useComet").label("Use Comet:").subscribe(false).build())
-                                                        .text(new AttributeBuilder().attribute(threads, "useCometTimeout").label("Use Comet Timeout:").subscribe(false).build())
-                                                        .text(new AttributeBuilder().attribute(threads, "usePolling").label("Use Polling:").subscribe(false).build())
-                                                        .text(new AttributeBuilder().attribute(threads, "useSendfile").label("Use Send File:").subscribe(false).build())
                                                        .build();
         return processorInfo;
                                                        
+    }
+    
+    private LedPanel getLedPanel(ObjectName requestProcessor, ObjectName threadPool, ObjectName protocolHandler, String port) {
+        String threads = threadPool.getCanonicalName();
+        String processor = requestProcessor.getCanonicalName();
+      
+       return new LedPanelBuilder("led-panel-"+port).layout(LayoutType.VERTICAL).color("#FFFF00")
+       .addData(new AttributeBuilder().attribute(processor, "errorCount").label("Error").jsFunction(JavaScriptFunction.NUMBER_TO_BOOLEAN.getScript()).build())
+       .addData(new AttributeBuilder().attribute(protocolHandler.getCanonicalName(), "compression").label("Compression").subscribe(false).jsFunction(JavaScriptFunction.ONOFF_TO_BOOLEAN.getScript()).build())
+       .addData(new AttributeBuilder().attribute(threads, "daemon").label("Daemon").subscribe(false).build())
+       .addData(new AttributeBuilder().attribute(threads, "deferAccept").label("TCP Defer Accept").subscribe(false).build())
+       .addData(new AttributeBuilder().attribute(threads, "useComet").label("Use Comet").subscribe(false).build())
+       .addData(new AttributeBuilder().attribute(threads, "useCometTimeout").label("Use Comet Timeout").subscribe(false).build())
+       .addData(new AttributeBuilder().attribute(threads, "usePolling").label("Use Polling").subscribe(false).build())
+       .addData(new AttributeBuilder().attribute(threads, "useSendfile").label("Use Send File").subscribe(false).build())
+       .build();
     }
     
    
@@ -183,24 +197,7 @@ public class ConnectorDashboardFactory implements DashboardFactory {
         
     }
     
-    private Gauge getProcessingErrorGauge(ObjectName requestProcessor, String port) {
-        Gauge errorGauge = new GaugeBuilder("errorGauge-"+port)
-                                             .min("0")
-                                             .max(new AttributeBuilder().attribute(requestProcessor.getCanonicalName(), "requestCount").build())
-                                             .value(new AttributeBuilder().attribute(requestProcessor.getCanonicalName(), "errorCount").label("Errors").build())
-                                             .build();
-        return errorGauge;
-    }
-
     
-    private Gauge getThreadUsageGauge(ObjectName threadPool, String port) {
-        Gauge threadGauge = new GaugeBuilder("threadGauge-"+port).title("Busy Threads")
-                                              .min("0")
-                                              .max(new AttributeBuilder().attribute(threadPool.getCanonicalName(), "maxThreads").build())
-                                              .value(new AttributeBuilder().attribute(threadPool.getCanonicalName(), "currentThreadsBusy").label("Count").build())
-                                              .build();
-        return threadGauge;
-    }
 
     private Graph getThreadGraph(ObjectName threadPool, String port) {
         Graph threadPoolGraph = new GraphBuilder("threadPoolGraph-"+port).samples(600).decimals(0)

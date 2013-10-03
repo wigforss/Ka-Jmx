@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.management.ObjectName;
 
 import org.kasource.jmx.core.dashboard.DashboardFactory;
+import org.kasource.jmx.core.dashboard.JavaScriptFunction;
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
 import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
@@ -68,7 +69,7 @@ public class ServerDashboardFactory implements DashboardFactory {
         dashboardBuilder.add(new PanelBuilder("serverInfoPanel","Server Info", row, 1).width(2).height(2).textGroup(serverInfo).build());
         if(hostBean != null) {
             LedPanel ledPanel = getServerLedPanlel(hostBean);
-            dashboardBuilder.add(new PanelBuilder("serverInfo-led-panel","Server State", row, 3).ledPanel(ledPanel).build());
+            dashboardBuilder.add(new PanelBuilder("serverInfo-led-panel","Server State", row, 3).width(3).height(2).ledPanel(ledPanel).build());
         }
         addDatasourcePanels(dashboardBuilder, row + 2);
        
@@ -77,16 +78,24 @@ public class ServerDashboardFactory implements DashboardFactory {
     }
     
     private LedPanel getServerLedPanlel(ObjectName hostBean) {
+        
         String name = hostBean.getCanonicalName();
-        return new LedPanelBuilder("serverInfo-leds").layout(LayoutType.VERTICAL)
-                                                    .addData(new AttributeBuilder().attribute(name, "stateName").label("Started").jsFunction("function(value){return value === \"STARTED\";}").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "deployOnStartup").label("Deploy on Startup").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "autoDeploy").label("Auto Deploy").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "unpackWARs").label("Unpack WARs").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "createDirs").label("Create Directories").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "deployXML").label("Deploy Context XML").build())
-                                                    .addData(new AttributeBuilder().attribute(name, "startChildren").label("Start Child Containers").build())         
-                                                    .build();
+        LedPanelBuilder builder = new LedPanelBuilder("serverInfo-leds").layout(LayoutType.HORIZONTAL)
+                                                    .addData(new AttributeBuilder().attribute(name, "stateName").label("Started").subscribe(false).jsFunction("function(value){return value === \"STARTED\";}").build())
+                                                    .addData(new AttributeBuilder().attribute(name, "deployOnStartup").label("Deploy on Startup").subscribe(false).build())
+                                                    .addData(new AttributeBuilder().attribute(name, "autoDeploy").label("Auto Deploy").subscribe(false).build())
+                                                    .addData(new AttributeBuilder().attribute(name, "unpackWARs").label("Unpack WARs").subscribe(false).build())
+                                                    .addData(new AttributeBuilder().attribute(name, "createDirs").label("Create Directories").subscribe(false).build())
+                                                    .addData(new AttributeBuilder().attribute(name, "deployXML").label("Deploy Context XML").subscribe(false).build())
+                                                    .addData(new AttributeBuilder().attribute(name, "startChildren").label("Start Child Containers").subscribe(false).build());
+        Set<ObjectName> datasourceBeans = jmxService.getNamesMatching(domain + ":type=DataSource,*");
+        for(ObjectName datasourceBean : datasourceBeans) {
+            builder.addData(new AttributeBuilder().attribute(datasourceBean.getCanonicalName(), "numActive")
+                                                                .label(datasourceBean.getKeyProperty("name"))
+                                                                .jsFunction(JavaScriptFunction.NUMBER_TO_BOOLEAN.getScript()).build());
+        }
+        return builder.build();
+                                                    
     }
     
     

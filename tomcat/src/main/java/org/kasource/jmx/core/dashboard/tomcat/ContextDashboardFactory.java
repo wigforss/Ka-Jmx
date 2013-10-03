@@ -18,10 +18,13 @@ import org.kasource.jmx.core.dashboard.builder.GraphBuilder;
 import org.kasource.jmx.core.dashboard.builder.PanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.PieBuilder;
 import org.kasource.jmx.core.dashboard.builder.TextGroupBuilder;
+import org.kasource.jmx.core.dashboard.builder.TrafficLightBuilder;
+import org.kasource.jmx.core.model.dashboard.AttributeType;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Gauge;
 import org.kasource.jmx.core.model.dashboard.Graph;
 import org.kasource.jmx.core.model.dashboard.TextGroup;
+import org.kasource.jmx.core.model.dashboard.TrafficLight;
 import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
 
@@ -98,9 +101,15 @@ public class ContextDashboardFactory implements DashboardFactory {
                     processingPieChartBuilder.addData(new AttributeBuilder().attribute(servletObjectName, "processingTime").label(servletName).build());
                 }  catch (Exception e) {}
             }
-            dashboardBuilder.add(new PanelBuilder("request-pie-panel"+contextName.replace('/', '-'),"Number of Requests", row, 1).width(2).height(2).pie(requestPieChartBuilder.build()).build());
-            dashboardBuilder.add(new PanelBuilder("process-pie-panel"+contextName.replace('/', '-'),"Processing Time (ms)", row, 3).width(2).height(2).pie(processingPieChartBuilder.build()).build());
-            dashboardBuilder.add(new PanelBuilder("error-pie-panel"+contextName.replace('/', '-'),"Number of Errors", row, 5).width(2).height(2).pie(errorPieChartBuilder.build()).build());
+            TrafficLight state = getStateTrafficLight(contextName);
+            int column = 1;
+            if(state != null) {
+                dashboardBuilder.add(new PanelBuilder("state-panel-"+contextName.replace('/', '-'), "Context State", row, column).width(1).height(2).trafficLight(state).build());
+                column++;
+            }
+            dashboardBuilder.add(new PanelBuilder("request-pie-panel"+contextName.replace('/', '-'),"Number of Requests", row, column).width(2).height(2).pie(requestPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("process-pie-panel"+contextName.replace('/', '-'),"Processing Time (ms)", row, column + 2).width(2).height(2).pie(processingPieChartBuilder.build()).build());
+            dashboardBuilder.add(new PanelBuilder("error-pie-panel"+contextName.replace('/', '-'),"Number of Errors", row, column + 4).width(2).height(2).pie(errorPieChartBuilder.build()).build());
         }
         row += 2;
         
@@ -110,6 +119,21 @@ public class ContextDashboardFactory implements DashboardFactory {
        }
         
         return dashboardBuilder.build();
+    }
+    
+    private TrafficLight getStateTrafficLight(String contextName) {
+       
+        Set<ObjectName> contextValves = jmxService.getNamesMatching(domain + ":name=StandardContextValve,context="+contextName+",*");
+        if(!contextValves.isEmpty()) {
+            ObjectName contextValve = contextValves.iterator().next();
+            return new TrafficLightBuilder("state-traffic-light-"+contextName.replace('/', '-')).attributeType(AttributeType.TEXT).title("State")
+                    .green(new AttributeBuilder().value("STARTED").build())
+                    .yellow(new AttributeBuilder().value("NEW, INITIALIZING, INITIALIZED, STARTING_PREP, STARTING, MUST_STOP, STOPPING_PREP").build())     
+                    .red(new AttributeBuilder().build())
+                    .value(new AttributeBuilder().attribute(contextValve.getCanonicalName(), "stateName").build())
+                    .build();
+        }
+        return null;
     }
     
     private void addSessionPanels(DashboardBuilder dashboardBuilder, String contextName, int row, ObjectName context) {
