@@ -15,7 +15,7 @@ public class GaugeBuilder extends AbstractWidgetBuilder {
     private AttributeValue max;
     private AttributeValue value;
     private String title;
-  
+    private int decimals = 2;
     
     public GaugeBuilder(String id) {
        super(id);
@@ -68,7 +68,10 @@ public class GaugeBuilder extends AbstractWidgetBuilder {
         return this;
     }
     
-    
+    public GaugeBuilder decimals(int decimals) {
+        this.decimals = decimals;
+        return this;
+    }
     
     
     public Gauge build() {
@@ -90,6 +93,7 @@ public class GaugeBuilder extends AbstractWidgetBuilder {
         gauge.setMin(min);
         gauge.setValue(value);
         gauge.setTitle(title);
+        gauge.setDecimals(decimals);
         return gauge;
     }
 }
