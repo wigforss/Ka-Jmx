@@ -1,11 +1,22 @@
+if(typeof org=='undefined') {
+	org = {};
+}
+if(!org.hasOwnProperty("kasource")) {
+	org.kasource = {};
+}
+if(!(org.kasource.hasOwnProperty("jmx"))) {
+	org.kasource.jmx = {};
+} 
+if(!(org.kasource.jmx.hasOwnProperty("dashboard"))) {
+	org.kasource.jmx.dashboard = {};
+} 
 
 
+org.kasource.jmx.dashboard.dashboards={};
 
-dashboards={};
 
-
-function loadDashboard(dashboardId) {
-	currentDasboard = dashboardId;
+org.kasource.jmx.dashboard.loadDashboard = function(dashboardId) {
+	org.kasource.jmx.dashboard.currentDasboard = dashboardId;
 	
 	$("#dashboardView").removeClass("hidden");
 	$("#beanView").addClass("hidden");
@@ -13,24 +24,26 @@ function loadDashboard(dashboardId) {
 	$("#dashboardView").children("div").addClass("hidden");
 	if($("#"+dashboardId).find('div:nth-child(2)').is(':empty')) {
 		// load dashboard
-		$.get(encodeURI('json/dashboard'), {dashboardId: dashboardId}, this.renderDashboard);
+		$.get(encodeURI('json/dashboard'), {dashboardId: dashboardId}, org.kasource.jmx.dashboard.renderDashboard);
 	} else {
 		// unhide render
 		$("#"+dashboardId).removeClass("hidden");
 		
-		for (var key in widgets) {
-		    if (widgets[key] && widgets[key].dashboardId == currentDasboard && (widgets[key].chart || widgets[key].gauge)) {
+		for (var key in org.kasource.jmx.dashboard.widgets) {
+		    if (org.kasource.jmx.dashboard.widgets[key] 
+		    	&& org.kasource.jmx.dashboard.widgets[key].dashboardId == org.kasource.jmx.dashboard.currentDasboard 
+		    	/*&& (org.kasource.jmx.dashboard.widgets[key].chart || org.kasource.jmx.dashboard.widgets[key].gauge)*/) {
 		    	$('#' + key).empty();
-				widgets[key].render();	
+		    	org.kasource.jmx.dashboard.widgets[key].render();	
 		    }
 		}
-		graphPainter.draw();
+		org.kasource.jmx.dashboard.graphPainter.draw();
 		
 	}
 	
 }
 
-function renderDashboard(json) {
+org.kasource.jmx.dashboard.renderDashboard = function(json) {
 	var dashboard = json.data;
 	   
 	
@@ -43,13 +56,13 @@ function renderDashboard(json) {
 		}
 		});
 		
-		dashboards[dashboard.id] = $("#"+dashboard.id).find("ul").data('gridster');
+		org.kasource.jmx.dashboard.dashboards[dashboard.id] = $("#"+dashboard.id).find("ul").data('gridster');
 		
 		setTimeout(function() {
 	
 	for(var i = 0; i < dashboard.panel.length; i++) {
 		var panel = dashboard.panel[i];
-		widgetFactory[panel.widget.type].get(dashboard.id, panel.widget.id, panel.widget);
+		org.kasource.jmx.dashboard.widgetFactory[panel.widget.type].get(dashboard.id, panel.widget.id, panel.widget);
 		
 	}
 		}, 500);
@@ -60,23 +73,10 @@ function renderDashboard(json) {
 
 
 
-function mergeOptions(options, overrideOptions) {
-	if (overrideOptions != null) {
-		for ( var key in overrideOptions) {
-			if (overrideOptions.hasOwnProperty(key)) {
-				options[key] = overrideOptions[key];
-			}
-		}
-	}
-	return options;
-}
-
-
-
-function removePanel(dashboardId, panelId, widgetId) {
-	dashboards[dashboardId].remove_widget($("#" + panelId), function(){
+org.kasource.jmx.dashboard.removePanel = function(dashboardId, panelId, widgetId) {
+	org.kasource.jmx.dashboard.dashboards[dashboardId].remove_widget($("#" + panelId), function(){
 		if(widgetId) {
-			var widget = widgets[widgetId];
+			var widget = org.kasource.jmx.dashboard.widgets[widgetId];
 			if(widget && widget.close) {
 				widget.close();
 			}
@@ -85,7 +85,7 @@ function removePanel(dashboardId, panelId, widgetId) {
 	
 }
 
-function togglePanelSize(dashboardId, panelId, widgetId) {
+org.kasource.jmx.dashboard.togglePanelSize = function(dashboardId, panelId, widgetId) {
 	var isMax = $("#" + panelId).attr("maximized");
 
 	var x = parseInt($("#" + panelId).attr("data-sizex"));
@@ -102,13 +102,13 @@ function togglePanelSize(dashboardId, panelId, widgetId) {
 		$("#" + panelId).attr("maximized", "true");
 		
 	}
-	dashboards[dashboardId].resize_widget($("#" + panelId), x, y);
+	org.kasource.jmx.dashboard.dashboards[dashboardId].resize_widget($("#" + panelId), x, y);
 	
 	
 	
 	if (widgetId) {
 		var widgetClass = $('#'+widgetId).attr("class");
-		var widget = widgets[widgetId];
+		var widget = org.kasource.jmx.dashboard.widgets[widgetId];
 		
 		if(widget.render) {
 			setTimeout(function() {

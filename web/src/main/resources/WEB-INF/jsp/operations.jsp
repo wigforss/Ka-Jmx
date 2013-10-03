@@ -18,7 +18,7 @@
 							<a id="a-operation-${operation.name}" href="#invokeForm-${operation.name}"><c:out value="${operation.name}"/></a><br/> 
 						</c:forEach> -->		
 					 	<c:forEach var="operation" items="${mBean.operations}" varStatus="operationStatus">
-					 		<a id="a-operation-${operation.name}" href="javascript:toggleHidden('operation-${operationStatus.index}')"><c:out value="${operation.name}"/></a><br/>
+					 		<a id="a-operation-${operation.name}" href="javascript:org.kasource.jmx.console.toggleHidden('operation-${operationStatus.index}')"><c:out value="${operation.name}"/></a><br/>
 					 		<div id="operation-${operationStatus.index}" class="hidden">
 							<form id="invokeForm-${operation.name}" action="${pageContext.request.contextPath}/json/bean" method="post">
 								<input type="hidden" name="objectName" value="${fn:escapeXml(mBean.name)}"/>
@@ -128,7 +128,7 @@
 								</table>
 								</c:if>
 							<p/>
-							<input type="button" value="Invoke ${operation.name}" onclick="validateAndPostOperationForm('invokeForm-${operation.name}','result-${operation.name}')"/>
+							<input type="button" value="Invoke ${operation.name}" onclick="org.kasource.jmx.console.validateAndPostOperationForm('invokeForm-${operation.name}','result-${operation.name}')"/>
 							<img alt="Show/Hide Result" title="Show/Hide Result" src="style/images/run-build-file-3.png" onclick="$('#result-${operation.name}').toggleClass('hidden')"/>
 							<br/>
 							<textarea class="hidden" rows="20" cols="80" id="result-${operation.name}" readonly="readonly"><c:out value=""/></textarea>

@@ -44,8 +44,8 @@
 				<ul class="dashboard">
 				<c:forEach var="panel" items="${dashboard.panel}">
 					
-    					<li id="${panel.id}" data-row="${panel.row}" data-col="${panel.column}" data-sizex="${panel.width}" data-sizey="${panel.height}" class="panel" ondblclick="togglePanelSize('${dashboard.id}',this.id,'${panel.widget.id}')">
-    				 		<div class="title-bar"><span class="title-bar-text" title="${panel.title}"><c:out value="${panel.title}"/></span><span class="title-bar-icon"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="removePanel('${dashboard.id}','${panel.id}','${panel.widget.id}')"/></span></div>
+    					<li id="${panel.id}" data-row="${panel.row}" data-col="${panel.column}" data-sizex="${panel.width}" data-sizey="${panel.height}" class="panel" ondblclick="org.kasource.jmx.dashboard.togglePanelSize('${dashboard.id}',this.id,'${panel.widget.id}')">
+    				 		<div class="title-bar"><span class="title-bar-text" title="${panel.title}"><c:out value="${panel.title}"/></span><span class="title-bar-icon"><img src="style/images/dialog-no-3.png" width="16" height="16" onclick="org.kasource.jmx.dashboard.removePanel('${dashboard.id}','${panel.id}','${panel.widget.id}')"/></span></div>
     						<div id="${panel.widget.id}" class="${panel.widget.type}"></div>
     					</li>
     					
