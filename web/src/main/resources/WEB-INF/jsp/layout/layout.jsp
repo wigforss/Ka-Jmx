@@ -28,13 +28,18 @@
 			<link rel="stylesheet" type="text/css" href="style/list_menu.css"/>
 			<link rel="stylesheet" type="text/css" href="style/jquery.gridster.css"/>
 			<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-			<script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.1.js"></script>
+			<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 			<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>  	
 			<script type="text/javascript" src="script/jquery.gridster.with-extras.js"> </script>
-			<script type="text/javascript" src="script/raphael.2.1.0.min.js"></script>
+			<script type="text/javascript" src="script/raphael.2.1.2-min.js"></script>
+			
+			<script type="text/javascript" src="script/jquery.qtip-1.0.0-rc3.min.js" charset="utf-8"></script>
     		<script type="text/javascript" src="script/justgage.1.0.1.min.js"></script>
+    		<script type="text/javascript" src="script/color-schema.js"></script> 
     		<script type="text/javascript" src="script/led-panel.js"></script>  
 		    <script type="text/javascript" src="script/traffic-light.js"></script>  
+		    <script type="text/javascript" src="script/heatmap.js"></script> 
     		<script type="text/javascript" src="script/dashboard.js"></script>
     		<script type="text/javascript" src="script/widget.js"></script>
       		<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
