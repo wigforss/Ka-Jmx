@@ -12,6 +12,8 @@ package org.kasource.jmx.core.model.dashboard;
 
 
 
+
+
 import javax.xml.bind.annotation.XmlRegistry;
 
 
@@ -129,6 +131,32 @@ public class ObjectFactory {
      */
     public Attribute createAttribute() {
         return new Attribute();
+    }
+    
+    /**
+     * Create an instance of {@link HeatRow }
+     * 
+     */
+    public HeatRow createHeatRow() {
+        return new HeatRow();
+    }
+
+    
+    /**
+     * Create an instance of {@link HeatCell }
+     * 
+     */
+    public HeatCell createHeatCell() {
+        return new HeatCell();
+    }
+
+  
+    /**
+     * Create an instance of {@link HeatMap }
+     * 
+     */
+    public HeatMap createHeatMap() {
+        return new HeatMap();
     }
 
 }
