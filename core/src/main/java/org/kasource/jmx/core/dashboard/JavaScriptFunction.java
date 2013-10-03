@@ -43,7 +43,9 @@ public enum JavaScriptFunction {
                                 + "return result;"
                              + "}"),
     PERCENTAGE("function(value) {return Math.round(value*100) / 100 + \" %\";}"),
-    UTC_TO_LOCAL_TIME("function(value) {return new Date(parseInt(value) - new Date().getTimezoneOffset()*60*1000).toJSON().replace(\"T\", \" \").replace(\"Z\",\"\");}");
+    UTC_TO_LOCAL_TIME("function(value) {return new Date(parseInt(value) - new Date().getTimezoneOffset()*60*1000).toJSON().replace(\"T\", \" \").replace(\"Z\",\"\");}"),
+    NUMBER_TO_BOOLEAN("function(value) {return (value > 0);}"),
+    ONOFF_TO_BOOLEAN("function(value) {return (value.toLowerCase() === \"on\");}");
     
     private String script;
     

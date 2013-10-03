@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.management.Notification;
 
+import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.jmx.export.notification.NotificationPublisher;
@@ -19,12 +20,13 @@ public class TestBean implements NotificationPublisherAware{
     private int[] intArray = {1,2,3,4};
     private short[] shortArray = {1,2,3,4};
     private byte[] byteArray = {1,2,3,4};
+    private boolean boolenValue;
     private boolean[] booleanArray = {true,false,true,false};
     private NotificationPublisher notificationPublisher;
     /**
      * @return the testEnum
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Testar enum")
+    @ManagedAttribute(description = "Testar enum")
     public TestEnum getTestEnum() {
         return testEnum;
     }
@@ -32,7 +34,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @param testEnum the testEnum to set
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute
+    @ManagedAttribute
     public void setTestEnum(TestEnum testEnum) {
         this.testEnum = testEnum;
     }
@@ -40,7 +42,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @return the started
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Date started")
+    @ManagedAttribute(description = "Date started")
     public Date getStarted() {
         return started;
     }
@@ -48,7 +50,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @param started the started to set
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute
+    @ManagedAttribute
     public void setStarted(Date started) {
         this.started = started;
     }
@@ -56,7 +58,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @return the intArray
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Integer array test")
+    @ManagedAttribute(description = "Integer array test")
     public int[] getIntArray() {
         return intArray;
     }
@@ -64,7 +66,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @param intArray the intArray to set
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Integer array test")
+    @ManagedAttribute(description = "Integer array test")
     public void setIntArray(int[] intArray) {
         this.intArray = intArray;
     }
@@ -72,7 +74,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @return the shortArray
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Short array test")
+    @ManagedAttribute(description = "Short array test")
     public short[] getShortArray() {
         return shortArray;
     }
@@ -87,7 +89,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @return the byteArray
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Byte array test")
+    @ManagedAttribute(description = "Byte array test")
     public byte[] getByteArray() {
         return byteArray;
     }
@@ -95,7 +97,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @param byteArray the byteArray to set
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Byte array test")
+    @ManagedAttribute(description = "Byte array test")
     public void setByteArray(byte[] byteArray) {
         this.byteArray = byteArray;
     }
@@ -103,7 +105,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @return the booleanArray
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Boolean array test")
+    @ManagedAttribute(description = "Boolean array test")
     public boolean[] getBooleanArray() {
         return booleanArray;
     }
@@ -111,7 +113,7 @@ public class TestBean implements NotificationPublisherAware{
     /**
      * @param booleanArray the booleanArray to set
      */
-    @org.springframework.jmx.export.annotation.ManagedAttribute(description = "Boolean array test")
+    @ManagedAttribute(description = "Boolean array test")
     public void setBooleanArray(boolean[] booleanArray) {
         this.booleanArray = booleanArray;
     }
@@ -124,6 +126,22 @@ public class TestBean implements NotificationPublisherAware{
     @ManagedOperation
     public void publishNotification() {
         notificationPublisher.sendNotification(new Notification("test", this, 0));
+    }
+
+    /**
+     * @return the boolenValue
+     */
+    @ManagedAttribute
+    public boolean isBoolenValue() {
+        return boolenValue;
+    }
+
+    /**
+     * @param boolenValue the boolenValue to set
+     */
+    @ManagedAttribute
+    public void setBoolenValue(boolean boolenValue) {
+        this.boolenValue = boolenValue;
     }
 
 }

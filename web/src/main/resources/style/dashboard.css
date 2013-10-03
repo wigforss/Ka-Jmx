@@ -82,12 +82,18 @@
 
 .ledPanel {
 	 width:100%; 
-	 height:100%;
+	 height:90%;
 }
 
 .trafficLight {
 	 width:100%; 
-	 height:100%;
+	 height:85%;
+}
+
+.heatMap {
+	 width:100%; 
+	 height:90%;
+	 font: normal 11px "Segoe UI", Arial, Sans-serif;
 }
 
 .pie {
@@ -108,7 +114,7 @@ div.textGroup{
 }
 .textGroup table{
 	border-collapse:separate;
-    border-spacing:0 5px;	
+    border-spacing:0 5px;
    
 }
 
