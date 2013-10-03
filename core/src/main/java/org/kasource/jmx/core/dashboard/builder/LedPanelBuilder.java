@@ -14,7 +14,7 @@ public class LedPanelBuilder extends AbstractWidgetBuilder {
 
  
     private List<AttributeValue> data = new ArrayList<AttributeValue>();
-    private LayoutType layout = LayoutType.VERTICAL;
+    private LayoutType layout = LayoutType.HORIZONTAL;
     private boolean showLabels = true;
     private String color = "#00FF00";
     
