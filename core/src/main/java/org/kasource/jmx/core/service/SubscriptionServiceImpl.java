@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
     private static final Logger LOG = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
+    private static final Object NULL_MARKER = new Object();
+    
     private Map<AttributeKey, Set<AttributeValueListener>> listeners = new ConcurrentHashMap<AttributeKey, Set<AttributeValueListener>>();
     private Map<AttributeKey, Object> values = new ConcurrentHashMap<AttributeKey, Object>();
     
@@ -88,6 +90,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                             notifyListeners(attributeListeners, key, value);
                             if(value != null) {
                                 values.put(key, value);
+                            } else {
+                                values.put(key, NULL_MARKER);
                             }
                         } 
                     
@@ -102,7 +106,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             if (!values.containsKey(key)) {
                 return true;
             }
-        
+            if(value == null) {
+                if(values.get(key) == NULL_MARKER) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            
             if(value.getClass().isArray()) {
                 return !Arrays.deepEquals((Object[])values.get(key), (Object[])value);
             } else if(value instanceof CompositeData) {
