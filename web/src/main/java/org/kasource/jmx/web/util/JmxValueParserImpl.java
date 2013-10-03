@@ -54,13 +54,17 @@ public class JmxValueParserImpl implements JmxValueParser {
     }
     
     private Object parseElement(String value, Class<?> clazz) {
+        
         if(value == null) {
+            if(clazz.equals(boolean.class) || clazz.equals(Boolean.class)) {
+                return Boolean.FALSE;
+            }
             return null;
         } else if(value.equals(nullStringValue)) {
             return null;
         } else if(Date.class.isAssignableFrom(clazz)) {
            return parseDate(value, clazz);
-        } 
+        }  
         
         return dataBinder.convertIfNecessary(value.trim(), clazz);
     }

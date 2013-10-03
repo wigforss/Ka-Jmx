@@ -110,7 +110,7 @@ public class JmxController {
         for(ManagedAttribute attribute : attributes) {
             String value = request.getParameter(attribute.getName());
             String changed = request.getParameter("changed-"+attribute.getName());
-            if(value != null && changed != null && "on".equals(changed)) {
+            if(changed != null && "on".equals(changed)) {
                 try {
                     attributeValues.put(attribute, jmxValueParser.parse(value, attribute.getTargetClass()));
                 } catch(Exception e) {
