@@ -1,6 +1,13 @@
- var org = {};
- org.kasource = {};
- org.kasource.Websocket = {};
+if(typeof org=='undefined') {
+	org = {};
+}
+if(!org.hasOwnProperty("kasource")) {
+	org.kasource = {};
+}
+if(!(org.kasource.hasOwnProperty("Websocket"))) {
+	org.kasource.Websocket = {};
+} 
+
 
  org.kasource.Websocket.socket = null;
  
@@ -127,12 +134,13 @@
 			}
 	 }
  }
- 
+
+ /*
 function logValue(jmxValue) {
 	
 	console.log("ObjectName: " + jmxValue.key.name+" Attribute: " + jmxValue.key.attributeName + " Value: " + jmxValue.value);
 }
-
+*/
 
 
 
