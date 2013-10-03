@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://kasource.org/schema/ka-jmx" 
+    		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   			   xsi:schemaLocation="
+        http://kasource.org/schema/ka-jmx 
+       ka-jmx-dashboard.xsd">
+	
+     <dashboard id="kajmx-demo" name="Demo" baseWidth="100" baseHeight="100">
+     	<panel row="1" column="1" height="2" title="Numeric TrafficLight ASC"  id="traffic-light-num-asc-panel">
+     		<trafficLight attributeType="numeric" id="traffic-light-num-asc" ascending="true" title="Integer1">
+     			<red>
+     				<value>100</value>
+     			</red>
+     			<yellow>
+     				<value>50</value>
+     			</yellow>
+     			<green>
+     			</green>
+     			<value>
+     				<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</trafficLight>
+     	</panel>
+     	<panel  row="3"  column="1" height="2" title="Numeric TrafficLight DESC" id="traffic-light-num-desc-panel">
+     		<trafficLight attributeType="numeric" id="traffic-light-num-desc" ascending="false" title="Integer2">
+     			<red>
+     				<value>50</value>
+     			</red>
+     			<yellow></yellow>
+     			<green>
+     				<value>100</value>
+     			</green>
+     			<value>
+     				<attribute attribute="Integer2" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</trafficLight>
+     	</panel>
+     	<panel row="1" column="2" height="2" title="Text TrafficLight ASC"  id="traffic-light-text-asc-panel">
+     		<trafficLight attributeType="text" id="traffic-light-text-asc" ascending="true" title="Enum1">
+     			<red></red>
+     			<yellow>
+     				<value>TWO, ADDITIONAL_YELLOW_VALUES</value>
+     			</yellow>
+     			<green>
+     				<value>ONE, ADDITIONAL_GREEN_VALUES</value>
+     			</green>
+     			<value>
+     				<attribute attribute="Enum1" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</trafficLight>
+     	</panel>
+     	<panel row="3" column="2" height="2" title="Text TrafficLight ASC"  id="traffic-light-text-desc-panel">
+     		<trafficLight attributeType="text" id="traffic-light-text-desc" ascending="false" title="Enum2">
+     			<red>
+     				<value>THREE, ADDITIONAL_RED_VALUES</value>
+     			</red>
+     			<yellow>
+     				<value>TWO, ADDITIONAL_YELLOW_VALUES</value>
+     			</yellow>
+     			<green></green>
+     			<value>
+     				<attribute attribute="Enum2" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</trafficLight>
+     	</panel>
+     	<panel  id="demo-pie-panel" row="3" column="3" height="2" width="2" title="Integer Pie Chart" >
+     		<pie id="demo-pie" title="Integer value">
+     			<dataSeries>
+     				<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Integer2" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Integer3" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Integer4" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Integer5" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Integer6" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			
+     		</pie>
+     	</panel>
+     	<panel id="demo-graph-panel" title="Float Graph" row="1" column="5" height="2" width="3">
+     		<graph id="demo-graph" decimals="2" yAxisLabel="Float Value">
+     			<dataSeries>
+     				<attribute attribute="Float1" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Float2" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     			<dataSeries>
+     				<attribute attribute="Float3" objectName="KaJMX:name=Demo"/>
+     			</dataSeries>
+     		</graph>
+     	</panel>
+     	<panel row="3"  column="5" title="LED indicators" id="demo-led-panel-panel" height="2" width="3">
+     		<ledPanel id="demo-led-panel" layout="horizontal">
+     			<data>
+     				<attribute attribute="Boolean1" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Boolean2" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Boolean3" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Boolean4" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Boolean5" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Boolean6" objectName="KaJMX:name=Demo"/>
+     			</data>
+     			<data>
+     				<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     				<jsFunction>
+     				<![CDATA[
+     				function(value){return value > 1}
+     				]]>
+     				</jsFunction>
+     			</data>
+     			<data>
+     				<attribute attribute="Integer2" objectName="KaJMX:name=Demo"/>
+     				<jsFunction>
+     				<![CDATA[
+     				function(value){return value > 10}
+     				]]>
+     				</jsFunction>
+     			</data>
+     			<data>
+     				<attribute attribute="Enum1" objectName="KaJMX:name=Demo"/>
+     				<jsFunction>
+     				<![CDATA[
+     				function(value){return value == "ONE"}
+     				]]>
+     				</jsFunction>
+     			</data>
+     		</ledPanel>
+     	</panel>
+     	<panel id="demo-text-panel" row="5" column="1" title="Integer Values"  width="2" height="2">
+     		<textGroup id="demo-text">
+     			<value>
+     				<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     			</value>
+     			<value>
+     				<attribute attribute="Integer2" objectName="KaJMX:name=Demo"/>
+     			</value>
+     			<value>
+     				<attribute attribute="Integer3" objectName="KaJMX:name=Demo"/>
+     			</value>
+     			<value>
+     				<attribute attribute="Integer4" objectName="KaJMX:name=Demo"/>
+     			</value>
+     			<value>
+     				<attribute attribute="Integer5" objectName="KaJMX:name=Demo"/>
+     			</value>
+     			<value>
+     				<attribute attribute="Integer6" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</textGroup>
+     	</panel>
+     	<panel id="demo-gauge-i1-panel" row="5" column="3" title="Integer 1">
+     		<gauge id="demo-gauge-i1">
+     			<min><value>0</value></min>
+     			<max><value>100</value></max>
+     			<value>
+     				<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</gauge>
+     	</panel>
+     	<panel id="demo-gauge-i6-panel" row="6" column="3" title="Integer 6">
+     		<gauge id="demo-gauge-i6">
+     			<min><value>0</value></min>
+     			<max><value>100</value></max>
+     			<value>
+     				<attribute attribute="Integer6" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</gauge>
+     	</panel>
+     	<panel id="demo-gauge-f1-panel" row="5" column="4" title="Float 1">
+     		<gauge id="demo-gauge-f1">
+     			<min><value>0</value></min>
+     			<max><value>100</value></max>
+     			<value>
+     				<attribute attribute="Float1" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</gauge>
+     	</panel>
+     	<panel id="demo-gauge-f6-panel" row="6" column="4" title="Float 6">
+     		<gauge id="demo-gauge-f6">
+     			<min><value>0</value></min>
+     			<max><value>100</value></max>
+     			<value>
+     				<attribute attribute="Float6" objectName="KaJMX:name=Demo"/>
+     			</value>
+     		</gauge>
+     	</panel>
+     	<panel id="heatMap-with-legend-panel" row="1" column="3" width="2" height="2" title="Heat Map with Legend">
+     		<heatMap id="heatMap-with-legend" legendLayout="horizontal">
+     			<heatRow>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer1" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer2" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer3" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer4" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer5" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Integer6" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     			</heatRow>
+     			<heatRow>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean1" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean2" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean3" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean4" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean5" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return ((value==="true" || value === true) ? 100 : 0);
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Boolean6" objectName="KaJMX:name=Demo"/>
+     					</data>	
+     				</heatCell>
+     			</heatRow>
+     			<heatRow>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum1" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum2" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum3" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum4" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum5" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<normalizationFunction>
+     						<![CDATA[
+     							function(value) {
+     								return (value=="ONE" ? 0 : (value=="TWO" ? 50 : 100));
+     							}
+     						]]>
+     					</normalizationFunction>
+     					<data>
+     						<attribute attribute="Enum6" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     			</heatRow>
+     			<heatRow>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float1" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float2" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float3" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float4" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float5" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Float6" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     			</heatRow>
+     			<heatRow>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Double1" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Double2" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     				<heatCell>
+     					<data>
+     						<attribute attribute="Double3" objectName="KaJMX:name=Demo"/>
+     					</data>
+     				</heatCell>
+     			</heatRow>
+     		</heatMap>
+     	</panel>
+     </dashboard>
+</configuration>
