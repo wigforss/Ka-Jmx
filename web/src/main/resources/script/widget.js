@@ -1,11 +1,25 @@
-widgets = [];
-graphs = [];
-widgetFactory = [];
-currentDasboard={};
-gaugeFactory = {};
+if(typeof org=='undefined') {
+	org = {};
+}
+if(!org.hasOwnProperty("kasource")) {
+	org.kasource = {};
+}
+if(!(org.kasource.hasOwnProperty("jmx"))) {
+	org.kasource.jmx = {};
+} 
+if(!(org.kasource.jmx.hasOwnProperty("dashboard"))) {
+	org.kasource.jmx.dashboard = {};
+} 
+
+org.kasource.jmx.dashboard.widgets = [];
+org.kasource.jmx.dashboard.graphs = [];
+org.kasource.jmx.dashboard.widgetFactory = {};
+org.kasource.jmx.dashboard.currentDasboard={};
+
+org.kasource.jmx.dashboard.gaugeFactory = {};
 
 
-Gauge = 
+org.kasource.jmx.dashboard.Gauge = 
 	function (dashboardId, id, options) {
 		this.id = id;
 		this.options = options;
@@ -14,38 +28,27 @@ Gauge =
 		this.listeners={};
 		this.dashboardId = dashboardId;
 		
+		this.initializeAttribute = function(attribute) {
+			if(!attribute.jsFunction && attribute.value) {
+				return this.roundValue(parseFloat(attribute.value));
+			} else if(attribute.jsFunction) {
+				attribute.transform = eval('('+attribute.jsFunction+')');
+				if(attribute.value) {
+					 return this.roundValue(parseFloat(attribute.transform(attribute.value)));
+				}
+			}
+			return 0;
+		} 
+		
+		this.roundValue = function(value) {
+			var multiplier = Math.pow(10, this.options.decimals);
+			return Math.round(value * multiplier) / multiplier;
+		}
+		
 		this.initialize = function() {
-			var minValue = 0;
-			if(!this.options.min.jsFunction && this.options.min.value) {
-				minValue = parseFloat(this.options.min.value);
-			} else if(this.options.min.jsFunction) {
-				this.options.min.transform = eval('('+this.options.min.jsFunction+')');
-				if(this.options.min.value) {
-					 minValue = this.options.min.transform(this.options.min.value);
-				}
-			}
-			
-			var maxValue = 0;
-			if(!this.options.max.jsFunction && this.options.max.value) {
-				maxValue = parseFloat(this.options.max.value);
-			} else if(this.options.max.jsFunction) {
-				this.options.max.transform = eval('('+this.options.max.jsFunction+')');
-				if(this.options.max.value) {
-					 maxValue = this.options.max.transform(this.options.max.value);
-				}
-			}
-			
-			var currentValue = 0;
-			if(!this.options.value.jsFunction && this.options.value.value) {
-				currentValue = parseFloat(this.options.value.value);
-			} else if(this.options.value.jsFunction) {
-				this.options.value.transform = eval('('+this.options.value.jsFunction+')');
-				if(this.options.value.value) {
-					currentValue = this.options.value.transform(this.options.value.value);
-				}
-			}
-			
-			
+			var minValue = this.initializeAttribute(this.options.min);
+			var maxValue = this.initializeAttribute(this.options.max);
+			var currentValue = this.initializeAttribute(this.options.value);
 			
 			var title = '';
 			if(this.options.title) {
@@ -72,7 +75,7 @@ Gauge =
 			
 			if(this.options.min.subscribe && this.options.min.attribute) {	
 				this.listeners[this.options.min.attribute.objectName+"."+this.options.min.attribute.attribute]=['min'];	
-				org.kasource.Websocket.subscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, id+"-min", this.refreshValue, this);
+				org.kasource.Websocket.subscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, id+"-min", this.refreshValue, this, this.options.min.type);
 			}
 			if(this.options.max.subscribe && this.options.max.attribute) {
 				var types = this.listeners[this.options.max.attribute.objectName+"."+this.options.max.attribute.attribute];
@@ -81,7 +84,7 @@ Gauge =
 				} else {
 					types.push('max')
 				}		
-				org.kasource.Websocket.subscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, id+"-max", this.refreshValue, this);
+				org.kasource.Websocket.subscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, id+"-max", this.refreshValue, this, this.options.max.type);
 			}
 			if(this.options.value.subscribe && this.options.value.attribute) {
 				var types = this.listeners[this.options.value.attribute.objectName+"."+this.options.value.attribute.attribute];
@@ -90,7 +93,7 @@ Gauge =
 				} else {
 					types.push('value');
 				}		
-				org.kasource.Websocket.subscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, id+"-value", this.refreshValue, this);
+				org.kasource.Websocket.subscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, id+"-value", this.refreshValue, this, this.options.value.type);
 			}
 			
 		}
@@ -100,60 +103,52 @@ Gauge =
 			this.gauge = new JustGage(this.gaugeOptions);
 		}
 		
+		this.getAttributeValue = function(attribute, value){
+			
+			if(attribute.transform) {
+				return this.roundValue(parseFloat(attribute.transform(value)));
+			} else {
+				return this.roundValue(parseFloat(value));
+			}
+		}
+		
+		this.setOptionAndRender = function(widget, optionKey, value) {
+			widget.gaugeOptions[optionKey] = value;
+			if (org.kasource.jmx.dashboard.currentDasboard == widget.dashboardId) {
+				$('#' + widget.id).empty();
+				widget.gauge = new JustGage(widget.gaugeOptions);
+			}
+		}
+		
 		this.refreshValue = function(jmxValue, widget) {
 			var attribute = jmxValue.key.attributeName;
 			var objectName = jmxValue.key.name;
 			var types = widget.listeners[objectName+"."+attribute];
 			var gauge = widget.gauge;
-			if(types) {
-				for (var i = 0; i < types.length; i++) {
-					var type = types[i];
-					switch(type) {
-					case 'min':
-						var minValue = 0;
-						if (jmxValue.value) {
-							if(widget.options.min.transform) {
-								var minValue = parseFloat(widget.options.min.transform(jmxValue.value));
-							} else {
-								minValue = parseFloat(jmxValue.value);
+			if(jmxValue.value != undefined && jmxValue.value != null) {
+				if(types) {
+					for (var i = 0; i < types.length; i++) {
+						var type = types[i];
+					
+						switch(type) {
+						case 'value':
+							var currentValue = widget.getAttributeValue(widget.options.value, jmxValue.value);
+							
+							widget.gaugeOptions['value']=currentValue;
+							if (org.kasource.jmx.dashboard.currentDasboard == widget.dashboardId) {
+								gauge.refresh(currentValue);
 							}
+							break;
+						case 'min':
+							var minValue = widget.getAttributeValue(widget.options.min, jmxValue.value);
+							widget.setOptionAndRender(widget, 'min', minValue);
+							break;
+						case 'max':
+							var maxValue = widget.getAttributeValue(widget.options.max, jmxValue.value);
+							widget.setOptionAndRender(widget, 'max', maxValue);
+							break;
+					
 						}
-						widget.gaugeOptions['min'] = minValue;
-						if (currentDasboard == widget.dashboardId) {
-							$('#' + widget.id).empty();
-							widget.gauge = new JustGage(this.gaugeOptions);
-						}
-						break;
-					case 'max':
-						var maxValue = 0;
-						if(jmxValue.value) {
-							if(widget.options.max.transform) {
-								maxValue = parseFloat(widget.options.max.transform(jmxValue.value));
-							} else {
-								maxValue = parseFloat(jmxValue.value);
-							}
-						}
-						widget.gaugeOptions['max'] = maxValue;
-						if (currentDasboard == widget.dashboardId) {
-							$('#' + widget.id).empty();
-							widget.gauge = new JustGage(widget.gaugeOptions);
-						}
-						break;
-					case 'value':
-						var currentValue = 0;
-						if(jmxValue.value) {
-							if(widget.options.value.transform) {
-								currentValue = parseFloat(widget.options.value.transform(jmxValue.value));
-							} else {
-								currentValue = parseFloat(jmxValue.value);
-							}
-						}
-						
-						widget.gaugeOptions['value']=currentValue;
-						if (currentDasboard == widget.dashboardId) {
-							gauge.refresh(currentValue);
-						}
-						break;
 					}
 				}
 			}
@@ -161,29 +156,29 @@ Gauge =
 		
 		this.close = function() {
 			if(this.options.min.subscribe && this.options.min.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, this.id+"-min", this.options.min.type);	
+				org.kasource.Websocket.unsubscribe(this.options.min.attribute.objectName, this.options.min.attribute.attribute, this.id+"-min");	
 			}
 			if(this.options.max.subscribe && this.options.max.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, this.id+"-max", this.options.max.type);
+				org.kasource.Websocket.unsubscribe(this.options.max.attribute.objectName, this.options.max.attribute.attribute, this.id+"-max");
 				
 			}
 			if(this.options.value.subscribe && this.options.value.attribute) {
-				org.kasource.Websocket.unsubscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, this.id+"-value", this.options.type);
+				org.kasource.Websocket.unsubscribe(this.options.value.attribute.objectName, this.options.value.attribute.attribute, this.id+"-value");
 			}
 		}
 		
 	}
 
 
-gaugeFactory.get = function(dashboardId, widgetId, options) {
-	widgets[widgetId] = new Gauge(dashboardId, widgetId, options);
-	widgets[widgetId].initialize();
-	widgets[widgetId].render();
-	widgets[widgetId].subscribe();
-	return widgets[widgetId];
+org.kasource.jmx.dashboard.gaugeFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.Gauge(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].render();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
-Graph = 
+org.kasource.jmx.dashboard.Graph = 
 	function (dashboardId, id, options) {
 		this.id = id;
 		this.options = options;
@@ -319,8 +314,8 @@ Graph =
 				}
 			
 			this.chart = new Highcharts.Chart(this.chartOptions);
-			if(!graphPainter.timer) {
-				graphPainter.timer = window.setInterval(function(){graphPainter.draw()},1000);
+			if(!org.kasource.jmx.dashboard.graphPainter.timer) {
+				org.kasource.jmx.dashboard.graphPainter.timer = window.setInterval(function(){org.kasource.jmx.dashboard.graphPainter.draw()},1000);
 			}
 		
 		}
@@ -348,7 +343,7 @@ Graph =
 			var attribute = jmxValue.key.attributeName;
 			var objectName = jmxValue.key.name;
 			var indices = widget.dataSeriesIndex[objectName+"."+attribute];
-			if(indices && jmxValue.value) {
+			if(indices && jmxValue.value != undefined && jmxValue.value != null) {
 				for (var i = 0; i < indices.length; i++) {
 					var index = indices[i];
 				
@@ -379,15 +374,15 @@ Graph =
 
 
 
-graphPainter = {}
+org.kasource.jmx.dashboard.graphPainter = {}
 
 
-graphPainter.addPoint = function(graph) {
+org.kasource.jmx.dashboard.graphPainter.addPoint = function(graph) {
 		var time = (new Date()).getTime();
 		var shift = true;
 		var paint = false;
 		
-		if(graph.dashboardId == currentDasboard) {
+		if(graph.dashboardId == org.kasource.jmx.dashboard.currentDasboard) {
 			paint = true;
 		}
 		if(graph.options.samples <= 0 || graph.chart.series[0].data.length <= graph.options.samples ) {
@@ -403,34 +398,34 @@ graphPainter.addPoint = function(graph) {
 	  	}
 }
 
-graphPainter.draw = function() {
-	for (var i = 0; i < graphs.length; i++) {
-		graphPainter.addPoint(graphs[i]);
+org.kasource.jmx.dashboard.graphPainter.draw = function() {
+	for (var i = 0; i < org.kasource.jmx.dashboard.graphs.length; i++) {
+		org.kasource.jmx.dashboard.graphPainter.addPoint(org.kasource.jmx.dashboard.graphs[i]);
 	}	
 }
 
-graphPainter.remove = function(graph) {
-	for (var i = 0; i < graphs.length; i++) {
-		if(graphs[i].id == graph.id) {
-			graphs.splice(i,1);
+org.kasource.jmx.dashboard.graphPainter.remove = function(graph) {
+	for (var i = 0; i < org.kasource.jmx.dashboard.graphs.length; i++) {
+		if(org.kasource.jmx.dashboard.graphs[i].id == graph.id) {
+			org.kasource.jmx.dashboard.graphs.splice(i,1);
 			break;
 		}
 	}
 }
 
-graphFactory = {};
+org.kasource.jmx.dashboard.graphFactory = {};
 
-graphFactory.get = function(dashboardId, widgetId, options) {
-	widgets[widgetId] = new Graph(dashboardId, widgetId, options);
-	widgets[widgetId].initialize();
-	widgets[widgetId].subscribe();
+org.kasource.jmx.dashboard.graphFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.Graph(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
 	
-	graphs.push(widgets[widgetId]);
+	org.kasource.jmx.dashboard.graphs.push(org.kasource.jmx.dashboard.widgets[widgetId]);
 	
-	return widgets[widgetId];
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
-Pie = 
+org.kasource.jmx.dashboard.Pie = 
 	function (dashboardId, id, options) {
 		this.id = id;
 		this.options = options;
@@ -527,7 +522,7 @@ Pie =
 			var indices = widget.dataSeriesIndex[objectName+"."+attribute];
 			var yValue =  parseFloat(jmxValue.value);
 				
-			if(indices && jmxValue.value) {
+			if(indices && jmxValue.value != undefined && jmxValue.value != null) {
 				for (var i = 0; i < indices.length; i++) {
 					var index = indices[i];
 					if(widget.options.dataSeries[index].transform) {
@@ -535,7 +530,7 @@ Pie =
 					}
 					
 					
-					if (currentDasboard == widget.dashboardId) {
+					if (org.kasource.jmx.dashboard.currentDasboard == widget.dashboardId) {
 						widget.chart.series[0].data[index].update(yValue, true);
 					} else {
 						widget.chart.series[0].data[index].update(yValue, false);
@@ -555,18 +550,18 @@ Pie =
 		}
 }
 
-pieFactory = {};
+org.kasource.jmx.dashboard.pieFactory = {};
 
-pieFactory.get = function(dashboardId, widgetId, options) {
-	widgets[widgetId] = new Pie(dashboardId, widgetId, options);
-	widgets[widgetId].initialize();
-	widgets[widgetId].subscribe();
+org.kasource.jmx.dashboard.pieFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.Pie(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
 	
-	return widgets[widgetId];
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
 
-TextGroup = 
+org.kasource.jmx.dashboard.TextGroup = 
 	function (dashboardId, id, data) {
 		this.id = id;
 		this.data = data;
@@ -631,6 +626,7 @@ TextGroup =
 					var row = rows[i];
 					var item = widget.data.value[row];
 					var value = jmxValue.value
+					item.value = value;
 					if(value && item.transform) {
 						value = item.transform(value);
 					}
@@ -654,19 +650,19 @@ TextGroup =
 		
 	}
 
-textGroupFactory = {};
+org.kasource.jmx.dashboard.textGroupFactory = {};
 
-textGroupFactory.get = function(dashboardId, widgetId, data) {
-	widgets[widgetId] = new TextGroup(dashboardId, widgetId, data);
-	widgets[widgetId].initialize();
-	widgets[widgetId].render();
-	widgets[widgetId].subscribe();
-	return widgets[widgetId];
+org.kasource.jmx.dashboard.textGroupFactory.get = function(dashboardId, widgetId, data) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.TextGroup(dashboardId, widgetId, data);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].render();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
 
 
-LedPanelWidget = 
+org.kasource.jmx.dashboard.LedPanelWidget = 
 	function (dashboardId, id, options) {
 		this.id = id;
 		this.options = options;
@@ -695,7 +691,7 @@ LedPanelWidget =
 			
 		
 		this.render = function() {
-			this.ledPanel = new LedPanel(this.id, this.ledPanelOptions);
+			this.ledPanel = new org.kasource.jmx.widget.LedPanel(this.id, this.ledPanelOptions);
 	    }
 	
 		this.subscribe = function() {
@@ -729,7 +725,7 @@ LedPanelWidget =
 			var objectName = jmxValue.key.name;
 			var indices = widget.dataIndex[objectName+"."+attribute];
 			
-			if(indices && jmxValue.value) {
+			if(indices && jmxValue.value != undefined && jmxValue.value != null) {
 				
 				for (var i = 0; i < indices.length; i++) {
 					var index = indices[i];
@@ -739,7 +735,10 @@ LedPanelWidget =
 					} else {
 						value = widget.toBoolean(jmxValue.value);
 					}
-					widget.ledPanel.enableLed(index, value);
+					widget.ledPanelOptions.data[index].enabled = value;
+					if (org.kasource.jmx.dashboard.currentDasboard == widget.dashboardId) {
+						widget.ledPanel.enableLed(index, value);
+					}
 				}
 			}
 		}
@@ -755,58 +754,354 @@ LedPanelWidget =
 		}
 }
 
-ledPanelFactory = {};
+org.kasource.jmx.dashboard.ledPanelFactory = {};
 
-ledPanelFactory.get = function(dashboardId, widgetId, options) {
-	widgets[widgetId] = new LedPanelWidget(dashboardId, widgetId, options);
-	widgets[widgetId].initialize();
-	widgets[widgetId].render();
-	widgets[widgetId].subscribe();
-	return widgets[widgetId];
+org.kasource.jmx.dashboard.ledPanelFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.LedPanelWidget(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].render();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
-TrafficLightWidget = 
+org.kasource.jmx.dashboard.TrafficLightWidget = 
 	function (dashboardId, id, options) {
 		this.id = id;
 		this.options = options;
 		this.dashboardId = dashboardId;
+		this.trafficLightOptions={};
+		this.trafficLight = {};
+		this.stateAttribute= {};
+		this.listeners = {};
+		this.redValue=0;
+		this.yellowValue=0;
+		this.greenValue=0;
+		this.currentValue=0;
+		
+		this.parseValue = function(valueToParse) {
+			if(this.options.attributeType === "numeric"){
+				return parseFloat(valueToParse);
+			} else if(this.options.attributeType.toLowerCase() === "text"){
+				return valueToParse;
+			} else {
+				return valueToParse && (valueToParse === true || valueToParse.toLowerCase() === "true");
+			}
+		} 
+		
+		this.initializeAttribute = function(attribute) {
+			if(!attribute.jsFunction && attribute.value) {
+				return this.parseValue(attribute.value);
+			} else if(attribute.jsFunction) {
+				attribute.transform = eval('('+attribute.jsFunction+')');
+				if(attribute.value) {
+					this.parseValue(attribute.transform(attribute.transform.value));
+				}
+			}
+			return '';
+		}
 		
 		this.initialize = function() {
+			this.options.attributeType = this.options.attributeType.toLowerCase();
+			this.redValue = this.initializeAttribute(this.options.red);
+			this.stateAttribute['red'] = this.options.red;
+			this.yellowValue = this.initializeAttribute(this.options.yellow);
+			this.stateAttribute['yellow'] = this.options.yellow;
+			this.greenValue = this.initializeAttribute(this.options.green);
+			this.stateAttribute['green'] = this.options.green;
+			this.currentValue = this.initializeAttribute(this.options.value);
+			this.stateAttribute['value'] = this.options.value;
 			
+			this.trafficLightOptions = {state: this.options.state, value: this.currentValue};
+			if (this.currentValue != undefined && this.currentValue != null) {
+				this.trafficLightOptions.state = this.resolveState();
+			}
+				
+			
+			
+			if(this.options.title) {
+				this.trafficLightOptions['title']=this.options.title;
+			}
+			if(this.options.prefix) {
+				this.trafficLightOptions['prefix']=this.options.prefix;
+			}
+			if(this.options.suffix) {
+				this.trafficLightOptions['suffix']=this.options.suffix;
+			}
 		}
 	
 		this.render = function() {
-		
+			this.trafficLight = new org.kasource.jmx.widget.TrafficLight(this.id, this.trafficLightOptions);
+			this.trafficLight.setValue(this.currentValue);
 	    }
 	
 		this.subscribe = function() {
-		
+			for (var key in this.stateAttribute) {
+    		    var state = this.stateAttribute[key];
+    		    if(state.attribute && state.subscribe) {
+    		    	var types = this.listeners[state.attribute.objectName+"."+state.attribute.attribute];
+    				if(!types) {
+    					this.listeners[state.attribute.objectName+"."+state.attribute.attribute]=[key];
+    				} else {
+    					types.push(key)
+    				}		
+    				org.kasource.Websocket.subscribe(state.attribute.objectName, state.attribute.attribute, this.id+"-"+key, this.refreshValue, this, state.type);
+    		    }
+    		}
 		}
 	
 		this.refreshValue = function(jmxValue, widget) {
-		
+			var attribute = jmxValue.key.attributeName;
+			var objectName = jmxValue.key.name;
+			var types = widget.listeners[objectName+"."+attribute];
+			var gauge = widget.gauge;
+			if(types && jmxValue.value != undefined && jmxValue.value != null) {
+				for (var i = 0; i < types.length; i++) {
+					var type = types[i];
+					switch(type) {
+					case 'value':
+						widget.currentValue = widget.getNewValue(widget.stateAttribute[type], jmxValue);
+						widget.trafficLightOptions.state = widget.resolveState();
+						if (org.kasource.jmx.dashboard.currentDasboard == widget.dashboardId) {
+							widget.trafficLight.setState(widget.trafficLightOptions.state);
+							widget.trafficLight.setValue(widget.currentValue);
+						}
+						break;
+					case 'red':
+						this.redValue = widget.getNewValue(widget.stateAttribute[type], jmxValue);
+						break;
+					case 'yelow':
+						this.yellowValue = widget.getNewValue(widget.stateAttribute[type], jmxValue);
+						break;
+					case 'green':
+						this.greenValue = widget.getNewValue(widget.stateAttribute[type], jmxValue);
+						break;
+					
+					}
+					
+				}
+			}
 		}
+		
+		this.getNewValue = function(attribute, jmxValue) {
+			if(attribute.transform) {
+				return this.parseValue(attribute.transform(jmxValue.value));
+			} else {
+				return this.parseValue(jmxValue.value);
+			}
+		}
+		
+		this.resolveState = function() {
+			if (this.options.attributeType === 'numeric') {
+				return this.resolveStateForNumericalValue();
+			} else {
+				return this.resolveStateForTextValue();
+			}
+		}
+		
+		this.resolveStateForNumericalValue = function() {
+			if(this.options.ascending && this.options.ascending === true) {
+				if(this.currentValue < this.yellowValue) {
+					return  'green';
+				} else if(this.currentValue < this.redValue) {
+					return 'yellow';
+				} else {
+					return 'red';
+				}
+			} else {
+				if(this.currentValue <= this.redValue) {
+					return 'red';
+				} else if(this.currentValue <= this.green) {
+					return 'yellow';
+				} else {
+					return 'green';
+				}
+			}
+			
+		}
+		
+		this.resolveStateForTextValue = function() {
+			if(this.options.ascending && this.options.ascending === true) {
+				if(this.greenValue.indexOf(this.currentValue) > -1) {
+					return 'green';
+				} else if(this.yellowValue.indexOf(this.currentValue) > -1) {
+					return 'yellow';
+				} else {
+					return 'red';
+				}
+			} else {
+				if(this.redValue.indexOf(this.currentValue) > -1) {
+					return 'red';
+				} else if(this.yellowValue.indexOf(this.currentValue) > -1) {
+					return 'yellow';
+				} else {
+					return 'green';
+				}
+			}
+		}
+		
 	
 		this.close = function() {
+			for (var key in this.stateAttribute) {
+    		    var state = this.stateAttribute[key];
+    		    if(state.attribute && state.subscribe) {
+    		    	org.kasource.Websocket.unsubscribe(state.attribute.objectName, state.attribute.attribute, this.id+"-"+key);	
+    		    }
+			}
+		}
+}
+
+org.kasource.jmx.dashboard.trafficLightFactory = {};
+
+org.kasource.jmx.dashboard.trafficLightFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.TrafficLightWidget(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].render();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
+	return org.kasource.jmx.dashboard.widgets[widgetId];
+}
+
+org.kasource.jmx.dashboard.HeatMap = 
+	function (dashboardId, id, options) {
+		this.id = id;
+		this.dashboardId = dashboardId;
+		this.options = options;
+		this.defaultHeat = 0;
+		this.defaultValue = 'NULL';
+		this.heatMapOptions = {};
+		this.heatMap = {};
+		this.listenerCellIndices = {};
 		
-	}
+		this.initialize = function() {
+			
+			this.options.colorSchema = this.options.colorSchema.toLowerCase();
+			this.options.legendLayout = this.options.legendLayout.toLowerCase();
+			
+			
+			var nodes = [];
+			for (var y = 0; y < this.options.heatRow.length; y++) {
+				var cells = [];
+				var row = this.options.heatRow[y];
+				for (var x = 0; x < row.heatCell.length; x++) {
+					var heatCell = row.heatCell[x];
+					if(heatCell.normalizationFunction) {
+						heatCell.normalize = eval('('+heatCell.normalizationFunction+')');
+					}
+					if(heatCell.data.jsFunction){
+						heatCell.data.transform = eval('('+heatCell.data.jsFunction+')');
+					}
+					var currentValue = this.defaultValue;
+					var heat = this.defaultHeat;
+					if(heatCell.data.value != undefined && heatCell.data.value != null) {
+						 currentValue = this.getValue(heatCell, heatCell.data.value);
+						 heat = this.getHeat(heatCell, heatCell.data.value);
+					}
+					var cellInfo = this.getCellInfo(heatCell, currentValue);
+					
+					
+					cells.push({heat: heat, value: cellInfo, title: heatCell.data.label});
+				}
+				nodes.push(cells);
+			}
+			
+			this.heatMapOptions = {colorSchema: this.options.colorSchema,showLegend: this.options.showLegend, legendLayout: this.options.legendLayout, data: nodes};
+			
+			
+		}
+		
+		this.getCellInfo = function(heatCell, value) {
+			if(heatCell.data.attribute) {
+				return '<b>Value:</b> ' + value + '<br><b>Attribute:</b> ' + heatCell.data.attribute.attribute + '<br><b>ObjectName:</b> <a href="'+window.location+'?objectName='+encodeURI(heatCell.data.attribute.objectName)+'" target="_blank">' + heatCell.data.attribute.objectName + '</a>';
+			} else {
+				return value;
+			}
+		}
+		
+		this.getValue = function(heatCell, value) {
+			if(heatCell.data.transform) {
+				return heatCell.data.transform(value);
+			} else {
+				return value;
+			}
+		}
+		
+		this.getHeat = function(heatCell, value) {
+			if(heatCell.normalize) {
+				return heatCell.normalize(value);
+			} else {
+				return value;
+			}
+			
+		}
+		
+		this.render = function() {
+			this.heatMap = new org.kasource.jmx.widget.HeatMap(this.id, this.heatMapOptions);
+		}
+		
+		this.subscribe = function() {
+			for (var y = 0; y < this.options.heatRow.length; y++) {
+				for (var x = 0; x < this.options.heatRow[y].heatCell.length; x++) {
+					var heatCell = this.options.heatRow[y].heatCell[x];
+					var attributeValue = heatCell.data;
+					if(attributeValue.attribute && attributeValue.subscribe) {
+						var objectName = attributeValue.attribute.objectName;
+						var attribute = attributeValue.attribute.attribute;
+						var index = this.listenerCellIndices[objectName+"."+attribute];
+						if(!index) {
+							this.listenerCellIndices[objectName+"."+attribute]=[{x: x, y: y}];
+						} else {
+							index.push({x: x, y: y});
+						}
+						org.kasource.Websocket.subscribe(objectName, attribute, this.id+"-"+x+"-"+y, this.refreshValue, this, attributeValue.type);
+					}
+				}
+			}
+		}
+		
+		this.close = function() {
+			for (var y = 0; y < this.options.heatRow.length; y++) {
+				for (var x = 0; x < this.options.heatRow[y].heatCell.length; x++) {
+					var heatCell = this.options.heatRow[y].heatCell[x];
+					var attributeValue = heatCell.data;
+					if(attributeValue.attribute && attributeValue.subscribe) {
+						org.kasource.Websocket.unsubscribe(attributeValue.attribute.objectName, attributeValue.attribute.attribute, this.id+"-"+x+"-"+y);	
+					}
+				}
+			}
+		}
+		
+		this.refreshValue = function(jmxValue, widget) {
+			var attribute = jmxValue.key.attributeName;
+			var objectName = jmxValue.key.name;
+			var positions = widget.listenerCellIndices[objectName+"."+attribute];
+		
+			if(positions && jmxValue.value != undefined && jmxValue != null) {
+				for (var i = 0; i < positions.length; i++) {
+					var pos = positions[i];
+					var heatCell = widget.options.heatRow[pos.y].heatCell[pos.x];
+					var value = widget.getValue(heatCell, jmxValue.value);
+					var heat = widget.getHeat(heatCell, jmxValue.value);
+					heatCell.value = value;
+					heatCell.heat = heat;
+					widget.heatMap.setHeat(pos.y, pos.x, heat, widget.getCellInfo(heatCell, value));
+				}
+			}
+		}
 }
 
-trafficLightFactory = {};
+org.kasource.jmx.dashboard.heatMapFactory = {};
 
-trafficLightFactory.get = function(dashboardId, widgetId, options) {
-	widgets[widgetId] = new TrafficLightWidget(dashboardId, widgetId, options);
-	widgets[widgetId].initialize();
-	widgets[widgetId].render();
-	widgets[widgetId].subscribe();
-	return widgets[widgetId];
+org.kasource.jmx.dashboard.heatMapFactory.get = function(dashboardId, widgetId, options) {
+	org.kasource.jmx.dashboard.widgets[widgetId] = new org.kasource.jmx.dashboard.HeatMap(dashboardId, widgetId, options);
+	org.kasource.jmx.dashboard.widgets[widgetId].initialize();
+	org.kasource.jmx.dashboard.widgets[widgetId].render();
+	org.kasource.jmx.dashboard.widgets[widgetId].subscribe();
+	return org.kasource.jmx.dashboard.widgets[widgetId];
 }
 
-
-
-widgetFactory['textGroup']=textGroupFactory;
-widgetFactory['gauge'] = gaugeFactory;
-widgetFactory['graph'] = graphFactory;
-widgetFactory['pie'] = pieFactory;
-widgetFactory['ledPanel'] = ledPanelFactory;
-widgetFactory['trafficLight'] = trafficLightFactory;
+org.kasource.jmx.dashboard.widgetFactory ['textGroup']=org.kasource.jmx.dashboard.textGroupFactory;
+org.kasource.jmx.dashboard.widgetFactory ['gauge'] = org.kasource.jmx.dashboard.gaugeFactory;
+org.kasource.jmx.dashboard.widgetFactory ['graph'] = org.kasource.jmx.dashboard.graphFactory;
+org.kasource.jmx.dashboard.widgetFactory ['pie'] = org.kasource.jmx.dashboard.pieFactory;
+org.kasource.jmx.dashboard.widgetFactory ['ledPanel'] = org.kasource.jmx.dashboard.ledPanelFactory;
+org.kasource.jmx.dashboard.widgetFactory ['trafficLight'] = org.kasource.jmx.dashboard.trafficLightFactory;
+org.kasource.jmx.dashboard.widgetFactory ['heatMap'] = org.kasource.jmx.dashboard.heatMapFactory;
