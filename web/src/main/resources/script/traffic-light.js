@@ -1,4 +1,18 @@
-TrafficLight = 
+if(typeof org=='undefined') {
+	org = {};
+}
+if(!org.hasOwnProperty("kasource")) {
+	org.kasource = {};
+}
+if(!(org.kasource.hasOwnProperty("jmx"))) {
+	org.kasource.jmx = {};
+} 
+if(!(org.kasource.jmx.hasOwnProperty("widget"))) {
+	org.kasource.jmx.widget = {};
+} 
+
+
+org.kasource.jmx.widget.TrafficLight = 
 	function (containerId, options) {
 		this.options = {title: '', state: 'none', value: '', prefix: '', suffix: '', red:'#FF0000', yellow: '#FFFF00', green: '#00FF00'};
 		this.id = containerId;
@@ -37,45 +51,99 @@ TrafficLight =
 		    return this.options.title;
 	    }
 	    
-	    var container = document.getElementById(this.id);
-		var paper = new Raphael(container, container.offsetWidth, container.offsetHeight); 
+	   
+		var paper = new Raphael(this.id); 
+		var set = paper.set();
 	    var redGlow = paper.set();
 	    var yellowGlow = paper.set();
 	    var greenGlow = paper.set();
-	    var rectangle = paper.rect(0, 0, 60, 160); 
+	    
+	    var offsetX=5;
+	    var offsetY=5;
+	    
+	    var rectangle = paper.rect(offsetX, offsetY, 60, 160); 
 	    rectangle.glow({
 	        color: '#444',
 	        offsety: 3,
 	        offsetx: 3
 	    });
-	    
+	    set.push(rectangle);
 	    this.lights={};
 	    
 	    var tooltip = this.getTooltip();
 	    
-	    rectangle.attr({stroke: '#000', 'stroke-width': 4, gradient: '90-#292929-#4D4D4D', title: tooltip});
-	    var circleRed = paper.circle(30, 30, 20);
-	    circleRed.attr({fill: this.options.red, opacity:0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    rectangle.attr({stroke: '#000', 'stroke-width': 4, gradient: '90-#292929-#4D4D4D'});
+	    var circleRed = paper.circle(30 + offsetX, 30 + offsetY, 20);
+	    circleRed.attr({fill: this.options.red, opacity:0.2, stroke: '#292828', 'stroke-width': 2});
+	    $(circleRed.node).qtip({ content: { text: tooltip},
+            style: {
+                background: 'rgba(255,255,255,0.7)',
+                color: '#000000',
+                border: { width: 2, radius: 3, color: '#000000'},
+                'font-size': 12
+            },
+            position: {
+                corner: {
+                    target: 'topRight',
+                    tooltip: 'bottomLeft'
+                }
+            }
+        });
+	
+	    
 	    redGlow.push(circleRed.glow({opacity: 0.7, color: this.options.red, width: 20}));
 	    redGlow.hide();
+	    set.push(circleRed);
+	    
 	    
 	    this.lights['red'] = {graphics: circleRed, glow: redGlow};
 	    
-	    var circleYellow = paper.circle(30, 80, 20); 
-	    circleYellow.attr({fill: this.options.yellow, opacity:0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    var circleYellow = paper.circle(30 + offsetX, 80 + offsetY, 20); 
+	    circleYellow.attr({fill: this.options.yellow, opacity:0.2, stroke: '#292828', 'stroke-width': 2});
+	    $(circleYellow.node).qtip({ content: { text: tooltip },
+            style: {
+                background: 'rgba(255,255,255,0.7)',
+                color: '#000000',
+                border: { width: 2, radius: 3, color: '#000000'},
+                'font-size': 12
+            },
+            position: {
+                corner: {
+                    target: 'topRight',
+                    tooltip: 'bottomLeft'
+                }
+            }
+        });
 	    yellowGlow.push(circleYellow.glow({opacity: 0.7, color: this.options.yellow, width: 20}));
 	    yellowGlow.hide();
-	    
+	    set.push(circleYellow);
 	    this.lights['yellow'] = {graphics: circleYellow, glow: yellowGlow};
 	    
-	    var circleGreen = paper.circle(30, 130, 20);
-	    circleGreen.attr({fill: this.options.green, opacity: 0.2, stroke: '#292828', 'stroke-width': 2, title: tooltip});
+	    var circleGreen = paper.circle(30 + offsetX, 130 + offsetY, 20);
+	    circleGreen.attr({fill: this.options.green, opacity: 0.2, stroke: '#292828', 'stroke-width': 2});
+	    $(circleGreen.node).qtip({ content: { text: tooltip },
+            style: {
+                background: 'rgba(255,255,255,0.7)',
+                color: '#000000',
+                border: { width: 2, radius: 3, color: '#000000'},
+                'font-size': 12
+            },
+            position: {
+                corner: {
+                    target: 'topRight',
+                    tooltip: 'bottomLeft'
+                }
+            }
+        });
 	    greenGlow.push(circleGreen.glow({opacity: 0.7, color: this.options.green, width: 20}));
 	    greenGlow.hide();
-	    
+	    set.push(circleGreen);
 	    this.lights['green'] = {graphics: circleGreen, glow: greenGlow};
 	   
-	   
+	    var viewBox = set.getBBox();
+		paper.setViewBox(0, 0, viewBox.width + offsetX, viewBox.height + offsetY, true);
+	    
+	    
 	    this.transition = function(fromLight, toLight) {
 	    	
 	    	if(fromLight != toLight) {
@@ -94,17 +162,11 @@ TrafficLight =
 	    
 	    		if(this.lights[fromLight]) {
 	    			this.lights[fromLight].glow.hide();
-	    			for(var i=0; i < 8; i++) {
-	    				var alpha = 1.0-(i*0.1);
-	    				this.lights[fromLight].graphics.animate({opacity: alpha}, 100*i, 'bounce');
-			    	
-	    			}
+	    			this.lights[fromLight].graphics.animate({opacity: 0.2}, 800, 'bounce');
+	    		
 	    		}
 	    		if(this.lights[toLight]) {
-	    			for(var i=0; i < 8; i++) {
-	    				var alpha = 0.2+(i*0.1);
-	    				this.lights[toLight].graphics.animate({opacity: alpha}, 100*i, 'bounce');
-	    			}
+	    			this.lights[toLight].graphics.animate({opacity: 1}, 800, 'bounce');
 	    			var glow = this.lights[toLight].glow;
 	    			setTimeout(function(){glow.show()},800);
 	    		}
@@ -116,18 +178,51 @@ TrafficLight =
 		this.setValue = function(newValue) {
 			this.options.value = newValue;
 			var newTooltip = this.getTooltip();
-		
+			var color = '#000000';
+			switch(this.state) {
+			case 'red':
+				color = this.options.red;
+				break;
+			case 'yellow':
+				color = this.options.yellow;
+				break;
+			case 'green':
+				color = this.options.green;
+				break;
+			}
+			
 			for (var key in this.lights) {
-				this.lights[key].graphics.attr({title: newTooltip});
+				var circle = this.lights[key].graphics;
+				$(circle.node).qtip('destroy');
+				$(circle.node).qtip({ content: { text: newTooltip},
+		            style: {
+		                background: 'rgba(255,255,255,0.65)',
+		                color: '#000000',
+		                border: { width: 2, radius: 3, color: color},
+		                'font-size': 12
+		            },
+		            position: {
+		                corner: {
+		                    target: 'topRight',
+		                    tooltip: 'bottomLeft'
+		                }
+		            }
+		        });
+				//$(circle.node).qtip('option', 'content.text', newTooltip);
+				//$(circle.node).qtip('option', 'style.border.color', color);
+				
 			}
 		}
 		
 		this.setState = function(newState) {
-			newState = newState.toLowerCase();
-			this.transition(this.state, newState);
-			this.state = newState;
-			this.options.state = newState;
+			if(newState) {
+				newState = newState.toLowerCase();
+				this.transition(this.state, newState);
+				this.state = newState;
+				this.options.state = newState;
+			}
 		}
 		
 		this.setState(this.options.state);
+		this.setValue(this.options.value);
 }
