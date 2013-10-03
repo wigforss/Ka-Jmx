@@ -205,6 +205,10 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
         listeners.add(listener);
     }
 
+    /**
+     * Handles JMX Notifications and relays notifications to the notification listers
+     * registered with this service.
+     **/
     @Override
     public void handleNotification(Notification notification, Object handback) {
         if(notification instanceof MBeanServerNotification) {
@@ -217,9 +221,7 @@ public class JmxServiceImpl implements JmxService, NotificationListener {
             } else if(mbeanNotification.getType().equals("JMX.mbean.unregistered")) {
                 jmxTree = null;
             }
-        } else {
-            System.out.println(notification);
-        }
+        } 
         for (NotificationListener listener : listeners) {
             listener.handleNotification(notification, handback);
         }
