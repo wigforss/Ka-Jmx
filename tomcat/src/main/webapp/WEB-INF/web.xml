@@ -7,6 +7,24 @@
 >
 	<display-name>Ka JMX ${project.version}</display-name>
 
+
+	
+
+	<context-param>   
+   		<param-name>system.properties.file</param-name>
+   		<param-value>file:${catalina.base}/conf/jmx-console.system.properties</param-value>
+	</context-param>
+	<context-param>   
+   		<param-name>system.properties.file.ignore.missing</param-name>
+   		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>system.properties.default</param-name>
+		<param-value>ka.jmx.plugin.scanpath=</param-value>
+	</context-param>
+	<listener>    
+  		<listener-class>org.kasource.web.servlet.listener.SystemPropertiesSetter</listener-class>  
+	</listener>
     <!-- Spring 3 Configuration -->
     
 	<context-param>

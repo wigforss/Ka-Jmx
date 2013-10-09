@@ -1,19 +1,21 @@
 package org.kasource.jmx.core.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.kasource.jmx.core.dao.DashboardDao;
+
 import org.kasource.jmx.core.dashboard.AttributeValuePopulator;
-import org.kasource.jmx.core.dashboard.DashboardFactory;
+import org.kasource.jmx.core.dashboard.DashboardPlugin;
 import org.kasource.jmx.core.model.dashboard.AttributeValue;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.model.dashboard.Panel;
 import org.kasource.jmx.core.model.dashboard.ValueType;
 import org.kasource.jmx.core.util.JmxValueConverter;
 import org.kasource.jmx.core.util.JmxValueFormatter;
+import org.kasource.kaplugin.PluginManager;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,15 +25,9 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class DashboardServiceImpl implements DashboardService, AttributeValuePopulator {
-
+   
     @Resource
-    private DashboardDao dao;
-    
-    @Resource(name = "vendorDashboardFactory")
-    private DashboardFactory vendorDashboardFactory;
-    
-    @Resource(name = "additionalDashboardFactory")
-    private DashboardFactory additionalDashboardFactory;
+    private PluginManager pluginManager;
     
     @Resource
     private JmxService jmxService;
@@ -47,9 +43,9 @@ public class DashboardServiceImpl implements DashboardService, AttributeValuePop
     @Override
     public List<Dashboard> getDashboards() {
         if(dashboards == null) {
-            dashboards = dao.getDashboards();
-            dashboards.addAll(vendorDashboardFactory.getDashboards());
-            dashboards.addAll(additionalDashboardFactory.getDashboards());
+            dashboards = new ArrayList<Dashboard>();
+            DashboardPlugin plugins = pluginManager.getExtensionPointFor(DashboardPlugin.class);
+            plugins.registerDashboard(dashboards, jmxService);
             Collections.sort(dashboards);
             populateValuesDashboards(dashboards);
         }

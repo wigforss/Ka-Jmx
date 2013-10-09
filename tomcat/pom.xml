@@ -88,6 +88,18 @@
 			<artifactId>ka-jmx-web</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+   			<groupId>org.kasource.kaplugin</groupId>
+   			<artifactId>ka-plugin-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.kasource</groupId>
+			<artifactId>ka-servlet</artifactId>
+		</dependency>
+		 <dependency>
+    		<groupId>org.kasource.commons</groupId>
+			<artifactId>ka-commons</artifactId>
+    	</dependency>
 		 <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>

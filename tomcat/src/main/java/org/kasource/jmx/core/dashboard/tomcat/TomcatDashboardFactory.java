@@ -8,14 +8,17 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.management.ObjectName;
 
-import org.kasource.jmx.core.dashboard.DashboardFactory;
+
+import org.kasource.jmx.core.dashboard.DashboardPlugin;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
 import org.kasource.jmx.core.service.JmxService;
+import org.kasource.kaplugin.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class TomcatDashboardFactory implements DashboardFactory {
+@Plugin
+public class TomcatDashboardFactory implements  DashboardPlugin {
     private static Logger LOG = LoggerFactory.getLogger(TomcatDashboardFactory.class);
     @Resource
     private JmxService jmxService;
@@ -67,8 +70,13 @@ public class TomcatDashboardFactory implements DashboardFactory {
     }
 
 
+    
+
+
     @Override
-    public void setJmxService(JmxService jmxService) {    
+    public void registerDashboard(List<Dashboard> dashboards, JmxService jmxService) {
+        dashboards.addAll(getDashboards());
+        
     }
     
 }

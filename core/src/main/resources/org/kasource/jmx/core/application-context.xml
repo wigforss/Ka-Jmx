@@ -17,8 +17,15 @@
 	    http://www.springframework.org/schema/task
  		http://www.springframework.org/schema/task/spring-task-3.0.xsd">
    
-   	 
- 	 <context:component-scan base-package="org.kasource.jmx.core"/>
+   	
+   	<context:component-scan base-package="org.kasource.jmx.core">
+ 	 	<context:include-filter type="annotation" expression="org.kasource.kaplugin.Plugin"/>
+ 	 </context:component-scan>
+   	  
+ 	 <context:component-scan base-package="${ka.jmx.plugin.scanpath}" use-default-filters="false">
+ 	 	<context:include-filter type="annotation" expression="org.kasource.kaplugin.Plugin"/>
+ 	 </context:component-scan>
+ 	 	
  	 <context:annotation-config/>
      <task:annotation-driven />
      
@@ -60,15 +67,18 @@
     
     <util:properties id="javadocProperties" location="classpath:org/kasource/jmx/javadoc.properties"/>
 
- 	<bean id="dashboardDao" class="org.kasource.jmx.core.dao.DashboardXmlDao">
- 		<property name="sourceXml" value="classpath:org/kasource/jmx/schema/dashboards.xml"/>
- 		<property name="additionalSourceXml" value="${dashboard.location}"/>
- 	</bean>
- 	
- 	<bean id="vendorDashboardFactory" class="${server.dashboard.factory}"/>
+	
     
     <bean id="jmxValueFormatter" class="org.kasource.jmx.core.util.JmxValueFormatterImpl"/>
     
     <bean id="jmxValueConverter" class="org.kasource.jmx.core.util.JmxValueConverterImpl"/>
     
+    <bean id="kaPlugin" class="org.kasource.kaplugin.spring.configuration.KaPluginConfig"/>
+    
+    <!--  
+    <bean id="pluginRepo" class="org.kasource.kaplugin.repository.SimplePluginRepository"/>
+    <bean id="pluginManager" class="org.kasource.kaplugin.manager.PluginManagerImpl">
+    	<constructor-arg ref="pluginRepo"/>
+    </bean>
+    -->
 </beans>

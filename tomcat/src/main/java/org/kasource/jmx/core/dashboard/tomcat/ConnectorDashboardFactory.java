@@ -9,19 +9,19 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.management.ObjectName;
 
-import org.kasource.jmx.core.dashboard.DashboardFactory;
+
 import org.kasource.jmx.core.dashboard.JavaScriptFunction;
 
 import static org.kasource.jmx.core.dashboard.JavaScriptFunction.*;
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
-import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
+
 import org.kasource.jmx.core.dashboard.builder.GraphBuilder;
 import org.kasource.jmx.core.dashboard.builder.LedPanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.PanelBuilder;
 import org.kasource.jmx.core.dashboard.builder.TextGroupBuilder;
 import org.kasource.jmx.core.model.dashboard.Dashboard;
-import org.kasource.jmx.core.model.dashboard.Gauge;
+
 import org.kasource.jmx.core.model.dashboard.Graph;
 import org.kasource.jmx.core.model.dashboard.LayoutType;
 import org.kasource.jmx.core.model.dashboard.LedPanel;
@@ -30,14 +30,14 @@ import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConnectorDashboardFactory implements DashboardFactory {
+public class ConnectorDashboardFactory  {
    
     @Resource
     private JmxService jmxService;
     
     private String domain = "Tomcat";
     
-    @Override
+   
     public List<Dashboard> getDashboards() {
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
         Map<String, Set<ObjectName>> beans = new HashMap<String, Set<ObjectName>>();
@@ -230,8 +230,6 @@ public class ConnectorDashboardFactory implements DashboardFactory {
         return null;
     }
     
-    @Override
-    public void setJmxService(JmxService jmxService) {    
-    }
+ 
 
 }

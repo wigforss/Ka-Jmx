@@ -13,7 +13,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.management.ObjectName;
 
-import org.kasource.jmx.core.dashboard.DashboardFactory;
+
 import org.kasource.jmx.core.dashboard.JavaScriptFunction;
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
@@ -32,7 +32,7 @@ import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServerDashboardFactory implements DashboardFactory {
+public class ServerDashboardFactory {
     
     @Resource
     private JmxService jmxService;
@@ -41,7 +41,7 @@ public class ServerDashboardFactory implements DashboardFactory {
     
     
    
-    @Override
+
     public List<Dashboard> getDashboards() {
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
         dashboards.add(getServerDashboard());
@@ -172,7 +172,5 @@ public class ServerDashboardFactory implements DashboardFactory {
         this.domain = domain;
     }
 
-    @Override
-    public void setJmxService(JmxService jmxService) {    
-    }
+    
 }

@@ -105,8 +105,26 @@
 	</build>
 	<dependencyManagement>
 		<dependencies>
-			
-			
+			<dependency>
+   				<groupId>org.kasource.kaplugin</groupId>
+   				<artifactId>ka-plugin-core</artifactId>
+   				<version>0.6-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+   				<groupId>org.kasource.kaplugin</groupId>
+   				<artifactId>ka-plugin-spring</artifactId>
+   				<version>0.6-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kasource</groupId>
+				<artifactId>ka-servlet</artifactId>
+				<version>0.4-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+    			<groupId>org.kasource.commons</groupId>
+				<artifactId>ka-commons</artifactId>
+				<version>1.0</version>
+    		</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>

@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.management.ObjectName;
 
-import org.kasource.jmx.core.dashboard.DashboardFactory;
+
 import org.kasource.jmx.core.dashboard.builder.AttributeBuilder;
 import org.kasource.jmx.core.dashboard.builder.DashboardBuilder;
 import org.kasource.jmx.core.dashboard.builder.GaugeBuilder;
@@ -29,7 +29,7 @@ import org.kasource.jmx.core.service.JmxService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContextDashboardFactory implements DashboardFactory {
+public class ContextDashboardFactory  {
 
   
     @Resource
@@ -39,7 +39,7 @@ public class ContextDashboardFactory implements DashboardFactory {
     
     
     
-    @Override
+  
     public List<Dashboard> getDashboards() {
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
         Set<ObjectName> contexts = jmxService.getNamesMatching(domain + ":j2eeType=WebModule,*");
@@ -244,8 +244,6 @@ public class ContextDashboardFactory implements DashboardFactory {
     }
 
 
-    @Override
-    public void setJmxService(JmxService jmxService) {    
-    }
+  
     
 }

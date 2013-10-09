@@ -22,9 +22,14 @@ import org.springframework.core.io.Resource;
  * @author rikardwi
  **/
 public class DashboardXmlDao implements DashboardDao {
-
     private Resource sourceXml;
-    private Resource additionalSourceXml;
+    
+    public DashboardXmlDao(Resource sourceXml) {
+        this.sourceXml = sourceXml;
+    }
+    
+   
+   // private Resource additionalSourceXml;
     
     @Override
     public List<Dashboard> getDashboards() {
@@ -43,6 +48,7 @@ public class DashboardXmlDao implements DashboardDao {
             } catch (Exception e) {
                 throw new IllegalStateException("Could not load dashboards configuration from " + sourceXml.toString(), e);
             }
+            /*
             if(additionalSourceXml != null) {
                 if (additionalSourceXml.isReadable()) {
             
@@ -56,6 +62,7 @@ public class DashboardXmlDao implements DashboardDao {
                     throw new IllegalStateException("Could not read configuration from " + additionalSourceXml.toString());
                 }
             }
+            */
             Collections.sort(dashboards);
             return dashboards;
       
@@ -65,17 +72,20 @@ public class DashboardXmlDao implements DashboardDao {
     /**
      * @param sourceXml the sourceXml to set
      */
-    @Required
+  /*  @Required
     public void setSourceXml(Resource sourceXml) {
         this.sourceXml = sourceXml;
     }
-
+*/
+    
+    
     /**
      * @param additionalSourceXml the additionalSourceXml to set
      */
-    @Required
+   /* @Required
     public void setAdditionalSourceXml(Resource additionalSourceXml) {
         this.additionalSourceXml = additionalSourceXml;
     }
+    */
 
 }
